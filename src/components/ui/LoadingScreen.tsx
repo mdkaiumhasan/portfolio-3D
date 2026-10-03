@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Volume2, VolumeX, Layout } from 'lucide-react';
 import { useProgress } from '@react-three/drei';
+import { useGameStore } from '../../store/gameStore';
+import { sound } from '../../systems/audio';
 
 interface LoadingScreenProps {
   onLoaded: () => void;
@@ -7,41 +10,52 @@ interface LoadingScreenProps {
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const { progress, active } = useProgress();
-  const [displayProgress, setDisplayProgress] = useState(20);
-  const [isFadingOut, setIsFadingOut] = useState(false);
-  const hasFinishedRef = useRef(false);
+  const [minTimerDone, setMinTimerDone] = useState(false);
+  const [displayProgress, setDisplayProgress] = useState(15);
+  const { setMode, setAudioEnabled } = useGameStore();
 
-  const finishLoading = () => {
-    if (hasFinishedRef.current) return;
-    hasFinishedRef.current = true;
-    setIsFadingOut(true);
-    setTimeout(() => {
-      onLoaded();
-    }, 350);
-  };
-
-  // Smoothly increment progress and never stall
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setMinTimerDone(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Smoothly increment and prevent stalling at 96%
+  useEffect(() => {
+    // If three.js progress reaches 88% or above, accelerate to 100%
     const target = progress >= 88 ? 100 : Math.max(displayProgress, Math.round(progress));
     setDisplayProgress((prev) => Math.max(prev, target));
+  }, [progress]);
 
-    if ((target >= 100 || !active) && !hasFinishedRef.current) {
-      const enterTimer = setTimeout(() => {
-        finishLoading();
-      }, 200);
-      return () => clearTimeout(enterTimer);
-    }
-  }, [progress, active]);
-
-  // Safety fallback: Automatically enter within 1.8 seconds max under any network condition
+  // Safety fallback timer so it never stays loading forever
   useEffect(() => {
     const safetyTimer = setTimeout(() => {
       setDisplayProgress(100);
-      finishLoading();
-    }, 1800);
-
+      setMinTimerDone(true);
+    }, 2500);
     return () => clearTimeout(safetyTimer);
   }, []);
+
+  const isReady = (displayProgress >= 100 || !active) && minTimerDone;
+
+  const statusText = !isReady
+    ? `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
+    : 'SYSTEM READY // WORLD GENERATED';
+
+  const handleEnterWorld = (enableAudio: boolean) => {
+    if (enableAudio) {
+      setAudioEnabled(true);
+      sound.startRain();
+      sound.playChime();
+    }
+    onLoaded();
+  };
+
+  const handleSkipTo2D = () => {
+    setMode('2d');
+    onLoaded();
+  };
 
   return (
     <div
@@ -55,10 +69,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
-        overflow: 'hidden',
-        opacity: isFadingOut ? 0 : 1,
-        transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        pointerEvents: isFadingOut ? 'none' : 'auto'
+        overflow: 'hidden'
       }}
     >
       {/* Background Ambient Glow */}
@@ -74,64 +85,56 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
       />
 
       <div
+        className="glass-panel"
         style={{
+          maxWidth: '520px',
+          width: '100%',
+          padding: '36px 30px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '16px',
-          maxWidth: '380px',
-          width: '100%',
+          gap: '20px',
           textAlign: 'center',
-          position: 'relative',
-          zIndex: 1
+          background: 'rgba(13, 17, 27, 0.95)',
+          border: '1.5px solid rgba(56, 189, 248, 0.35)',
+          boxShadow: '0 0 40px rgba(14, 165, 233, 0.25)'
         }}
       >
-        {/* Glowing Indicator Core */}
+        {/* Pulsing Core Icon */}
         <div
           style={{
-            width: '16px',
-            height: '16px',
+            position: 'relative',
+            width: '64px',
+            height: '64px',
             borderRadius: '50%',
-            backgroundColor: '#00e5ff',
-            boxShadow: '0 0 20px #00e5ff, 0 0 40px rgba(0, 229, 255, 0.6)'
+            background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%)',
+            border: '2px solid #38bdf8',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)'
           }}
-        />
+        >
+          <Sparkles size={28} color="#38bdf8" />
+        </div>
 
         {/* Title */}
         <div>
-          <h2
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '18px',
-              fontWeight: 800,
-              color: '#ffffff',
-              letterSpacing: '1px',
-              margin: 0
-            }}
-          >
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: 900, color: '#ffffff', letterSpacing: '1px', margin: 0 }}>
             MD. KAIUM HASAN
-          </h2>
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#38bdf8',
-              fontFamily: 'var(--font-mono)',
-              marginTop: '4px',
-              margin: 0,
-              letterSpacing: '0.5px'
-            }}
-          >
-            ENTERING 3D INTERACTIVE WORLD
+          </h1>
+          <p style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 600, marginTop: '4px', margin: 0 }}>
+            3D INTERACTIVE DEVELOPER PORTFOLIO
           </p>
         </div>
 
-        {/* Sleek Minimal Progress Bar */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
+        {/* Progress Bar Container */}
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div
             style={{
               width: '100%',
-              height: '4px',
-              borderRadius: '2px',
+              height: '8px',
+              borderRadius: '4px',
               background: 'rgba(30, 41, 59, 0.8)',
               overflow: 'hidden',
               position: 'relative'
@@ -142,25 +145,80 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
                 width: `${displayProgress}%`,
                 height: '100%',
                 background: 'linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #00e5ff 100%)',
-                boxShadow: '0 0 10px #00e5ff',
-                transition: 'width 0.25s ease-out'
+                boxShadow: '0 0 12px #00e5ff',
+                transition: 'width 0.3s ease-out'
               }}
             />
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: '11px',
-              color: '#94a3b8',
-              fontFamily: 'var(--font-mono)'
-            }}
-          >
-            <span>INITIALIZING...</span>
-            <span style={{ color: '#00e5ff', fontWeight: 700 }}>{displayProgress}%</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', fontFamily: 'var(--font-mono)' }}>
+            <span>{statusText}</span>
+            <span style={{ color: '#38bdf8', fontWeight: 700 }}>{displayProgress}%</span>
           </div>
         </div>
+
+        {/* Ready Actions */}
+        {isReady ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '6px' }}>
+            <button
+              onClick={() => handleEnterWorld(true)}
+              className="btn-cyber btn-cyber-primary"
+              style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '14px' }}
+            >
+              <Volume2 size={18} />
+              Enter 3D World (With Sound)
+            </button>
+
+            <button
+              onClick={() => handleEnterWorld(false)}
+              className="btn-cyber"
+              style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: '13px' }}
+            >
+              <VolumeX size={16} />
+              Enter Silently
+            </button>
+
+            <button
+              onClick={handleSkipTo2D}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94a3b8',
+                fontSize: '12px',
+                cursor: 'pointer',
+                marginTop: '4px',
+                textDecoration: 'underline'
+              }}
+            >
+              Skip to 2D Classic Portfolio View
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%', marginTop: '4px' }}>
+            <p style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', margin: 0 }}>
+              Exploring real-time architectures, enterprise microservices & CCNA networking
+            </p>
+            <button
+              onClick={handleSkipTo2D}
+              style={{
+                background: 'rgba(14, 165, 233, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '6px',
+                padding: '8px 16px',
+                color: '#38bdf8',
+                fontSize: '12px',
+                cursor: 'pointer',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <Layout size={14} />
+              Instant Fast Load: Go Directly to 2D Portfolio
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
