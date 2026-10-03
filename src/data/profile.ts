@@ -10,6 +10,9 @@ export interface ProfileData {
   github: string;
   linkedin: string;
   portfolio: string;
+  twitter?: string;
+  instagram?: string;
+  facebook?: string;
   education: Array<{
     degree: string;
     institution: string;
@@ -54,6 +57,9 @@ export const profileData: ProfileData = {
   github: "https://github.com/mdkaiumhasan",
   linkedin: "https://linkedin.com/in/md-kaium-hasan",
   portfolio: "https://www.mdkaiumhasan.site",
+  twitter: "https://x.com/mdkaium2005?s=11",
+  instagram: "https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto",
+  facebook: "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr",
   education: [
     {
       degree: "Bachelor of Science (B.Sc.) in Computer Science & Engineering",

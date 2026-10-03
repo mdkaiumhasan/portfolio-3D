@@ -170,9 +170,30 @@ const INITIAL_ACHIEVEMENTS: Achievement[] = [
   { id: 'grand_tourist', title: 'Grand Tour Master', description: 'Discovered all 6 world stations', unlocked: false, icon: 'Sparkles' }
 ];
 
+const getInitialMode = (): '3d' | '2d' => {
+  if (typeof window === 'undefined') return '3d';
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('view') === '2d' || window.location.hash === '#2d' || window.location.hash === '#classic') {
+    return '2d';
+  }
+  return '3d';
+};
+
 export const useGameStore = create<GameState>((set, get) => ({
-  mode: '3d',
-  setMode: (mode) => set({ mode }),
+  mode: getInitialMode(),
+  setMode: (mode) => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (mode === '2d') {
+        url.searchParams.set('view', '2d');
+      } else {
+        url.searchParams.delete('view');
+        if (url.hash === '#2d' || url.hash === '#classic') url.hash = '';
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+    set({ mode });
+  },
 
   activePanel: null,
   setActivePanel: (panel) => {

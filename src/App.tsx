@@ -17,8 +17,8 @@ import { sound } from './systems/audio';
 import './styles/hud.css';
 
 export const App: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const { mode, activePanel, setActivePanel, setIsMobile, audioEnabled } = useGameStore();
+  const [isLoading, setIsLoading] = useState(mode === '3d');
 
   // Detect mobile viewport
   useEffect(() => {

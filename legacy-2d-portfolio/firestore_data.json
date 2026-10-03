@@ -1,0 +1,574 @@
+{
+  "name": "projects/portfolio-networking/databases/(default)/documents/artifacts/portfolio-networking/public/data/portfolioContent/main",
+  "fields": {
+    "showBlogsConstruction": {
+      "booleanValue": true
+    },
+    "home_subheading": {
+      "stringValue": "I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps."
+    },
+    "timeline_cv_link": {
+      "stringValue": "#"
+    },
+    "blogs_cv_link": {
+      "stringValue": "#"
+    },
+    "skills": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "percent": {
+                  "integerValue": "95"
+                },
+                "name": {
+                  "stringValue": "ROUTING"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "name": {
+                  "stringValue": "SWITCHING"
+                },
+                "percent": {
+                  "integerValue": "95"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "name": {
+                  "stringValue": "CONFIGURE"
+                },
+                "percent": {
+                  "integerValue": "90"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "name": {
+                  "stringValue": "FIREWALL"
+                },
+                "percent": {
+                  "integerValue": "80"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "percent": {
+                  "integerValue": "75"
+                },
+                "name": {
+                  "stringValue": "C++"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "percent": {
+                  "integerValue": "80"
+                },
+                "name": {
+                  "stringValue": "PYTHON"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "about_cv_link": {
+      "stringValue": "https://files.catbox.moe/0juxap.pdf"
+    },
+    "portfolio_cv_link": {
+      "stringValue": "#"
+    },
+    "about_info_heading": {
+      "stringValue": "INFORMATION ABOUT ME"
+    },
+    "contact_info_heading": {
+      "stringValue": "CONTACT ME HERE"
+    },
+    "posts": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "shortDesc": {
+                  "stringValue": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos..."
+                },
+                "category": {
+                  "stringValue": "Tutorial"
+                },
+                "imageUrl": {
+                  "stringValue": "https://i.imgur.com/1dVmLEu.jpeg"
+                },
+                "date": {
+                  "stringValue": "Oct 26, 2025"
+                },
+                "title": {
+                  "stringValue": "How to Create Your Own Website.       read more..."
+                },
+                "fullContent": {
+                  "stringValue": "\u003c!DOCTYPE html\u003e\n\u003chtml lang=\"bn\"\u003e\n\u003chead\u003e\n\u003cmeta charset=\"UTF-8\"\u003e\n\u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"\u003e\n\u003ctitle\u003eAccess Control List (ACL) – সম্পূর্ণ গাইড\u003c/title\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n\n\u003ch1\u003eAccess Control List (ACL) – সম্পূর্ণ গাইড\u003c/h1\u003e\n\n\u003cp\u003e\u003cb\u003eAccess Control List (ACL)\u003c/b\u003e হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।\u003c/p\u003e\n\n\u003ch2\u003e🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:\u003c/h2\u003e\n\u003cp\u003eধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।\u003c/p\u003e\n\u003cblockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" \u003e\u003ca href=\"//imgur.com/a/Geaj8KR\"\u003e\u003c/a\u003e\u003c/blockquote\u003e\u003cscript async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"\u003e\u003c/script\u003e\n\u003ch2\u003e🔍 ACL এর ধরন:\u003c/h2\u003e\n\u003cul\u003e\n\u003cli\u003e\u003cb\u003eStandard ACL:\u003c/b\u003e শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।\u003c/li\u003e\n\u003cli\u003e\u003cb\u003eExtended ACL:\u003c/b\u003e সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003ch2\u003e🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):\u003c/h2\u003e\n\n\u003ch3\u003eStep 1: Basic Network Setup\u003c/h3\u003e\n\u003cp\u003eদুটি নেটওয়ার্ক নাও:\u003c/p\u003e\n\u003cpre\u003e\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n\u003c/pre\u003e\n\n\u003ch3\u003eStep 2: IP Assign\u003c/h3\u003e\n\u003cp\u003ePC এবং রাউটারে IP অ্যাসাইন করো।\u003c/p\u003e\n\n\u003ch3\u003eStep 3: ACL তৈরি\u003c/h3\u003e\n\u003cp\u003eউদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা\u003c/p\u003e\n\u003cpre\u003e\nRouter\u003e enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n\u003c/pre\u003e\n\n\u003ch3\u003eStep 4: ACL Apply করা\u003c/h3\u003e\n\u003cp\u003eযে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।\u003c/p\u003e\n\u003cpre\u003e\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n\u003c/pre\u003e\n\n\u003ch3\u003eStep 5: Verify\u003c/h3\u003e\n\u003cp\u003ePC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।\u003c/p\u003e\n\n\u003ch2\u003e🧠 টিপস:\u003c/h2\u003e\n\u003cul\u003e\n\u003cli\u003eACL সবসময় “Top to Bottom” ক্রমে কাজ করে।\u003c/li\u003e\n\u003cli\u003eশেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003cp\u003e\u003ca href=\"https://www.mdkaiumhasan.site\"\u003eVisit Now\u003c/a\u003e\u003c/p\u003e\n\n\u003c/body\u003e\n\u003c/html\u003e"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "fullContent": {
+                  "stringValue": "\u003ch3\u003eCCNA ki? Networking Career-er Sothik Shuruvat\u003c/h3\u003e\n\n\u003cp\u003eAmra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.\u003c/p\u003e\n\n\u003cp\u003eJodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo \u003cstrong\u003eCCNA certification\u003c/strong\u003e.\u003c/p\u003e\n\n\u003ch3\u003eKeno CCNA Ekhono Eto Guruttwopurno?\u003c/h3\u003e\n\n\u003cp\u003eTechnology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.\u003c/p\u003e\n\n\u003cp\u003eJob market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.\u003c/p\u003e\n\n\u003c!-- Apnar request onujayi image-ti ekhane add kora holo --\u003e\n\n\u003ca href=\"https://www.arduino.cc\" target=\"_blank\"\u003e\n\u003cimg src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\"\u003e\n\u003c/a\u003e\n\n\u003ch3\u003eAdhunik CCNA-te (200-301) Notun ki ache?\u003c/h3\u003e\n\n\u003cp\u003eAdhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:\u003c/p\u003e\n\n\u003cul\u003e\n\u003cli\u003e\u003cstrong\u003eAutomation & Programmability:\u003c/strong\u003e Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003eSecurity Fundamentals:\u003c/strong\u003e VPN, wireless security (WPA3), ebong port security-r mool dharona.\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003eWireless Networking:\u003c/strong\u003e Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003ch3\u003ePorishesh\u003c/h3\u003e\n\n\u003cp\u003eJodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.\u003c/p\u003e"
+                },
+                "category": {
+                  "stringValue": "Web Design"
+                },
+                "imageUrl": {
+                  "stringValue": "https://placehold.co/600x400/333/fff?text=Blog+Post+2"
+                },
+                "title": {
+                  "stringValue": "How to Become an Expert in Web Design"
+                },
+                "shortDesc": {
+                  "stringValue": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos..."
+                },
+                "date": {
+                  "stringValue": "Oct 25, 2025 "
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "socialLinks": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "url": {
+                  "stringValue": "https://x.com/mdkaium2005?s=11"
+                },
+                "platform": {
+                  "stringValue": "twitter"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "platform": {
+                  "stringValue": "instagram"
+                },
+                "url": {
+                  "stringValue": "https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "url": {
+                  "stringValue": "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr"
+                },
+                "platform": {
+                  "stringValue": "facebook"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "url": {
+                  "stringValue": "https://www.linkedin.com/in/md-kaium-hasan-bb6009372/"
+                },
+                "platform": {
+                  "stringValue": "Linkedin"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "platform": {
+                  "stringValue": "github"
+                },
+                "url": {
+                  "stringValue": "https://github.com/mdkaiumhasan"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "home_profile_image": {
+      "stringValue": "https://ik.imagekit.io/rp0mjzf41/portfolio/home/zle99b_k52_Xk_Ta.png"
+    },
+    "portfolio__showConstructionMessage": {
+      "booleanValue": true
+    },
+    "stats": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "heading": {
+                  "stringValue": "CCNA"
+                },
+                "description": {
+                  "stringValue": "CISCO CERTIFIED NETWORK ASSOCIATE"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "heading": {
+                  "stringValue": "MIKROTIK"
+                },
+                "description": {
+                  "stringValue": "MIKROTIK ROUTER CONFIGURE & MANAGEMENT"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "heading": {
+                  "stringValue": "WINDOWS SERVER"
+                },
+                "description": {
+                  "stringValue": "WIDOWS SERVER CONFIGURETION & MANAGEMENT"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "heading": {
+                  "stringValue": "LINUX SERVER"
+                },
+                "description": {
+                  "stringValue": "LINUX SERVER CONFIGURETION & MANAGEMENT"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "heading": {
+                  "stringValue": "MTCNA"
+                },
+                "description": {
+                  "stringValue": "MIKROTIK CERTIFIED NETWORK ASSOCIATE "
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "description": {
+                  "stringValue": "MIKROTIK CERTIFIED ROUTING ENGINEER "
+                },
+                "heading": {
+                  "stringValue": "MTCRE"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "available_for_work": {
+      "booleanValue": true
+    },
+    "showPortfolioConstruction": {
+      "booleanValue": true
+    },
+    "timeline__showConstructionMessage": {
+      "booleanValue": false
+    },
+    "showTimelineConstruction": {
+      "booleanValue": true
+    },
+    "timeline_showConstructionMessage": {
+      "booleanValue": false
+    },
+    "contact_info_text": {
+      "stringValue": "For Network consultancy services, please get in touch."
+    },
+    "home_heading": {
+      "stringValue": "Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer."
+    },
+    "activities": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "title": {
+                  "stringValue": "District Science Exhibition - 2024 Project - LFR"
+                },
+                "description": {
+                  "stringValue": "My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024."
+                },
+                "imageUrl": {
+                  "stringValue": "https://files.catbox.moe/f1wk8c.webp"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "imageUrl": {
+                  "stringValue": "https://files.catbox.moe/cz183c.PNG"
+                },
+                "title": {
+                  "stringValue": "Cultural Day Football Tournament-2025"
+                },
+                "description": {
+                  "stringValue": "Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "projects": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "imageUrl": {
+                  "stringValue": "https://files.catbox.moe/qx0vri.jpg"
+                },
+                "shortDesc": {
+                  "stringValue": "This app is a simple account management tool for mess Manager & Members. Easily track deposit, expenses, dues, and monthly reports."
+                },
+                "technology": {
+                  "stringValue": "JavaScript, CSS, HTML, Firebase, Android Studio"
+                },
+                "fullDetails": {
+                  "stringValue": "\u003ch2\u003eHow to Download & use the App?\u003c/h2\u003e\n\u003cp\u003eFirst, click the \u003cstrong\u003eDownload App\u003c/strong\u003e button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n\u003c/p\u003e\n\n\u003c!-- Shothik Image Link Button --\u003e\n\u003cp\u003e\n  \u003ca href=\"https://files.catbox.moe/zrgptp.zip\"\u003e\n    \u003cimg src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\"\u003e\n  \u003c/a\u003e\n\u003c/p\u003e\n\u003c!-- Image Link Button Shesh --\u003e\n\u003ch2\u003eManager Mode\u003c/h2\u003e\n\u003cp\u003eAs soon as you open the app, you will see two options:\u003c/p\u003e\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003e Manager\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eMember\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\n\u003cp\u003eTo use the app as a Manager, first select the mode and sign up. Then, log in to your account. Once logged in, you’ll enter your Manager Dashboard.\u003c/p\u003e\n \u003cimg src=\"https://files.catbox.moe/w0gg6m.png\"\u003e\n\u003cp\u003eFrom here, tap the “+” icon from the Member section to add new members. Next, go to the three-line (hamburger) menu, where you’ll find the following settings options:\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003eChange App Name\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eBind Code\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eChange Password\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eView Previous Reports\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eSupport\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eClose Monthly Accounts\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\u003cimg src=\"https://files.catbox.moe/bwkjwl.png\"\u003e\n\u003cp\u003eFrom here, click on \u003cstrong\u003eBind Code\u003c/strong\u003e, and you will get a code similar to an IPv4 address. Copy this code and share it with your members.\u003c/p\u003e\n\n\u003ch2\u003eMember Mode\u003c/h2\u003e\n\u003cp\u003eOnce you select Member Mode, you’ll be asked to enter a Bind Code.\nPaste the Bind Code provided by your Manager and click Search. You’ll then see your Mess Name and a dropdown box below it. Click the dropdown, select your name, and click Enter. This will take you to the Member Dashboard. Here, you’ll find the options:\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003eMy Account\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eEveryone's Accounts\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eMarket Request\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\u003cp\u003eFrom this section, you can view both your own and everyone’s accounts in the mess. If you spend your own money on market purchases, you can also \u003cstrong\u003esubmit a request to the Manager\u003c/strong\u003e to add that expense.\n\u003ch2\u003eAPP Features-Manager\u003c/h2\u003e\n\u003cp\u003eThe Manager only needs to add the members’ names, their deposited amounts, meal counts, and market expenses. That’s it. The Manager’s job is done. The app will automatically handle all complex calculations and provide instant results.\nOn the Dashboard, you can accurately view every calculation, including:\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Deposits\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Expenses\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eRemaining Funds\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Meals\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eMeal Rate\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eEach Member’s Deposit\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eEach Member’s Meal Count\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eHow much each Member should receive or pay\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\u003cp\u003eIn short, the app shows everything from A to Z instantly and accurately.\u003c/p\u003e\n\u003cp\u003eYou’ll find many more amazing features in this app! From the Manager Panel, when you click the Meal button, a calendar of the month will appear along with the days of the week. If there are no meals added on certain days, you’ll see two colored boxes \u003cstrong\u003eDark Red\u003c/strong\u003e and \u003cstrong\u003eGreen.\u003c/strong\u003e\nWhen a meal is added for a specific date, that date’s box will turn \u003cstrong\u003eYellow.\u003c/strong\u003e\u003c/p\u003e\n\u003cstrong\u003e\u003cp\u003eHere’s what the color codes mean:\u003c/p\u003e\u003c/strong\u003e\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003eDark Red – No meal recorded on this date\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eGreen – Today’s date\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eYello – Meal updated for this date\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\n\u003cp\u003eThese color indicators help the Manager easily identify which days’ meals have been updated. If a meal update is missed, the red box will make it immediately clear which date was left out. The most exciting features of this app are the \u003cstrong\u003eMonthly Account Close\u003c/strong\u003e and \u003cstrong\u003ePrevious Report View\u003c/strong\u003e options. Making mess management smarter and more organized than ever!\u003c/p\u003e\n\n\u003cp\u003eLet’s say, in a month, Sadiq deposited 3000 BDT and his total expenses for the month were 2500 BDT, while Abid deposited 1500 BDT and his total expenses were 2200 BDT. At the end of the month, Sadiq will receive 500 BDT, and Abid will have a 700 BDT deficit. The Manager does not need to keep track of this separately. When the Manager closes the month, the app will automatically update these balances in the current month’s deposits: \nSadiq’s 500 BDT will be added to his deposit. Abid’s 700 BDT deficit will appear as a negative balance. Even if, by any chance, the Manager forgets to close the month, the app will automatically close the month on the 1st of the next month, update all members’ balances, and start the new month’s account seamlessly.\u003c/p\u003e\n\u003cp\u003eAnd Manager can view previously closed month’s accounts by clicking on “View Previous Reports”.\nThis allows them to see the reports for the last 3 months.\u003c/p\u003e\n\u003ch4\u003eSupport\u003c/h4\u003e\n\u003cp\u003eUnder the Support option, you’ll find Mail, Instagram, Facebook, and Website.From now on, you can easily get app-related support directly via Mail or the Website.\u003c/p\u003e\n\n\u003ch2\u003eAPP Features-Member\u003c/h2\u003e\n\u003cp\u003eFrom the Dashboard, when a member clicks on \u003cstrong\u003eMy Account\u003c/strong\u003e, they can view all their account details:\u003c/p\u003e\n\u003cul\u003e\n  \u003cstrong\u003e\u003cli\u003eMeal Rate\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Meals\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Expenses\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eTotal Deposits\u003c/li\u003e\u003c/strong\u003e\n  \u003cstrong\u003e\u003cli\u003eRemaining balance or amount they need to pay\u003c/li\u003e\u003c/strong\u003e\n\u003c/ul\u003e\n\u003cp\u003eClicking on \u003cstrong\u003eTotal Meals\u003c/strong\u003e will show the number of meals they had on each date of the month.\u003c/p\u003e\n\n\u003cp\u003eSimilarly, from the Dashboard, if they tap Everyone's Accounts, they can view everyone’s account details.\nClicking on Total Expenses will show what items the Manager purchased, when, and for how much.\u003c/p\u003e\n\n\u003ch4\u003eMarket Request\u003c/h4\u003e\n\u003cp\u003eThis is the most awesome feature in Member Mode! If, in the Manager’s absence, a member spends their own money for the mess:\n\u003cul\u003e\n  \u003cp\u003e\u003cstrong\u003e1. \u003c/strong\u003eThey can enter the expense details and amount and tap Send.\u003c/p\u003e\n  \u003cp\u003e\u003cstrong\u003e2. \u003c/strong\u003eThe request will be sent to the Manager, who will receive a notification in their app.\u003c/p\u003e\n  \u003cp\u003e\u003cstrong\u003e3. \u003c/strong\u003eA red dot will appear on the icon whenever a new notification arrives.\u003c/p\u003e\n  \u003cp\u003e\u003cstrong\u003e4. \u003c/strong\u003eThe Manager can Approve or Decline the request.\u003c/p\u003e\n\u003c/ul\u003e\n\u003cp\u003eOnce approved, the expense is automatically added to the mess’s total expenses, and the member’s amount is added to their deposit. No manual work is required at all. The app handles everything automatically.\n\u003ch4\u003eSo Download and Enjoy the APP. Thank Me latter\u003c/h4\u003e\n\n\n\u003c!-- \u003ch4\u003eTechnology Stack (Table):\u003c/h4\u003e\n\u003ctable style=\"width:100%; border-collapse: collapse; border: 1px solid #495057;\"\u003e\n  \u003cthead style=\"background-color: #343a40;\"\u003e\n    \u003ctr\u003e\n      \u003cth style=\"padding: 10px; border: 1px solid #495057; text-align: left;\"\u003eCategory\u003c/th\u003e\n      \u003cth style=\"padding: 10px; border: 1px solid #495057; text-align: left;\"\u003eTechnology\u003c/th\u003e\n    \u003c/tr\u003e\n  \u003c/thead\u003e\n  \u003ctbody\u003e\n    \u003ctr\u003e\n      \u003ctd style=\"padding: 10px; border: 1px solid #495057;\"\u003eFrontend\u003c/td\u003e\n      \u003ctd style=\"padding: 10px; border: 1px solid #495057;\"\u003eHTML, TailwindCSS, JS\u003c/td\u003e\n    \u003c/tr\u003e\n    \u003ctr\u003e\n      \u003ctd style=\"padding: 10px; border: 1px solid #495057;\"\u003eBackend\u003c/td\u003e\n      \u003ctd style=\"padding: 10px; border: 1px solid #495057;\"\u003eFirebase (Firestore)\u003c/td\u003e\n    \u003c/tr\u003e\n  \u003c/tbody\u003e\n\u003c/table\u003e --!\u003e"
+                },
+                "role": {
+                  "stringValue": "Developer"
+                },
+                "title": {
+                  "stringValue": "Mess Management APP"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "imageUrl": {
+                  "stringValue": "https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png"
+                },
+                "role": {
+                  "stringValue": "Administrator"
+                },
+                "technology": {
+                  "stringValue": "NAT, VLAN, OSPF, ACL, DHCP..."
+                },
+                "fullDetails": {
+                  "stringValue": "\u003cimg src=\"https://i.ibb.co.com/JRY977Rk/Screenshot-2026-01-04-235907.png\"\u003e\n\u003cimg src=\"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png\"\u003e\n\u003cimg src=\"https://i.ibb.co.com/bg3rbzrm/Screenshot-2026-01-04-232916.png\"\u003e\n\n"
+                },
+                "title": {
+                  "stringValue": "Enterprise Network"
+                },
+                "shortDesc": {
+                  "stringValue": "Building a Resilient Enterprise Network.\nDesigning a robust and scalable network for a 600-staff trading floor support center moving to a new, network-free building.\n\n"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "shortDesc": {
+                  "stringValue": "Ramadan Journey app is an your Real time Prayer Helper. Using this application you allways can be connect prayer and Allah Subhan-Wa-Ta'la.IT provide you the reminder of salah, set alarm for sahri and iftar. and contain so much cool feature instead."
+                },
+                "role": {
+                  "stringValue": "Developer"
+                },
+                "technology": {
+                  "stringValue": "React.js, Android Studio"
+                },
+                "title": {
+                  "stringValue": "Ramadan Journey"
+                },
+                "imageUrl": {
+                  "stringValue": "https://files.catbox.moe/bcktxt.png"
+                },
+                "fullDetails": {
+                  "stringValue": "\u003ch2\u003eHow to Download & use the App?\u003c/h2\u003e\n\u003cp\u003eFirst, click the \u003cstrong\u003eDownload App\u003c/strong\u003e button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n\u003c/p\u003e\n\n\u003c!-- Shothik Image Link Button --\u003e\n\u003cp\u003e\n  \u003ca href=\"https://files.catbox.moe/3juat0.zip\" target=\"_blank\" rel=\"noopener noreferrer\"\u003e\n    \u003cimg src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\"\u003e\n  \u003c/a\u003e\n\u003c/p\u003e\n\n\u003cp\u003eAfter Finidhed download you will get a zip file, name \u003cb\u003e3juat0\u003c/b\u003e. Unzip and open the file. Now you can see the app \u003cb\u003eRamadan Journey\u003c/b\u003e. install app and use.\n\u003c/p\u003e\n\n\n\u003cp\u003e\n  \u003ca href=\"https://files.catbox.moe/b5bgv1.apk\" target=\"_blank\" rel=\"noopener noreferrer\"\u003e\n    \u003cimg src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\"\u003e\n  \u003c/a\u003e\n\u003c/p\u003e\n\n\u003cp\u003eAfter Finidhed download you will get a zip file, name \u003cb\u003e3juat0\u003c/b\u003e. Unzip and open the file. Now you can see the app \u003cb\u003eRamadan Journey\u003c/b\u003e. install app and use.\n\u003c/p\u003e\n"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "contactDetails": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "value": {
+                  "stringValue": "Dhanmondi 27, Dhaka"
+                },
+                "type": {
+                  "stringValue": "Location"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "value": {
+                  "stringValue": "mdkaiumhasan2005@gmail.com"
+                },
+                "type": {
+                  "stringValue": "Email"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "type": {
+                  "stringValue": "Contact Number"
+                },
+                "value": {
+                  "stringValue": "+880 1560-014339"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "type": {
+                  "stringValue": "Languages"
+                },
+                "value": {
+                  "stringValue": "Bangla, English, Hindi"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "home_cv_link": {
+      "stringValue": "#"
+    },
+    "about_info_text": {
+      "stringValue": "I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work."
+    },
+    "blogs__showConstructionMessage": {
+      "booleanValue": true
+    },
+    "experiences": {
+      "arrayValue": {
+        "values": [
+          {
+            "mapValue": {
+              "fields": {
+                "description": {
+                  "stringValue": "Covering Network, Parameter Security and Virtualisation."
+                },
+                "date": {
+                  "stringValue": "2019 - PRESENT"
+                },
+                "imageUrl": {
+                  "stringValue": "https://ik.imagekit.io/rp0mjzf41/portfolio/timeline/20230826_152307_S--62kZPx.jpg"
+                },
+                "title": {
+                  "stringValue": "SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "description": {
+                  "stringValue": "Worked closely with Platform team for new networks provisioning, routing and firewall policy management."
+                },
+                "title": {
+                  "stringValue": "SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD"
+                },
+                "imageUrl": {
+                  "stringValue": "https://placehold.co/600x400/b8860b/ffffff?text=FNZ+(UK)+LTD"
+                },
+                "date": {
+                  "stringValue": "2018 – 2019"
+                }
+              }
+            }
+          },
+          {
+            "mapValue": {
+              "fields": {
+                "date": {
+                  "stringValue": ""
+                },
+                "description": {
+                  "stringValue": ""
+                },
+                "imageUrl": {
+                  "stringValue": ""
+                },
+                "title": {
+                  "stringValue": ""
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "contact_cv_link": {
+      "stringValue": "https://files.catbox.moe/0juxap.pdf"
+    }
+  },
+  "createTime": "2025-10-27T17:51:33.814913Z",
+  "updateTime": "2026-06-20T21:30:12.051042Z"
+}

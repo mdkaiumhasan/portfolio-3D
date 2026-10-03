@@ -16,8 +16,16 @@ import {
   CheckCircle2,
   Box,
   ChevronRight,
-  GraduationCap
+  GraduationCap,
+  X,
+  Award,
+  Shield,
+  Image as ImageIcon,
+  Twitter,
+  Instagram,
+  Facebook
 } from 'lucide-react';
+import { Project } from '../../data/projects';
 import { profileData } from '../../data/profile';
 import { projectsData } from '../../data/projects';
 import { skillGroups } from '../../data/skills';
@@ -29,6 +37,7 @@ export const Classic2DView: React.FC = () => {
   const { setMode, audioEnabled } = useGameStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeResume, setActiveResume] = useState<'softwareDev' | 'networkEng'>('softwareDev');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const categories = ['All', 'Enterprise Fullstack', 'Mobile & Realtime', 'AI & Protocol', 'Robotics & Hardware'];
 
@@ -59,10 +68,12 @@ export const Classic2DView: React.FC = () => {
           background: 'rgba(7, 9, 14, 0.85)',
           backdropFilter: 'blur(16px)',
           borderBottom: '1px solid rgba(56, 189, 248, 0.2)',
-          padding: '16px 24px',
+          padding: '14px 24px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -85,7 +96,59 @@ export const Classic2DView: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* Social Links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <a
+              href={profileData.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              style={{ color: '#94a3b8', transition: 'color 0.2s', display: 'flex' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#38bdf8')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
+            >
+              <Github size={18} />
+            </a>
+            <a
+              href={profileData.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              style={{ color: '#94a3b8', transition: 'color 0.2s', display: 'flex' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#38bdf8')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
+            >
+              <Linkedin size={18} />
+            </a>
+            {profileData.twitter && (
+              <a
+                href={profileData.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter / X"
+                style={{ color: '#94a3b8', transition: 'color 0.2s', display: 'flex' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#38bdf8')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
+              >
+                <Twitter size={18} />
+              </a>
+            )}
+            {profileData.facebook && (
+              <a
+                href={profileData.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                style={{ color: '#94a3b8', transition: 'color 0.2s', display: 'flex' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#38bdf8')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
+              >
+                <Facebook size={18} />
+              </a>
+            )}
+          </div>
+
           <button
             onClick={() => {
               if (audioEnabled) sound.playClick();
@@ -213,6 +276,33 @@ export const Classic2DView: React.FC = () => {
                 }}
               >
                 <div>
+                  {project.imageUrl && (
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '160px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        marginBottom: '14px',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        background: '#0a0f1d',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => {
+                        if (audioEnabled) sound.playClick();
+                        setSelectedProject(project);
+                      }}
+                    >
+                      <img
+                        src={project.imageUrl}
+                        alt={project.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                      />
+                    </div>
+                  )}
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span
                       style={{
@@ -282,17 +372,28 @@ export const Classic2DView: React.FC = () => {
                 </div>
 
                 {/* Links */}
-                <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '8px' }}>
+                <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => {
+                      if (audioEnabled) sound.playClick();
+                      setSelectedProject(project);
+                    }}
+                    className="btn-cyber btn-cyber-primary"
+                    style={{ flex: 1, minWidth: '100px', justifyContent: 'center', padding: '8px', fontSize: '12px' }}
+                  >
+                    <FileText size={14} />
+                    Overview
+                  </button>
                   {project.github && (
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-cyber"
-                      style={{ flex: 1, justifyContent: 'center', padding: '8px', fontSize: '12px', textDecoration: 'none' }}
+                      style={{ flex: 1, minWidth: '90px', justifyContent: 'center', padding: '8px', fontSize: '12px', textDecoration: 'none' }}
                     >
                       <Github size={14} />
-                      Source
+                      Code
                     </a>
                   )}
                   {project.live && (
@@ -300,11 +401,11 @@ export const Classic2DView: React.FC = () => {
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-cyber btn-cyber-primary"
-                      style={{ flex: 1, justifyContent: 'center', padding: '8px', fontSize: '12px', textDecoration: 'none' }}
+                      className="btn-cyber"
+                      style={{ flex: 1, minWidth: '90px', justifyContent: 'center', padding: '8px', fontSize: '12px', textDecoration: 'none' }}
                     >
                       <ExternalLink size={14} />
-                      Live App
+                      {project.live.endsWith('.apk') ? 'Download' : 'Live'}
                     </a>
                   )}
                 </div>
@@ -563,8 +664,206 @@ export const Classic2DView: React.FC = () => {
               {profileData.phone}
             </a>
           </div>
+
+          {/* Social Network Links */}
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px', flexWrap: 'wrap' }}>
+            <a
+              href={profileData.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-cyber"
+              style={{ padding: '8px 16px', fontSize: '12px', textDecoration: 'none' }}
+            >
+              <Github size={15} /> GitHub
+            </a>
+            <a
+              href={profileData.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-cyber"
+              style={{ padding: '8px 16px', fontSize: '12px', textDecoration: 'none' }}
+            >
+              <Linkedin size={15} /> LinkedIn
+            </a>
+            {profileData.twitter && (
+              <a
+                href={profileData.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cyber"
+                style={{ padding: '8px 16px', fontSize: '12px', textDecoration: 'none' }}
+              >
+                <Twitter size={15} /> Twitter / X
+              </a>
+            )}
+            {profileData.facebook && (
+              <a
+                href={profileData.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cyber"
+                style={{ padding: '8px 16px', fontSize: '12px', textDecoration: 'none' }}
+              >
+                <Facebook size={15} /> Facebook
+              </a>
+            )}
+          </div>
         </section>
       </main>
+
+      {/* Project Detail Modal */}
+      {selectedProject && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedProject(null)}
+          style={{ zIndex: 1000 }}
+        >
+          <div
+            className="modal-content"
+            style={{ maxWidth: '850px', maxHeight: '90vh', overflowY: 'auto' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    backgroundColor: selectedProject.color,
+                    boxShadow: `0 0 10px ${selectedProject.color}`
+                  }}
+                />
+                <div>
+                  <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', color: '#ffffff' }}>
+                    {selectedProject.title}
+                  </h2>
+                  <p style={{ fontSize: '12px', color: '#38bdf8' }}>
+                    {selectedProject.subtitle}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="btn-cyber"
+                style={{ padding: '6px' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Main Image Banner */}
+              {selectedProject.imageUrl && (
+                <div style={{ width: '100%', maxHeight: '360px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                  <img
+                    src={selectedProject.imageUrl}
+                    alt={selectedProject.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#0a0f1d' }}
+                  />
+                </div>
+              )}
+
+              {/* Gallery if present */}
+              {selectedProject.gallery && selectedProject.gallery.length > 1 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 600 }}>Architecture & Topology Diagrams:</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+                    {selectedProject.gallery.map((img, i) => (
+                      <a key={i} href={img} target="_blank" rel="noopener noreferrer" style={{ display: 'block', height: '110px', borderRadius: '6px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                        <img src={img} alt={`Diagram ${i}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Description */}
+              <div>
+                <h4 style={{ fontSize: '14px', color: '#ffffff', marginBottom: '6px', fontWeight: 700 }}>Overview</h4>
+                <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#cbd5e1' }}>
+                  {selectedProject.description}
+                </p>
+              </div>
+
+              {/* Highlights */}
+              <div>
+                <h4 style={{ fontSize: '14px', color: '#ffffff', marginBottom: '8px', fontWeight: 700 }}>Key Architectural Highlights</h4>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {selectedProject.bulletPoints.map((bp, i) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#cbd5e1' }}>
+                      <CheckCircle2 size={16} color={selectedProject.color} style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span>{bp}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Metrics */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {selectedProject.metrics.map((m, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      fontSize: '12px',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      background: 'rgba(56, 189, 248, 0.1)',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      color: '#7dd3fc',
+                      fontWeight: 600
+                    }}
+                  >
+                    ★ {m}
+                  </span>
+                ))}
+              </div>
+
+              {/* Tech Stack */}
+              <div>
+                <h4 style={{ fontSize: '14px', color: '#ffffff', marginBottom: '8px', fontWeight: 700 }}>Technologies Used</h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {selectedProject.techStack.map((t, i) => (
+                    <span key={i} className="tech-tag" style={{ fontSize: '12px', padding: '4px 10px' }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Links */}
+              <div style={{ display: 'flex', gap: '12px', paddingTop: '10px' }}>
+                {selectedProject.github && (
+                  <a
+                    href={selectedProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-cyber"
+                    style={{ flex: 1, justifyContent: 'center', padding: '10px', textDecoration: 'none' }}
+                  >
+                    <Github size={16} />
+                    View Repository
+                  </a>
+                )}
+                {selectedProject.live && (
+                  <a
+                    href={selectedProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-cyber btn-cyber-primary"
+                    style={{ flex: 1, justifyContent: 'center', padding: '10px', textDecoration: 'none' }}
+                  >
+                    <ExternalLink size={16} />
+                    {selectedProject.live.endsWith('.apk') ? 'Download APK' : 'Open Live Deployment'}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
