@@ -1921,5 +1921,141 @@ function handleEnter3D() {
         }); // End DOMContentLoaded for non-module script
     </script>
 
+
+<script>
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const station = params.get('station') || params.get('panel');
+    const isModal = params.get('modal') === 'true' || Boolean(station);
+    const forceDark = params.get('theme') === 'dark' || isModal;
+
+    // Strict Dark Theme enforcement (theme cannot be changed)
+    if (forceDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+
+        const style = document.createElement('style');
+        style.innerHTML = '#theme-toggle { display: none !important; }';
+        document.head.appendChild(style);
+    }
+
+    if (isModal) {
+        const btnText = document.querySelector('.btn-floating-3d .btn-text');
+        if (btnText) btnText.textContent = 'Return to 3D World';
+
+        window.handleEnter3D = function() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'CLOSE_PANEL' }, '*');
+                return;
+            }
+            const url = new URL(window.location.href);
+            url.searchParams.delete('view');
+            url.searchParams.delete('station');
+            url.searchParams.delete('panel');
+            url.pathname = '/';
+            if (window.top) window.top.location.href = url.toString();
+            else window.location.href = url.toString();
+        };
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage({ type: 'CLOSE_PANEL' }, '*');
+                }
+            }
+        });
+    }
+
+    function applyStationRouting() {
+        const allSections = document.querySelectorAll('section.main-section');
+        const navLinks = document.querySelectorAll('[data-nav-link]');
+        if (!allSections.length) return;
+
+        if (station === 'about') {
+            // WELCOME PLAZA: Show Home + About Info together!
+            allSections.forEach(sec => {
+                if (sec.id === 'home' || sec.id === 'about') {
+                    sec.classList.remove('hidden');
+                } else {
+                    sec.classList.add('hidden');
+                }
+            });
+
+            // Adjust nav links for Home and About
+            navLinks.forEach(link => {
+                const target = link.getAttribute('href');
+                if (target === '#home') {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
+                } else if (target === '#about') {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        const aboutEl = document.getElementById('about');
+                        if (aboutEl) aboutEl.scrollIntoView({ behavior: 'smooth' });
+                    };
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        } else if (station === 'projects' || station === 'portfolio') {
+            allSections.forEach(sec => {
+                if (sec.id === 'portfolio') sec.classList.remove('hidden');
+                else sec.classList.add('hidden');
+            });
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') !== '#portfolio') link.style.display = 'none';
+                else link.classList.add('active');
+            });
+        } else if (station === 'skills') {
+            allSections.forEach(sec => {
+                if (sec.id === 'about') sec.classList.remove('hidden');
+                else sec.classList.add('hidden');
+            });
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') !== '#about') link.style.display = 'none';
+            });
+            setTimeout(() => {
+                const skillsEl = document.getElementById('skills-container');
+                if (skillsEl) skillsEl.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        } else if (station === 'experience' || station === 'timeline') {
+            allSections.forEach(sec => {
+                if (sec.id === 'timeline') sec.classList.remove('hidden');
+                else sec.classList.add('hidden');
+            });
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') !== '#timeline') link.style.display = 'none';
+                else link.classList.add('active');
+            });
+        } else if (station === 'contact') {
+            allSections.forEach(sec => {
+                if (sec.id === 'contact') sec.classList.remove('hidden');
+                else sec.classList.add('hidden');
+            });
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') !== '#contact') link.style.display = 'none';
+                else link.classList.add('active');
+            });
+        } else if (station === 'resume') {
+            allSections.forEach(sec => {
+                if (sec.id === 'about' || sec.id === 'home') sec.classList.remove('hidden');
+                else sec.classList.add('hidden');
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyStationRouting);
+    } else {
+        applyStationRouting();
+    }
+    setTimeout(applyStationRouting, 200);
+    setTimeout(applyStationRouting, 700);
+})();
+</script>
+
 </body>
 </html>
