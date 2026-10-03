@@ -13,7 +13,6 @@ export const IronThrone: React.FC = () => {
   const audioEnabled = useGameStore((state) => state.audioEnabled);
 
   const groupRef = useRef<THREE.Group>(null);
-  const auraRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
 
   const [hasStartedVanishing, setHasStartedVanishing] = useState(false);
@@ -96,13 +95,8 @@ export const IronThrone: React.FC = () => {
   useFrame((_, delta) => {
     if (vanished) return;
 
-    // Ambient floating particles & aura breathing while seated
+    // Ambient floating particles while seated
     if (!hasStartedVanishing) {
-      if (auraRef.current) {
-        const t = performance.now() * 0.002;
-        const scalePulse = 1.0 + Math.sin(t) * 0.04;
-        auraRef.current.scale.set(scalePulse, scalePulse, 1);
-      }
 
       if (particlesRef.current) {
         const posAttr = particlesRef.current.geometry.attributes.position;
@@ -154,12 +148,6 @@ export const IronThrone: React.FC = () => {
       }
     });
 
-    // Fade and expand ethereal ground seal
-    if (auraRef.current) {
-      const auraMat = auraRef.current.material as THREE.MeshBasicMaterial;
-      auraMat.opacity = Math.max(0, 0.6 * (1 - p));
-      auraRef.current.scale.multiplyScalar(1.0 + delta * 1.5);
-    }
 
     // Fade sparkles
     if (particlesRef.current) {
@@ -184,22 +172,6 @@ export const IronThrone: React.FC = () => {
       {/* 3D Photorealistic Iron & Stone Throne */}
       <primitive object={clonedScene} />
 
-      {/* Royal Golden Ground Inscription Seal under Throne */}
-      <mesh
-        ref={auraRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.46, 0.05]}
-      >
-        <ringGeometry args={[0.7, 1.35, 32]} />
-        <meshBasicMaterial
-          color="#eab308"
-          transparent
-          opacity={0.35}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
 
       {/* Floating Mystic Embers */}
       <points
