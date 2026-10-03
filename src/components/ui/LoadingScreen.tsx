@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Terminal, Volume2, Layout, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Volume2, Layout, VolumeX, ArrowRight } from 'lucide-react';
 import { useProgress } from '@react-three/drei';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
@@ -10,36 +10,85 @@ interface LoadingScreenProps {
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const { progress, active } = useProgress();
-  const [minTimerDone, setMinTimerDone] = useState(false);
   const { setMode, setAudioEnabled } = useGameStore();
+  const [displayProgress, setDisplayProgress] = useState(25);
+  const [isReady, setIsReady] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const hasTriggeredLoaded = useRef(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMinTimerDone(true);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+  // Check if user has already entered 3D world in this session (e.g. page reload)
+  const isReload = typeof window !== 'undefined' && sessionStorage.getItem('visited_3d') === 'true';
 
-  const isReady = (progress >= 100 || !active) && minTimerDone;
-  const displayProgress = Math.min(100, Math.max(15, Math.round(progress)));
+  const triggerLoaded = (enableAudio: boolean = false) => {
+    if (hasTriggeredLoaded.current) return;
+    hasTriggeredLoaded.current = true;
+    sessionStorage.setItem('visited_3d', 'true');
 
-  const statusText = !isReady
-    ? `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
-    : 'SYSTEM READY // WORLD GENERATED';
-
-  const handleEnterWorld = (enableAudio: boolean) => {
     if (enableAudio) {
       setAudioEnabled(true);
       sound.startRain();
       sound.playChime();
     }
-    onLoaded();
+
+    setIsFadingOut(true);
+    setTimeout(() => {
+      onLoaded();
+    }, 300);
   };
 
+  // Smoothly increment and never freeze at 96%
+  useEffect(() => {
+    // If drei reports 85% or higher, accelerate to 100%
+    const target = progress >= 88 ? 100 : Math.max(displayProgress, Math.round(progress));
+    setDisplayProgress((prev) => Math.max(prev, target));
+
+    if (target >= 100 || !active) {
+      setIsReady(true);
+    }
+  }, [progress, active]);
+
+  // Safety fallback timers
+  useEffect(() => {
+    // 1. Max wait timeout: force ready after 2.2 seconds max (or 800ms on reload)
+    const maxTimeoutMs = isReload ? 800 : 2200;
+    const safetyTimer = setTimeout(() => {
+      setDisplayProgress(100);
+      setIsReady(true);
+    }, maxTimeoutMs);
+
+    return () => clearTimeout(safetyTimer);
+  }, [isReload]);
+
+  // Automatic entry on page reload once ready
+  useEffect(() => {
+    if (isReady && isReload && !hasTriggeredLoaded.current) {
+      // User is reloading the page: auto enter immediately!
+      const reloadTimer = setTimeout(() => {
+        triggerLoaded(false);
+      }, 250);
+      return () => clearTimeout(reloadTimer);
+    }
+  }, [isReady, isReload]);
+
+  // Automatic countdown entry for first-time visitors once 100% ready (after 2s)
+  useEffect(() => {
+    if (isReady && !isReload && !hasTriggeredLoaded.current) {
+      const autoEnterTimer = setTimeout(() => {
+        triggerLoaded(false);
+      }, 2500);
+      return () => clearTimeout(autoEnterTimer);
+    }
+  }, [isReady, isReload]);
+
   const handleSkipTo2D = () => {
+    sessionStorage.setItem('visited_3d', 'true');
     setMode('2d');
     onLoaded();
   };
+
+  const statusText = !isReady
+    ? `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
+    : 'SYSTEM READY // WORLD GENERATED';
 
   return (
     <div
@@ -53,7 +102,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        opacity: isFadingOut ? 0 : 1,
+        transition: 'opacity 0.3s ease-out',
+        pointerEvents: isFadingOut ? 'none' : 'auto'
       }}
     >
       {/* Background Ambient Glow */}
@@ -71,43 +123,52 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
       <div
         className="glass-panel"
         style={{
-          maxWidth: '520px',
+          maxWidth: '500px',
           width: '100%',
-          padding: '36px 30px',
+          padding: '32px 28px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '20px',
+          gap: '18px',
           textAlign: 'center',
           background: 'rgba(13, 17, 27, 0.95)',
           border: '1.5px solid rgba(56, 189, 248, 0.35)',
           boxShadow: '0 0 40px rgba(14, 165, 233, 0.25)'
         }}
       >
-        {/* Pulsing Core Icon */}
+        {/* Pulsing Core Hologram */}
         <div
           style={{
             position: 'relative',
-            width: '64px',
-            height: '64px',
+            width: '54px',
+            height: '54px',
             borderRadius: '50%',
             background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%)',
-            border: '2px solid #38bdf8',
+            border: '2px solid #00e5ff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)'
+            boxShadow: '0 0 25px rgba(0, 229, 255, 0.45)'
           }}
         >
-          <Sparkles size={28} color="#38bdf8" />
+          <div
+            style={{
+              width: '16px',
+              height: '16px',
+              borderRadius: '50%',
+              backgroundColor: isReady ? '#39ff14' : '#00e5ff',
+              boxShadow: isReady ? '0 0 12px #39ff14' : '0 0 12px #00e5ff',
+              transition: 'all 0.3s ease'
+            }}
+          />
         </div>
 
         {/* Title */}
         <div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: 900, color: '#ffffff', letterSpacing: '1px' }}>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: 900, color: '#ffffff', letterSpacing: '0.8px', margin: 0 }}>
             MD. KAIUM HASAN
           </h1>
-          <p style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 600, marginTop: '4px' }}>
+          <p style={{ fontSize: '12px', color: '#38bdf8', fontWeight: 600, marginTop: '4px', margin: 0 }}>
             3D INTERACTIVE DEVELOPER PORTFOLIO
           </p>
         </div>
@@ -117,7 +178,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
           <div
             style={{
               width: '100%',
-              height: '8px',
+              height: '7px',
               borderRadius: '4px',
               background: 'rgba(30, 41, 59, 0.8)',
               overflow: 'hidden',
@@ -130,7 +191,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
                 height: '100%',
                 background: 'linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #00e5ff 100%)',
                 boxShadow: '0 0 12px #00e5ff',
-                transition: 'width 0.4s ease-out'
+                transition: 'width 0.3s ease-out'
               }}
             />
           </div>
@@ -141,23 +202,24 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
           </div>
         </div>
 
-        {/* Ready Actions */}
+        {/* Actions / Ready State */}
         {isReady ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '6px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', width: '100%', marginTop: '4px' }}>
             <button
-              onClick={() => handleEnterWorld(true)}
+              onClick={() => triggerLoaded(true)}
               className="btn-cyber btn-cyber-primary"
-              style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '14px' }}
+              style={{ width: '100%', justifyContent: 'center', padding: '11px', fontSize: '13px' }}
             >
-              <Volume2 size={18} />
-              Enter 3D World (With Sound)
+              <Volume2 size={16} />
+              Enter 3D World (Sound On)
             </button>
 
             <button
-              onClick={() => handleEnterWorld(false)}
+              onClick={() => triggerLoaded(false)}
               className="btn-cyber"
-              style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: '13px' }}
+              style={{ width: '100%', justifyContent: 'center', padding: '9px', fontSize: '12.5px' }}
             >
+              <VolumeX size={15} />
               Enter Silently
             </button>
 
@@ -167,29 +229,29 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
                 background: 'transparent',
                 border: 'none',
                 color: '#94a3b8',
-                fontSize: '12px',
+                fontSize: '11.5px',
                 cursor: 'pointer',
-                marginTop: '4px',
+                marginTop: '2px',
                 textDecoration: 'underline'
               }}
             >
-              Skip to 2D Classic Portfolio View
+              Switch to 2D Classic Portfolio
             </button>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%', marginTop: '4px' }}>
-            <p style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', margin: 0 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', width: '100%', marginTop: '2px' }}>
+            <p style={{ fontSize: '11.5px', color: '#64748b', fontStyle: 'italic', margin: 0 }}>
               Exploring real-time architectures, enterprise microservices & CCNA networking
             </p>
             <button
               onClick={handleSkipTo2D}
               style={{
                 background: 'rgba(14, 165, 233, 0.1)',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
                 borderRadius: '6px',
-                padding: '8px 16px',
+                padding: '7px 14px',
                 color: '#38bdf8',
-                fontSize: '12px',
+                fontSize: '11.5px',
                 cursor: 'pointer',
                 fontWeight: 600,
                 display: 'flex',
@@ -197,8 +259,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
                 gap: '6px'
               }}
             >
-              <Layout size={14} />
-              ⚡ Instant Fast Load: Go Directly to 2D Portfolio
+              <Layout size={13} />
+              Instant Fast Load: Go Directly to 2D Portfolio
             </button>
           </div>
         )}
