@@ -20,8 +20,8 @@ export const ThirdPersonCamera: React.FC = () => {
   const previousPointer = useRef({ x: 0, y: 0 });
 
   // Camera look target
-  const currentTarget = useRef(new THREE.Vector3(0, 1.45, 41));
-  const currentPos = useRef(new THREE.Vector3(0, 2.5, 36.2));
+  const currentTarget = useRef(new THREE.Vector3(1.35, 1.45, 41));
+  const currentPos = useRef(new THREE.Vector3(1.35, 2.5, 36.2));
 
   // Pointer drag listeners
   useEffect(() => {

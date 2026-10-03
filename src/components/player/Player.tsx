@@ -110,15 +110,15 @@ export const Player: React.FC<PlayerProps> = () => {
   // Real 3D Physical Capsule Collider (radius = 0.35m, height = 1.8m)
   const playerCollider = useRef(
     new Capsule(
-      new THREE.Vector3(0, 0.35, 41),
-      new THREE.Vector3(0, 1.45, 41),
+      new THREE.Vector3(1.35, 0.35, 41),
+      new THREE.Vector3(1.35, 1.45, 41),
       0.35
     )
   );
 
   // Local physics & input state
-  const pos = useRef(new THREE.Vector3(0, 0, 41));
-  const lastReportedPos = useRef(new THREE.Vector3(0, 0, 41));
+  const pos = useRef(new THREE.Vector3(1.35, 0, 41));
+  const lastReportedPos = useRef(new THREE.Vector3(1.35, 0, 41));
   const vel = useRef(new THREE.Vector3(0, 0, 0));
   const heading = useRef(Math.PI); // Facing down the street (North towards Z < 0)
   const isGrounded = useRef(true);
@@ -521,7 +521,7 @@ export const Player: React.FC<PlayerProps> = () => {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, 41]} scale={[1, 1, 1]}>
+    <group ref={groupRef} position={[1.35, 0, 41]} scale={[1, 1, 1]}>
       {/* 3D Character Model */}
       <primitive object={scene} />
     </group>
