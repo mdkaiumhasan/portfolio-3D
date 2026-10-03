@@ -122,28 +122,84 @@
   ],
   "projects": [
     {
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035639/portfolio/projects/agnrlxbyv7csjhzsb6fc.jpg",
-      "shortDesc": "This app is a simple account management tool for mess Manager & Members. Easily track deposit, expenses, dues, and monthly reports.",
-      "technology": "JavaScript, CSS, HTML, Firebase, Android Studio",
-      "fullDetails": "<h2>How to Download & use the App?</h2>\n<p>First, click the <strong>Download App</strong> button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n</p>\n\n<!-- Shothik Image Link Button -->\n<p>\n  <a href=\"https://files.catbox.moe/zrgptp.zip\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n<!-- Image Link Button Shesh -->\n<h2>Manager Mode</h2>\n<p>As soon as you open the app, you will see two options:</p>\n<ul>\n  <strong><li> Manager</li></strong>\n  <strong><li>Member</li></strong>\n</ul>\n\n<p>To use the app as a Manager, first select the mode and sign up. Then, log in to your account. Once logged in, you’ll enter your Manager Dashboard.</p>\n <img src=\"https://files.catbox.moe/w0gg6m.png\">\n<p>From here, tap the “+” icon from the Member section to add new members. Next, go to the three-line (hamburger) menu, where you’ll find the following settings options:\n<ul>\n  <strong><li>Change App Name</li></strong>\n  <strong><li>Bind Code</li></strong>\n  <strong><li>Change Password</li></strong>\n  <strong><li>View Previous Reports</li></strong>\n  <strong><li>Support</li></strong>\n  <strong><li>Close Monthly Accounts</li></strong>\n</ul>\n<img src=\"https://files.catbox.moe/bwkjwl.png\">\n<p>From here, click on <strong>Bind Code</strong>, and you will get a code similar to an IPv4 address. Copy this code and share it with your members.</p>\n\n<h2>Member Mode</h2>\n<p>Once you select Member Mode, you’ll be asked to enter a Bind Code.\nPaste the Bind Code provided by your Manager and click Search. You’ll then see your Mess Name and a dropdown box below it. Click the dropdown, select your name, and click Enter. This will take you to the Member Dashboard. Here, you’ll find the options:\n<ul>\n  <strong><li>My Account</li></strong>\n  <strong><li>Everyone's Accounts</li></strong>\n  <strong><li>Market Request</li></strong>\n</ul>\n<p>From this section, you can view both your own and everyone’s accounts in the mess. If you spend your own money on market purchases, you can also <strong>submit a request to the Manager</strong> to add that expense.\n<h2>APP Features-Manager</h2>\n<p>The Manager only needs to add the members’ names, their deposited amounts, meal counts, and market expenses. That’s it. The Manager’s job is done. The app will automatically handle all complex calculations and provide instant results.\nOn the Dashboard, you can accurately view every calculation, including:\n<ul>\n  <strong><li>Total Deposits</li></strong>\n  <strong><li>Total Expenses</li></strong>\n  <strong><li>Remaining Funds</li></strong>\n  <strong><li>Total Meals</li></strong>\n  <strong><li>Meal Rate</li></strong>\n  <strong><li>Each Member’s Deposit</li></strong>\n  <strong><li>Each Member’s Meal Count</li></strong>\n  <strong><li>How much each Member should receive or pay</li></strong>\n</ul>\n<p>In short, the app shows everything from A to Z instantly and accurately.</p>\n<p>You’ll find many more amazing features in this app! From the Manager Panel, when you click the Meal button, a calendar of the month will appear along with the days of the week. If there are no meals added on certain days, you’ll see two colored boxes <strong>Dark Red</strong> and <strong>Green.</strong>\nWhen a meal is added for a specific date, that date’s box will turn <strong>Yellow.</strong></p>\n<strong><p>Here’s what the color codes mean:</p></strong>\n<ul>\n  <strong><li>Dark Red – No meal recorded on this date</li></strong>\n  <strong><li>Green – Today’s date</li></strong>\n  <strong><li>Yello – Meal updated for this date</li></strong>\n</ul>\n\n<p>These color indicators help the Manager easily identify which days’ meals have been updated. If a meal update is missed, the red box will make it immediately clear which date was left out. The most exciting features of this app are the <strong>Monthly Account Close</strong> and <strong>Previous Report View</strong> options. Making mess management smarter and more organized than ever!</p>\n\n<p>Let’s say, in a month, Sadiq deposited 3000 BDT and his total expenses for the month were 2500 BDT, while Abid deposited 1500 BDT and his total expenses were 2200 BDT. At the end of the month, Sadiq will receive 500 BDT, and Abid will have a 700 BDT deficit. The Manager does not need to keep track of this separately. When the Manager closes the month, the app will automatically update these balances in the current month’s deposits: \nSadiq’s 500 BDT will be added to his deposit. Abid’s 700 BDT deficit will appear as a negative balance. Even if, by any chance, the Manager forgets to close the month, the app will automatically close the month on the 1st of the next month, update all members’ balances, and start the new month’s account seamlessly.</p>\n<p>And Manager can view previously closed month’s accounts by clicking on “View Previous Reports”.\nThis allows them to see the reports for the last 3 months.</p>\n<h4>Support</h4>\n<p>Under the Support option, you’ll find Mail, Instagram, Facebook, and Website.From now on, you can easily get app-related support directly via Mail or the Website.</p>\n\n<h2>APP Features-Member</h2>\n<p>From the Dashboard, when a member clicks on <strong>My Account</strong>, they can view all their account details:</p>\n<ul>\n  <strong><li>Meal Rate</li></strong>\n  <strong><li>Total Meals</li></strong>\n  <strong><li>Total Expenses</li></strong>\n  <strong><li>Total Deposits</li></strong>\n  <strong><li>Remaining balance or amount they need to pay</li></strong>\n</ul>\n<p>Clicking on <strong>Total Meals</strong> will show the number of meals they had on each date of the month.</p>\n\n<p>Similarly, from the Dashboard, if they tap Everyone's Accounts, they can view everyone’s account details.\nClicking on Total Expenses will show what items the Manager purchased, when, and for how much.</p>\n\n<h4>Market Request</h4>\n<p>This is the most awesome feature in Member Mode! If, in the Manager’s absence, a member spends their own money for the mess:\n<ul>\n  <p><strong>1. </strong>They can enter the expense details and amount and tap Send.</p>\n  <p><strong>2. </strong>The request will be sent to the Manager, who will receive a notification in their app.</p>\n  <p><strong>3. </strong>A red dot will appear on the icon whenever a new notification arrives.</p>\n  <p><strong>4. </strong>The Manager can Approve or Decline the request.</p>\n</ul>\n<p>Once approved, the expense is automatically added to the mess’s total expenses, and the member’s amount is added to their deposit. No manual work is required at all. The app handles everything automatically.\n<h4>So Download and Enjoy the APP. Thank Me latter</h4>\n\n\n<!-- <h4>Technology Stack (Table):</h4>\n<table style=\"width:100%; border-collapse: collapse; border: 1px solid #495057;\">\n  <thead style=\"background-color: #343a40;\">\n    <tr>\n      <th style=\"padding: 10px; border: 1px solid #495057; text-align: left;\">Category</th>\n      <th style=\"padding: 10px; border: 1px solid #495057; text-align: left;\">Technology</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Frontend</td>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">HTML, TailwindCSS, JS</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Backend</td>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Firebase (Firestore)</td>\n    </tr>\n  </tbody>\n</table> --!>",
-      "role": "Developer",
-      "title": "Mess Management APP"
+      "title": "GravityEats",
+      "role": "Lead Fullstack & Mobile Architect",
+      "technology": "Next.js 16, NestJS, Kotlin Android, Apache Kafka, Kubernetes, PostgreSQL",
+      "imageUrl": "https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=800&q=80",
+      "shortDesc": "Multi-platform enterprise food delivery ecosystem across Customer, Rider, Merchant, and Admin roles with Kafka real-time dispatch and audited ledger.",
+      "fullDetails": "<h3>GravityEats - Multi-Platform Food Delivery Ecosystem</h3><p>Production-grade enterprise food delivery architecture handling high-concurrency order workflows, real-time dispatch, and audited financial ledgers. Built with Kafka event streaming, KEDA autoscaled Kubernetes pods, and pessimistic locking for zero double-payouts in cash-on-delivery transactions.</p><ul><li>4 Apps in single Monorepo (Customer, Rider, Merchant, Admin)</li><li>Real-time order dispatch via Apache Kafka & WebSockets</li><li>Native Kotlin Android app with Jetpack Compose & Mapbox turn-by-turn navigation</li></ul>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
     },
     {
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035642/portfolio/projects/it8v0rqrkcbpqprfktqu.png",
-      "role": "Administrator",
-      "technology": "NAT, VLAN, OSPF, ACL, DHCP...",
-      "fullDetails": "<img src=\"https://i.ibb.co.com/JRY977Rk/Screenshot-2026-01-04-235907.png\">\n<img src=\"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png\">\n<img src=\"https://i.ibb.co.com/bg3rbzrm/Screenshot-2026-01-04-232916.png\">\n\n",
-      "title": "Enterprise Network",
-      "shortDesc": "Building a Resilient Enterprise Network.\nDesigning a robust and scalable network for a 600-staff trading floor support center moving to a new, network-free building.\n\n"
+      "title": "Parentra",
+      "role": "Fullstack & Mobile Engineer",
+      "technology": "Kotlin Android, Go (Fiber), React, LiveKit WebRTC, WebSockets, PostgreSQL, Cloudinary",
+      "imageUrl": "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80",
+      "shortDesc": "Dual native Android apps and high-performance React dashboard with Go backend, sub-150ms WebRTC live camera/audio streaming, and geofencing.",
+      "fullDetails": "<h3>Parentra - Child Safety & Real-Time Supervisory Suite</h3><p>Parentra provides modern parents with immediate, low-latency peace of mind. Consists of child and parent native Android apps paired with a responsive React supervisory dashboard, featuring live camera and microphone streaming via WebRTC (LiveKit), geofence alerts, and Android Device Admin protection against unauthorized app uninstallation.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
     },
     {
-      "shortDesc": "Ramadan Journey app is an your Real time Prayer Helper. Using this application you allways can be connect prayer and Allah Subhan-Wa-Ta'la.IT provide you the reminder of salah, set alarm for sahri and iftar. and contain so much cool feature instead.",
-      "role": "Developer",
-      "technology": "React.js, Android Studio",
+      "title": "Enterprise Trading Network",
+      "role": "Network Architect & Administrator",
+      "technology": "Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035639/portfolio/projects/i1m0u1m6q1y3b4h8q1w2.png",
+      "shortDesc": "High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.",
+      "fullDetails": "<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
+    },
+    {
+      "title": "Mess Management APP (EasyMess)",
+      "role": "Android & Fullstack Developer",
+      "technology": "Kotlin, Jetpack Compose, Material 3, Cloud Firestore, Firebase Auth",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035637/portfolio/projects/l3h5n5p8k7s1j3x4m8r2.jpg",
+      "shortDesc": "Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.",
+      "fullDetails": "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
+    },
+    {
+      "title": "Waypoint Challenge : IEP MCP Server",
+      "role": "AI & Protocol Engineer",
+      "technology": "TypeScript, Model Context Protocol (MCP), Node.js, SQLite, Jest, Claude AI API",
+      "imageUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      "shortDesc": "TypeScript AI Model Context Protocol server for special education lesson planning with 17 discrete tools and 100% IDEA legal compliance.",
+      "fullDetails": "<h3>Waypoint Challenge : IEP MCP Server</h3><p>Selected from an open competition on Hacker News with direct CEO interview invite. Designed a disability profile knowledge base covering 9 categories with a comorbidity resolver and 17 discrete tools adhering to Anthropic's Model Context Protocol (MCP) standard.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
+    },
+    {
+      "title": "Cradle & Care",
+      "role": "Fullstack E-Commerce Engineer",
+      "technology": "Next.js 15, MedusaJS, PostgreSQL, Redis, Meilisearch, Tailwind CSS, Docker",
+      "imageUrl": "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=800&q=80",
+      "shortDesc": "High-performance headless e-commerce platform with custom FEFO inventory management, sub-250ms search, and 236 RBAC policies.",
+      "fullDetails": "<h3>Cradle & Care - Headless Maternal Care E-Commerce</h3><p>Enterprise digital commerce architecture featuring FEFO (First-Expired, First-Out) inventory batch management with PostgreSQL row-level locks, instant typo-tolerant Meilisearch, and an audited 9.0/10 production-readiness score.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
+    },
+    {
       "title": "Ramadan Journey",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035643/portfolio/projects/zfiw72jwxz7l2njzbeaw.png",
-      "fullDetails": "<h2>How to Download & use the App?</h2>\n<p>First, click the <strong>Download App</strong> button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n</p>\n\n<!-- Shothik Image Link Button -->\n<p>\n  <a href=\"https://files.catbox.moe/3juat0.zip\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n\n<p>After Finidhed download you will get a zip file, name <b>3juat0</b>. Unzip and open the file. Now you can see the app <b>Ramadan Journey</b>. install app and use.\n</p>\n\n\n<p>\n  <a href=\"https://files.catbox.moe/b5bgv1.apk\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n\n<p>After Finidhed download you will get a zip file, name <b>3juat0</b>. Unzip and open the file. Now you can see the app <b>Ramadan Journey</b>. install app and use.\n</p>\n"
+      "role": "Android Developer",
+      "technology": "React.js, Android Studio, Kotlin, Push Notifications",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035641/portfolio/projects/t9v5x2k4m7p1j3w6s8r4.png",
+      "shortDesc": "Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.",
+      "fullDetails": "<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
+    },
+    {
+      "title": "Autonomous Line Follower Robot (LFR)",
+      "role": "Hardware & Robotics Engineer",
+      "technology": "Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/b1c4e7k2m9p3j5w8s0r2.webp",
+      "shortDesc": "Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.",
+      "fullDetails": "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>",
+      "live": "https://www.mdkaiumhasan.site",
+      "github": "https://github.com/mdkaiumhasan"
     }
   ],
   "contactDetails": [

@@ -108,10 +108,10 @@ export const STATIONS: StationInfo[] = [
   {
     id: 'station-about',
     title: 'Welcome Plaza',
-    subtitle: 'Who is MD. Kaium Hasan?',
+    subtitle: 'Home & About Profile (Dark Theme)',
     panel: 'about',
     position: [-4.0, 0, 26.5],
-    color: '#00e5ff',
+    color: '#28a745',
     icon: 'User'
   },
   {

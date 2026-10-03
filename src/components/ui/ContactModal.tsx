@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { X, Mail, Phone, MapPin, Send, Github, Linkedin, Globe, CheckCircle2, MessageSquare } from 'lucide-react';
-import { profileData } from '../../data/profile';
+import { X, Mail, Phone, MapPin, Send, Github, Linkedin, Globe, CheckCircle2 } from 'lucide-react';
+import { usePortfolioData } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
 export const ContactModal: React.FC = () => {
   const { setActivePanel, audioEnabled } = useGameStore();
+  const { data } = usePortfolioData();
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -14,6 +15,8 @@ export const ContactModal: React.FC = () => {
     setActivePanel(null);
   };
 
+  const recipientEmail = "mdkaiumhasan2005@gmail.com";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formState.name || !formState.email || !formState.message) return;
@@ -21,8 +24,7 @@ export const ContactModal: React.FC = () => {
     if (audioEnabled) sound.playChime();
     setIsSubmitted(true);
 
-    // Also trigger mailto so message can actually be sent
-    const mailtoUrl = `mailto:${profileData.email}?subject=${encodeURIComponent(
+    const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(
       formState.subject || 'Portfolio Inquiry from ' + formState.name
     )}&body=${encodeURIComponent(
       `Name: ${formState.name}\nEmail: ${formState.email}\n\nMessage:\n${formState.message}`
@@ -30,27 +32,64 @@ export const ContactModal: React.FC = () => {
     window.open(mailtoUrl, '_blank');
   };
 
+  const contactDetails = data.contactDetails || [
+    { type: 'Location', value: 'Dhanmondi 27, Dhaka' },
+    { type: 'Email', value: recipientEmail },
+    { type: 'Contact Number', value: '+880 1560-014339' },
+    { type: 'Languages', value: 'Bangla, English, Hindi' }
+  ];
+
+  const socialLinks = data.socialLinks || [
+    { platform: 'github', url: 'https://github.com/mdkaiumhasan' },
+    { platform: 'Linkedin', url: 'https://www.linkedin.com/in/md-kaium-hasan-bb6009372/' },
+    { platform: 'twitter', url: 'https://x.com/mdkaium2005?s=11' },
+    { platform: 'facebook', url: 'https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr' }
+  ];
+
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" style={{ maxWidth: '880px' }} onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content"
+        style={{
+          maxWidth: '880px',
+          width: '95%',
+          maxHeight: '88vh',
+          backgroundColor: '#212529',
+          color: '#f8f9fa',
+          border: '1px solid #495057',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(40, 167, 69, 0.15)',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="modal-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          className="modal-header"
+          style={{
+            background: 'linear-gradient(180deg, #2b3035 0%, #212529 100%)',
+            borderBottom: '1px solid #343a40',
+            padding: '18px 24px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
                 width: '12px',
                 height: '12px',
                 borderRadius: '50%',
-                backgroundColor: '#06b6d4',
-                boxShadow: '0 0 10px #06b6d4'
+                backgroundColor: '#28a745',
+                boxShadow: '0 0 12px #28a745'
               }}
             />
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff' }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#f8f9fa', letterSpacing: '0.5px' }}>
                 TRANSMISSION TOWER // CONTACT
               </h2>
-              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Direct Uplink to MD. Kaium Hasan
+              <p style={{ fontSize: '12px', color: '#adb5bd' }}>
+                Direct Uplink to MD. Kaium Hasan ({recipientEmail})
               </p>
             </div>
           </div>
@@ -60,274 +99,260 @@ export const ContactModal: React.FC = () => {
         </div>
 
         {/* Body */}
-        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            {/* Direct Contact Channels */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div
-                className="glass-panel"
-                style={{
-                  padding: '20px',
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  borderLeft: '4px solid #06b6d4',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '14px'
-                }}
-              >
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
-                  Direct Transmission Channels
-                </h3>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <a
-                    href={`mailto:${profileData.email}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      color: '#cbd5e1',
-                      textDecoration: 'none',
-                      padding: '10px 14px',
-                      borderRadius: '8px',
-                      background: 'rgba(30, 41, 59, 0.4)',
-                      border: '1px solid rgba(148, 163, 184, 0.15)',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <Mail size={18} color="#06b6d4" />
-                    <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Email Dispatch</div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#ffffff' }}>{profileData.email}</div>
-                    </div>
-                  </a>
-
-                  <a
-                    href={`tel:${profileData.phone}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      color: '#cbd5e1',
-                      textDecoration: 'none',
-                      padding: '10px 14px',
-                      borderRadius: '8px',
-                      background: 'rgba(30, 41, 59, 0.4)',
-                      border: '1px solid rgba(148, 163, 184, 0.15)'
-                    }}
-                  >
-                    <Phone size={18} color="#06b6d4" />
-                    <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Mobile / WhatsApp</div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#ffffff' }}>{profileData.phone}</div>
-                    </div>
-                  </a>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '10px 14px',
-                      borderRadius: '8px',
-                      background: 'rgba(30, 41, 59, 0.4)',
-                      border: '1px solid rgba(148, 163, 184, 0.15)'
-                    }}
-                  >
-                    <MapPin size={18} color="#06b6d4" />
-                    <div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Physical Station</div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#ffffff' }}>{profileData.location}</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Social Profiles */}
-                <div style={{ paddingTop: '8px' }}>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px', fontWeight: 600 }}>
-                    Global Networks:
-                  </div>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <a
-                      href={profileData.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-cyber"
-                      style={{ padding: '8px 14px', fontSize: '12px' }}
-                    >
-                      <Github size={15} />
-                      GitHub
-                    </a>
-                    <a
-                      href={profileData.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-cyber"
-                      style={{ padding: '8px 14px', fontSize: '12px' }}
-                    >
-                      <Linkedin size={15} />
-                      LinkedIn
-                    </a>
-                  </div>
-                </div>
-              </div>
+        <div
+          className="modal-body"
+          style={{
+            padding: '24px',
+            overflowY: 'auto',
+            backgroundColor: '#212529',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '24px'
+          }}
+        >
+          {/* Left Column: Contact details & Socials */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ backgroundColor: '#2b3035', padding: '18px', borderRadius: '12px', border: '1px solid #343a40' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#f8f9fa', margin: '0 0 6px 0' }}>
+                {data.contact_info_heading || 'CONTACT ME HERE'}
+              </h3>
+              <p style={{ fontSize: '13px', color: '#adb5bd', lineHeight: 1.5, margin: 0 }}>
+                {data.contact_info_text || 'For Network consultancy, fullstack engineering or architecture collaborations, please reach out directly.'}
+              </p>
             </div>
 
-            {/* Quick Message Form */}
-            <div
-              className="glass-panel"
-              style={{
-                padding: '20px',
-                background: 'rgba(15, 23, 42, 0.7)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '14px'
-              }}
-            >
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <MessageSquare size={17} color="#06b6d4" />
-                Dispatch Direct Frequency
-              </h3>
-
-              {isSubmitted ? (
+            {/* Details list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {contactDetails.map((item, idx) => (
                 <div
+                  key={idx}
                   style={{
-                    padding: '28px 20px',
+                    backgroundColor: '#2b3035',
+                    border: '1px solid #495057',
+                    borderRadius: '10px',
+                    padding: '12px 16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '12px',
-                    textAlign: 'center',
-                    background: 'rgba(6, 182, 212, 0.1)',
-                    border: '1px solid rgba(6, 182, 212, 0.4)',
-                    borderRadius: '12px'
+                    gap: '2px'
                   }}
                 >
-                  <CheckCircle2 size={40} color="#06b6d4" />
-                  <h4 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff' }}>
-                    Transmission Initiated!
-                  </h4>
-                  <p style={{ fontSize: '13px', color: '#cbd5e1' }}>
-                    Thank you, {formState.name}. Your message draft has been dispatched to Kaium's inbox at {profileData.email}.
-                  </p>
-                  <button
-                    className="btn-cyber"
-                    onClick={() => setIsSubmitted(false)}
-                    style={{ marginTop: '8px' }}
-                  >
-                    Send Another Transmission
-                  </button>
+                  <span style={{ fontSize: '11px', color: '#28a745', fontWeight: 700, textTransform: 'uppercase' }}>
+                    {item.type}
+                  </span>
+                  <span style={{ fontSize: '13.5px', color: '#f8f9fa', fontWeight: 600 }}>
+                    {item.value}
+                  </span>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px', fontWeight: 600 }}>
-                      YOUR NAME
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Recruiter / Tech Lead / Collaborator"
-                      value={formState.name}
-                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: 'rgba(30, 41, 59, 0.7)',
-                        border: '1px solid rgba(148, 163, 184, 0.25)',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '13px',
-                        outline: 'none',
-                        fontFamily: 'var(--font-body)'
-                      }}
-                    />
-                  </div>
+              ))}
+            </div>
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px', fontWeight: 600 }}>
-                      EMAIL FREQUENCY
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="you@company.com"
-                      value={formState.email}
-                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: 'rgba(30, 41, 59, 0.7)',
-                        border: '1px solid rgba(148, 163, 184, 0.25)',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '13px',
-                        outline: 'none',
-                        fontFamily: 'var(--font-body)'
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px', fontWeight: 600 }}>
-                      SUBJECT / PURPOSE
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Opportunity / Project Consultation / Collaboration"
-                      value={formState.subject}
-                      onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: 'rgba(30, 41, 59, 0.7)',
-                        border: '1px solid rgba(148, 163, 184, 0.25)',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '13px',
-                        outline: 'none',
-                        fontFamily: 'var(--font-body)'
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', color: '#94a3b8', marginBottom: '4px', fontWeight: 600 }}>
-                      TRANSMISSION MESSAGE
-                    </label>
-                    <textarea
-                      rows={4}
-                      required
-                      placeholder="Let's build something remarkable together..."
-                      value={formState.message}
-                      onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '10px 12px',
-                        background: 'rgba(30, 41, 59, 0.7)',
-                        border: '1px solid rgba(148, 163, 184, 0.25)',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        fontSize: '13px',
-                        outline: 'none',
-                        fontFamily: 'var(--font-body)',
-                        resize: 'vertical'
-                      }}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn-cyber btn-cyber-primary"
-                    style={{ marginTop: '6px', justifyContent: 'center', padding: '10px' }}
-                  >
-                    <Send size={15} />
-                    Transmit Signal
-                  </button>
-                </form>
-              )}
+            {/* Social Links */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+              {socialLinks.map((link, idx) => (
+                <a
+                  key={idx}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    backgroundColor: '#2b3035',
+                    color: '#f8f9fa',
+                    border: '1px solid #495057',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    textDecoration: 'none'
+                  }}
+                >
+                  <Globe size={13} color="#28a745" />
+                  {link.platform}
+                </a>
+              ))}
             </div>
           </div>
+
+          {/* Right Column: Contact Form */}
+          <div style={{ backgroundColor: '#2b3035', padding: '22px', borderRadius: '12px', border: '1px solid #495057' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#f8f9fa', margin: '0 0 16px 0' }}>
+              Send Direct Message
+            </h3>
+
+            {isSubmitted ? (
+              <div style={{ textAlign: 'center', padding: '30px 10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <CheckCircle2 size={44} color="#28a745" />
+                <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#f8f9fa', margin: 0 }}>Message Ready!</h4>
+                <p style={{ fontSize: '13px', color: '#adb5bd', margin: 0 }}>
+                  Your email client has been opened. If it didn't open, mail directly to <strong style={{ color: '#28a745' }}>{recipientEmail}</strong>.
+                </p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  style={{
+                    marginTop: '10px',
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    backgroundColor: '#343a40',
+                    color: '#f8f9fa',
+                    border: '1px solid #495057',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Send Another Message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#adb5bd', display: 'block', marginBottom: '4px' }}>
+                    YOUR NAME
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formState.name}
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      backgroundColor: '#212529',
+                      border: '1px solid #495057',
+                      borderRadius: '8px',
+                      color: '#f8f9fa',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                    placeholder="Enter your name"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#adb5bd', display: 'block', marginBottom: '4px' }}>
+                    YOUR EMAIL
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formState.email}
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      backgroundColor: '#212529',
+                      border: '1px solid #495057',
+                      borderRadius: '8px',
+                      color: '#f8f9fa',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#adb5bd', display: 'block', marginBottom: '4px' }}>
+                    SUBJECT
+                  </label>
+                  <input
+                    type="text"
+                    value={formState.subject}
+                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      backgroundColor: '#212529',
+                      border: '1px solid #495057',
+                      borderRadius: '8px',
+                      color: '#f8f9fa',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                    placeholder="Inquiry topic"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#adb5bd', display: 'block', marginBottom: '4px' }}>
+                    MESSAGE
+                  </label>
+                  <textarea
+                    rows={4}
+                    required
+                    value={formState.message}
+                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      backgroundColor: '#212529',
+                      border: '1px solid #495057',
+                      borderRadius: '8px',
+                      color: '#f8f9fa',
+                      fontSize: '13px',
+                      resize: 'vertical',
+                      boxSizing: 'border-box'
+                    }}
+                    placeholder="Your message..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    padding: '11px',
+                    borderRadius: '8px',
+                    backgroundColor: '#28a745',
+                    color: '#ffffff',
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    marginTop: '6px'
+                  }}
+                >
+                  <Send size={15} />
+                  Transmit Email
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div
+          style={{
+            padding: '14px 24px',
+            background: 'linear-gradient(180deg, #212529 0%, #1a1d20 100%)',
+            borderTop: '1px solid #343a40',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <span style={{ fontSize: '12px', color: '#adb5bd' }}>
+            Permanent Dark Theme • Station: Transmission Tower
+          </span>
+
+          <button
+            onClick={handleClose}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '6px',
+              backgroundColor: '#28a745',
+              color: '#ffffff',
+              border: 'none',
+              fontSize: '12.5px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Back to 3D World
+          </button>
         </div>
       </div>
     </div>

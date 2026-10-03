@@ -1,51 +1,90 @@
 import React, { useState } from 'react';
-import { X, ExternalLink, Github, Terminal, CheckCircle2, Filter, Sparkles } from 'lucide-react';
-import { projectsData, Project } from '../../data/projects';
+import { X, ExternalLink, Github, Layers, Code, CheckCircle, Info } from 'lucide-react';
+import { usePortfolioData, ProjectItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
 export const ProjectsModal: React.FC = () => {
   const { setActivePanel, audioEnabled } = useGameStore();
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const { data } = usePortfolioData();
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
-  const categories = ['All', 'Enterprise Fullstack', 'Mobile & Realtime', 'AI & Protocol', 'Robotics & Hardware'];
-
-  const filteredProjects = selectedCategory === 'All'
-    ? projectsData
-    : projectsData.filter((p) => p.category === selectedCategory);
+  const projects = data.projects || [];
 
   const handleClose = () => {
     if (audioEnabled) sound.playClick();
     setActivePanel(null);
   };
 
-  const handleSelectCategory = (cat: string) => {
+  const handleViewDetails = (proj: ProjectItem) => {
     if (audioEnabled) sound.playClick();
-    setSelectedCategory(cat);
+    setSelectedProject(proj);
+  };
+
+  const handleCloseDetails = () => {
+    if (audioEnabled) sound.playClick();
+    setSelectedProject(null);
   };
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" style={{ maxWidth: '980px' }} onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content"
+        style={{
+          maxWidth: '1100px',
+          width: '95%',
+          maxHeight: '88vh',
+          backgroundColor: '#212529',
+          color: '#f8f9fa',
+          border: '1px solid #495057',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(40, 167, 69, 0.15)',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="modal-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div
+          className="modal-header"
+          style={{
+            background: 'linear-gradient(180deg, #2b3035 0%, #212529 100%)',
+            borderBottom: '1px solid #343a40',
+            padding: '18px 24px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
                 width: '12px',
                 height: '12px',
                 borderRadius: '50%',
-                backgroundColor: '#ff007f',
-                boxShadow: '0 0 10px #ff007f'
+                backgroundColor: '#28a745',
+                boxShadow: '0 0 12px #28a745'
               }}
             />
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff' }}>
-                SOFTWARE ENGINEERING LAB
-              </h2>
-              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Production Architectures, High-Concurrency Backends & Mobile Applications
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#f8f9fa', letterSpacing: '0.5px' }}>
+                  PROJECTS & ARCHITECTURE
+                </h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '2px 8px',
+                    borderRadius: '20px',
+                    backgroundColor: 'rgba(40, 167, 69, 0.18)',
+                    color: '#28a745',
+                    border: '1px solid rgba(40, 167, 69, 0.4)'
+                  }}
+                >
+                  {projects.length} Production Systems
+                </span>
+              </div>
+              <p style={{ fontSize: '12px', color: '#adb5bd' }}>
+                Fullstack platforms, high-concurrency microservices, native mobile apps & enterprise network topologies
               </p>
             </div>
           </div>
@@ -54,165 +93,402 @@ export const ProjectsModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Category Tabs */}
+        {/* Body: Projects Grid */}
         <div
+          className="modal-body"
           style={{
-            padding: '12px 24px',
-            background: 'rgba(15, 23, 42, 0.4)',
-            borderBottom: '1px solid rgba(56, 189, 248, 0.15)',
-            display: 'flex',
-            gap: '8px',
-            overflowX: 'auto'
+            padding: '24px',
+            overflowY: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: '20px',
+            backgroundColor: '#212529'
           }}
         >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleSelectCategory(cat)}
-              style={{
-                background: selectedCategory === cat ? 'linear-gradient(135deg, rgba(255, 0, 127, 0.3) 0%, rgba(14, 165, 233, 0.25) 100%)' : 'rgba(30, 41, 59, 0.5)',
-                border: `1px solid ${selectedCategory === cat ? '#ff007f' : 'rgba(148, 163, 184, 0.2)'}`,
-                color: selectedCategory === cat ? '#ffffff' : '#94a3b8',
-                padding: '6px 14px',
-                borderRadius: '20px',
-                fontSize: '12px',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease',
-                boxShadow: selectedCategory === cat ? '0 0 12px rgba(255, 0, 127, 0.35)' : 'none'
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+          {projects.map((project, index) => {
+            const techList = project.technology
+              ? project.technology.split(',').map((t) => t.trim())
+              : [];
 
-        {/* Projects List */}
-        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="glass-panel glass-panel-hover"
-              style={{
-                padding: '22px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '14px',
-                borderLeft: `4px solid ${project.color}`,
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 25, 0.95) 100%)'
-              }}
-            >
-              {/* Title & Metadata Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>
-                      {project.title}
-                    </h3>
-                    <span
+            return (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: '#2b3035',
+                  border: '1px solid #495057',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: '0 6px 18px rgba(0, 0, 0, 0.3)',
+                  transition: 'transform 0.2s ease, border-color 0.2s ease'
+                }}
+              >
+                {/* Thumbnail Image */}
+                <div
+                  style={{
+                    height: '175px',
+                    width: '100%',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    backgroundColor: '#181b1e'
+                  }}
+                >
+                  <img
+                    src={project.imageUrl || 'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=800&q=80'}
+                    alt={project.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=800&q=80';
+                    }}
+                  />
+                  {project.role && (
+                    <div
                       style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '10px',
+                        backgroundColor: 'rgba(33, 37, 41, 0.88)',
+                        backdropFilter: 'blur(6px)',
+                        padding: '3px 10px',
+                        borderRadius: '20px',
                         fontSize: '11px',
-                        padding: '2px 8px',
-                        borderRadius: '6px',
-                        background: `${project.color}22`,
-                        color: project.color,
-                        border: `1px solid ${project.color}66`,
-                        fontWeight: 600
+                        fontWeight: 700,
+                        color: '#28a745',
+                        border: '1px solid rgba(40, 167, 69, 0.4)'
                       }}
                     >
-                      {project.category}
-                    </span>
-                    <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-                      {project.year}
-                    </span>
+                      {project.role}
+                    </div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', flexGrow: 1 }}>
+                  <div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#f8f9fa', margin: '0 0 4px 0' }}>
+                      {project.title}
+                    </h3>
+                    <p style={{ fontSize: '13px', lineHeight: 1.55, color: '#adb5bd', margin: 0 }}>
+                      {project.shortDesc}
+                    </p>
                   </div>
-                  <p style={{ color: '#38bdf8', fontSize: '13px', fontWeight: 500, marginTop: '2px' }}>
-                    {project.subtitle}
-                  </p>
-                </div>
 
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-cyber"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                    >
-                      <Github size={14} />
-                      GitHub
-                    </a>
+                  {/* Tech stack pills */}
+                  {techList.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {techList.slice(0, 4).map((tech, tIdx) => (
+                        <span
+                          key={tIdx}
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            backgroundColor: '#343a40',
+                            color: '#adb5bd',
+                            border: '1px solid #495057'
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {techList.length > 4 && (
+                        <span style={{ fontSize: '11px', color: '#6c757d', alignSelf: 'center' }}>
+                          +{techList.length - 4} more
+                        </span>
+                      )}
+                    </div>
                   )}
-                  {project.live && (
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-cyber btn-cyber-primary"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                    >
-                      <ExternalLink size={14} />
-                      Live Demo
-                    </a>
-                  )}
-                </div>
-              </div>
 
-              {/* Description */}
-              <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#cbd5e1' }}>
-                {project.description}
-              </p>
-
-              {/* Engineering Highlights */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#94a3b8', fontWeight: 600 }}>
-                  Key Engineering Deliverables:
-                </span>
-                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {project.bulletPoints.map((point, pIdx) => (
-                    <li key={pIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: '#cbd5e1' }}>
-                      <CheckCircle2 size={15} color={project.color} style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Metrics & Badges */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '4px' }}>
-                {project.metrics.map((metric, mIdx) => (
-                  <span
-                    key={mIdx}
+                  {/* Actions */}
+                  <div
                     style={{
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      padding: '3px 8px',
-                      borderRadius: '4px',
-                      background: 'rgba(56, 189, 248, 0.1)',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      color: '#7dd3fc'
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: 'auto',
+                      paddingTop: '12px',
+                      borderTop: '1px solid #343a40'
                     }}
                   >
-                    ★ {metric}
-                  </span>
-                ))}
-              </div>
+                    <button
+                      onClick={() => handleViewDetails(project)}
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: '9999px',
+                        backgroundColor: 'transparent',
+                        border: '1.5px solid #28a745',
+                        color: '#28a745',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <Info size={13} />
+                      Full Details
+                    </button>
 
-              {/* Tech Stack Pills */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingTop: '4px' }}>
-                {project.techStack.map((tech, tIdx) => (
-                  <span key={tIdx} className="tech-tag">
-                    {tech}
-                  </span>
-                ))}
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="GitHub Repository"
+                          style={{
+                            padding: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: '#343a40',
+                            color: '#adb5bd',
+                            border: '1px solid #495057',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textDecoration: 'none'
+                          }}
+                        >
+                          <Github size={15} />
+                        </a>
+                      )}
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Live Demo"
+                          style={{
+                            padding: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                            color: '#28a745',
+                            border: '1px solid rgba(40, 167, 69, 0.4)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textDecoration: 'none'
+                          }}
+                        >
+                          <ExternalLink size={15} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        {/* Modal Footer */}
+        <div
+          style={{
+            padding: '14px 24px',
+            background: 'linear-gradient(180deg, #212529 0%, #1a1d20 100%)',
+            borderTop: '1px solid #343a40',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <span style={{ fontSize: '12px', color: '#adb5bd' }}>
+            Permanent Dark Theme • Synchronized with Live Database
+          </span>
+
+          <button
+            onClick={handleClose}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '6px',
+              backgroundColor: '#28a745',
+              color: '#ffffff',
+              border: 'none',
+              fontSize: '12.5px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Back to 3D World
+          </button>
         </div>
       </div>
+
+      {/* Full Details Modal Overlay (if a project is selected) */}
+      {selectedProject && (
+        <div
+          className="modal-overlay"
+          style={{ zIndex: 120, backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
+          onClick={handleCloseDetails}
+        >
+          <div
+            className="modal-content"
+            style={{
+              maxWidth: '750px',
+              width: '90%',
+              maxHeight: '80vh',
+              backgroundColor: '#212529',
+              color: '#f8f9fa',
+              border: '1px solid #495057',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="modal-header"
+              style={{
+                background: '#2b3035',
+                borderBottom: '1px solid #343a40',
+                padding: '16px 22px'
+              }}
+            >
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#f8f9fa', margin: 0 }}>
+                  {selectedProject.title}
+                </h3>
+                {selectedProject.role && (
+                  <p style={{ fontSize: '12.5px', color: '#28a745', fontWeight: 600, margin: '2px 0 0 0' }}>
+                    {selectedProject.role}
+                  </p>
+                )}
+              </div>
+              <button className="modal-close-btn" onClick={handleCloseDetails} aria-label="Close details">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div
+              className="modal-body"
+              style={{
+                padding: '22px',
+                overflowY: 'auto',
+                backgroundColor: '#212529',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}
+            >
+              {selectedProject.imageUrl && (
+                <div style={{ maxHeight: '240px', borderRadius: '10px', overflow: 'hidden', backgroundColor: '#181b1e' }}>
+                  <img
+                    src={selectedProject.imageUrl}
+                    alt={selectedProject.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+              )}
+
+              {selectedProject.technology && (
+                <div style={{ backgroundColor: '#2b3035', padding: '12px 16px', borderRadius: '8px', border: '1px solid #343a40' }}>
+                  <span style={{ fontSize: '11px', color: '#28a745', fontWeight: 700, textTransform: 'uppercase' }}>
+                    Technology Stack:
+                  </span>
+                  <p style={{ fontSize: '13px', color: '#f8f9fa', margin: '4px 0 0 0', fontWeight: 500 }}>
+                    {selectedProject.technology}
+                  </p>
+                </div>
+              )}
+
+              {/* HTML full details */}
+              <div
+                style={{
+                  fontSize: '14px',
+                  lineHeight: '1.7',
+                  color: '#adb5bd'
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: selectedProject.fullDetails || `<p>${selectedProject.shortDesc || ''}</p>`
+                }}
+              />
+            </div>
+
+            <div
+              style={{
+                padding: '14px 22px',
+                background: '#2b3035',
+                borderTop: '1px solid #343a40',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <div style={{ display: 'flex', gap: '10px' }}>
+                {selectedProject.github && (
+                  <a
+                    href={selectedProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '7px 14px',
+                      borderRadius: '6px',
+                      backgroundColor: '#343a40',
+                      color: '#f8f9fa',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      border: '1px solid #495057'
+                    }}
+                  >
+                    <Github size={14} />
+                    GitHub
+                  </a>
+                )}
+                {selectedProject.live && (
+                  <a
+                    href={selectedProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '7px 14px',
+                      borderRadius: '6px',
+                      backgroundColor: '#28a745',
+                      color: '#ffffff',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <ExternalLink size={14} />
+                    Live Demo
+                  </a>
+                )}
+              </div>
+
+              <button
+                onClick={handleCloseDetails}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: '6px',
+                  backgroundColor: '#343a40',
+                  color: '#adb5bd',
+                  border: '1px solid #495057',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
