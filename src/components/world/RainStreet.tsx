@@ -7,7 +7,11 @@ import { SouthPerimeterGate, NorthStreetTerminus, CorridorClosureGate, EastPerim
 import { IronThrone } from './IronThrone';
 import { STATIONS, useGameStore } from '../../store/gameStore';
 
-export const RAIN_STREET_MODEL_URL = import.meta.env.VITE_RAIN_STREET_MODEL_URL || '/models/after_the_rain_2k.glb';
+export const RAIN_STREET_MODEL_URL =
+  import.meta.env.VITE_RAIN_STREET_MODEL_URL ||
+  (import.meta.env.PROD
+    ? 'https://github.com/mdkaiumhasan/portfolio-3D/releases/download/1.0.0/after_the_rain_2k.glb'
+    : '/models/after_the_rain_2k.glb');
 
 const MapModel: React.FC = () => {
   const { scene } = useGLTF(RAIN_STREET_MODEL_URL);

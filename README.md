@@ -114,12 +114,17 @@ This portfolio is not just another flat website—it's a playable, photorealisti
 
 ---
 
-## 📐 3D Asset Architecture & Performance Notes
+## 📐 3D Asset Architecture & Model Download
 
-To keep this open-source repository lightweight and compliant with GitHub's 100MB file limit:
-- Core avatar (`cool_man.glb`), interaction pedestals (`Project_tower.glb`), and props are bundled directly.
-- The high-fidelity 2K PBR environment model (`after_the_rain_2k.glb`) is served via GitHub Releases CDN with zero loss in visual fidelity.
-- Local environments fall back gracefully to local storage if present.
+To keep this open-source repository lightweight (~50MB) and strictly compliant with GitHub's 100MB file limit:
+- Avatar (`cool_man.glb`), pedestals (`Project_tower.glb`), and props are bundled directly inside the repository.
+- The high-fidelity 2K PBR environment model (**`after_the_rain_2k.glb`**, 220 MB) is hosted via GitHub Releases CDN with zero loss in visual quality.
+
+### 📥 Direct 3D Model Download for Developers
+If you are running the project locally offline:
+1. Download the environment model: **[after_the_rain_2k.glb (Release v1.0.0)](https://github.com/mdkaiumhasan/portfolio-3D/releases/download/1.0.0/after_the_rain_2k.glb)**
+2. Place the downloaded file into your local project directory at `public/models/after_the_rain_2k.glb`
+3. In production deployments, the application automatically streams the asset directly from the GitHub Releases CDN URL with full CORS support.
 
 ---
 
