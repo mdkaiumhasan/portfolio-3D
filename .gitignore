@@ -1,0 +1,61 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+
+# Production build
+dist/
+dist-ssr/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Editor & OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# Temporary & test scripts
+check_glb.cjs
+scratch/
+*.bak
+
+# Root models folder (redundant, assets served via public/models)
+/models/
+
+# Large 3D Models (> 100MB, served via GitHub Releases / CDN)
+public/models/after_the_rain_2k.glb
+models/after_the_rain_2k.glb
+
+# Unused/duplicate model versions (saves ~900MB)
+models/*converted*
+public/models/*converted*
+models/*vr__sound*
+public/models/*vr__sound*
+models/*pbr*
+public/models/*pbr*
+models/city.glb
+public/models/city.glb
+models/santa_cruz*
+public/models/santa_cruz*
+models/street_city*
+public/models/street_city*
+models/crystal_tower*
+public/models/crystal_tower*
