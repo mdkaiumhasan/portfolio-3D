@@ -72,6 +72,40 @@ function apiPlugin(): Plugin {
           }
         }
 
+        if (req.url?.startsWith('/api/upload')) {
+          try {
+            // @ts-ignore
+            const { default: uploadHandler } = await import('./api/upload.js');
+            let body = '';
+            req.on('data', chunk => { body += chunk; });
+            req.on('end', async () => {
+              if (body) {
+                try { (req as any).body = JSON.parse(body); } catch (_) { (req as any).body = body; }
+              }
+              const mockRes = {
+                setHeader: (k: string, v: string) => res.setHeader(k, v),
+                status: (code: number) => {
+                  res.statusCode = code;
+                  return {
+                    json: (data: any) => {
+                      res.setHeader('Content-Type', 'application/json');
+                      res.end(JSON.stringify(data));
+                    },
+                    end: () => res.end()
+                  };
+                }
+              };
+              await uploadHandler(req, mockRes);
+            });
+            return;
+          } catch (e: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: e.message }));
+            return;
+          }
+        }
+
         next();
       });
     }
