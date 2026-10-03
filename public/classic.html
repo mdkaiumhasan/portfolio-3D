@@ -1428,11 +1428,11 @@ function handleEnter3D() {
              const subject = contactForm.subject ? contactForm.subject.value : 'Portfolio Contact Inquiry';
              const message = contactForm.message ? contactForm.message.value : '';
 
-             const mailtoLink = 'mailto:mdkaiumhasan99@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
+             const mailtoLink = 'mailto:mdkaiumhasan2005@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
 
              window.open(mailtoLink, '_blank');
 
-             formStatus.textContent = 'Thank you! Mail draft opened. You can also email directly to mdkaiumhasan99@gmail.com';
+             formStatus.textContent = 'Thank you! Mail draft opened. You can also email directly to mdkaiumhasan2005@gmail.com';
              formStatus.className = 'mt-4 text-center text-green-600 dark:text-green-400';
              contactForm.reset();
              setTimeout(() => formStatus.classList.add('hidden'), 8000);
