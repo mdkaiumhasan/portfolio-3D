@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Award, MapPin, Mail, Phone, FileText, Sparkles, Terminal } from 'lucide-react';
+import { X, Award, MapPin, Mail, Phone, FileText, Terminal } from 'lucide-react';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
@@ -138,14 +138,12 @@ export const AboutModal: React.FC = () => {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '6px',
                       background: 'rgba(0, 229, 255, 0.12)',
                       border: '1px solid rgba(0, 229, 255, 0.35)',
-                      padding: '3px 10px',
+                      padding: '3px 12px',
                       borderRadius: '20px'
                     }}
                   >
-                    <Sparkles size={12} color="#00e5ff" />
                     <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600, letterSpacing: '0.3px' }}>
                       {data.about_info_heading || 'INFORMATION ABOUT ME'}
                     </span>
