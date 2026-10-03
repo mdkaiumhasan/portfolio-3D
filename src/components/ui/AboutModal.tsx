@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, GraduationCap, MapPin, Mail, Phone, FileText, Sparkles, Terminal } from 'lucide-react';
+import { X, Award, MapPin, Mail, Phone, FileText, Sparkles, Terminal } from 'lucide-react';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
@@ -18,37 +18,33 @@ export const AboutModal: React.FC = () => {
     setActivePanel(panel);
   };
 
-  const bioText = data.about_info_text || data.home_subheading || "Fullstack developer with 2+ years of hands-on experience building production React, Next.js, and TypeScript applications across food-delivery, child-safety, and content-automation platforms. Comfortable owning features end-to-end — states, edge cases, and performance, not just the happy path — while pairing REST/GraphQL data layers with clean, accessible UI. CCNA (200-301) certified with deep hands-on ISP field experience in MikroTik router/switch/OLT configuration, bandwidth management, and Linux server administration. Daily user of AI-assisted tooling (Claude, Cursor, Antigravity, MCP) to build faster without cutting corners.";
+  // Helper to render accent tags identically to 2D
+  const renderAccentText = (text: string) => {
+    if (!text) return null;
+    const parts = text.split(/\{\{ACCENT\}\}|\{\{\/ACCENT\}\}/gi);
+    if (parts.length === 1) return text;
+    return parts.map((part, index) => {
+      if (index % 2 === 1) {
+        return (
+          <span
+            key={index}
+            style={{
+              color: '#00e5ff',
+              textShadow: '0 0 14px rgba(0, 229, 255, 0.45)',
+              fontWeight: 800
+            }}
+          >
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
 
   const profileImage = data.home_profile_image || "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg";
 
-  // Dynamic stats from database
-  const statsList = (data.stats && data.stats.length > 0)
-    ? data.stats
-    : [
-        { heading: "2+ Yrs", description: "Production Experience" },
-        { heading: "CCNA", description: "Cisco Certified Network Associate" },
-        { heading: "6+", description: "Enterprise Projects" },
-        { heading: "236+", description: "RBAC Security Policies" }
-      ];
-
-  const education = [
-    {
-      degree: "Bachelor of Science (B.Sc.) in Computer Science & Engineering",
-      institution: "Northern University Bangladesh",
-      period: "Present",
-      status: "In Progress",
-      details: "Focus on Distributed Systems, Network Security, Database Architecture, and Advanced Software Engineering."
-    },
-    {
-      degree: "Diploma in Engineering (Computer Science & Technology)",
-      institution: "Mymensingh Polytechnic Institute",
-      period: "Graduated 2026",
-      status: "Completed",
-      details: "Comprehensive foundation in computer networking, data structures, algorithms, microprocessor hardware, and systems programming."
-    }
-  ];
-
+  // Dynamic Contact helpers from database
   const getDetail = (type: string, fallback: string) => {
     const item = data.contactDetails?.find((d) => d.type.toLowerCase().includes(type.toLowerCase()));
     return item ? item.value : fallback;
@@ -75,7 +71,7 @@ export const AboutModal: React.FC = () => {
             />
             <div>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff', letterSpacing: '0.5px' }}>
-                ABOUT THE DEVELOPER
+                {data.about_info_heading || 'INFORMATION ABOUT ME'}
               </h2>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                 System Architecture & Network Engineering Dossier
@@ -89,7 +85,7 @@ export const AboutModal: React.FC = () => {
 
         {/* Body */}
         <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-          {/* Standard Premium Profile Card */}
+          {/* Dynamic Hero Profile Card */}
           <div
             className="glass-panel"
             style={{
@@ -103,7 +99,7 @@ export const AboutModal: React.FC = () => {
               gap: '16px'
             }}
           >
-            {/* Top Row: Avatar + Headline Block */}
+            {/* Top Row: Dynamic Portrait + Heading + Subheading */}
             <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
               {/* Profile Image with Cyber Border */}
               <div
@@ -121,7 +117,7 @@ export const AboutModal: React.FC = () => {
               >
                 <img
                   src={profileImage}
-                  alt="MD. Kaium Hasan"
+                  alt="Profile"
                   style={{
                     width: '100%',
                     height: '100%',
@@ -135,7 +131,7 @@ export const AboutModal: React.FC = () => {
                 />
               </div>
 
-              {/* Title & Badges */}
+              {/* Title & Status */}
               <div style={{ flex: '1 1 340px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                   <div
@@ -151,7 +147,7 @@ export const AboutModal: React.FC = () => {
                   >
                     <Sparkles size={12} color="#00e5ff" />
                     <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600, letterSpacing: '0.3px' }}>
-                      Enterprise Fullstack Developer & CCNA Network Engineer
+                      {data.about_info_heading || 'INFORMATION ABOUT ME'}
                     </span>
                   </div>
 
@@ -176,27 +172,33 @@ export const AboutModal: React.FC = () => {
                       }}
                     />
                     <span style={{ fontSize: '11px', color: data.available_for_work !== false ? '#6ee7b7' : '#fca5a5', fontWeight: 600 }}>
-                      {data.available_for_work !== false ? 'Available for Remote & Relocation' : 'Currently Engaged'}
+                      {data.available_for_work !== false ? 'Available for Work' : 'Currently Engaged'}
                     </span>
                   </div>
                 </div>
 
-                <h1 style={{ fontSize: '21px', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.3px', lineHeight: 1.3, margin: 0 }}>
-                  Engineering Resilient Software Platforms & High-Capacity Network Infrastructure
+                {/* Main Heading dynamically from data.home_heading */}
+                <h1 style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.3px', lineHeight: 1.35, margin: 0 }}>
+                  {renderAccentText(data.home_heading || "Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.")}
                 </h1>
 
-                <p style={{ color: '#38bdf8', fontSize: '12.5px', fontWeight: 600, margin: 0 }}>
-                  MD. Kaium Hasan • Fullstack & Systems // CCNA Certified
-                </p>
+                {/* Subheading dynamically from data.home_subheading */}
+                {data.home_subheading && (
+                  <p style={{ color: '#94a3b8', fontSize: '13px', lineHeight: '1.5', margin: 0 }}>
+                    {data.home_subheading}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* Bio Narrative */}
-            <p style={{ fontSize: '13.5px', lineHeight: '1.65', color: '#cbd5e1', margin: 0 }}>
-              {bioText}
-            </p>
+            {/* Detailed About Narrative from data.about_info_text */}
+            {data.about_info_text && (
+              <p style={{ fontSize: '13.5px', lineHeight: '1.65', color: '#cbd5e1', margin: 0 }}>
+                {data.about_info_text}
+              </p>
+            )}
 
-            {/* Quick Contact Chips */}
+            {/* Quick Contact Chips from data.contactDetails */}
             <div
               style={{
                 display: 'flex',
@@ -228,40 +230,10 @@ export const AboutModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Key Metric Stats Grid (Dynamic from Database) */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-            {statsList.map((stat, idx) => (
-              <div
-                key={idx}
-                className="glass-panel"
-                style={{
-                  padding: '16px 20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                  background: 'rgba(15, 23, 42, 0.65)',
-                  border: '1px solid rgba(56, 189, 248, 0.2)',
-                  borderRadius: '12px'
-                }}
-              >
-                <span style={{ fontSize: '24px', fontWeight: 800, color: '#38bdf8', fontFamily: 'var(--font-heading)' }}>
-                  {stat.heading}
-                </span>
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#f8fafc' }}>
-                  {stat.description}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Education & Academic Rigor */}
-          <div>
-            <h3 style={{ fontSize: '15px', color: '#ffffff', fontFamily: 'var(--font-heading)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <GraduationCap size={18} color="#38bdf8" />
-              ACADEMIC FOUNDATION
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {education.map((edu, idx) => (
+          {/* Key Metric Stats Grid (Dynamic from Admin Panel / DB) */}
+          {data.stats && data.stats.length > 0 && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+              {data.stats.map((stat, idx) => (
                 <div
                   key={idx}
                   className="glass-panel"
@@ -269,34 +241,60 @@ export const AboutModal: React.FC = () => {
                     padding: '16px 20px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '6px',
-                    background: 'rgba(15, 23, 42, 0.5)',
+                    gap: '4px',
+                    background: 'rgba(15, 23, 42, 0.65)',
+                    border: '1px solid rgba(56, 189, 248, 0.2)',
                     borderRadius: '12px'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '6px' }}>
-                    <div>
-                      <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', margin: 0 }}>{edu.degree}</h4>
-                      <p style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 500, margin: '2px 0 0 0' }}>{edu.institution}</p>
-                    </div>
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        padding: '3px 8px',
-                        borderRadius: '12px',
-                        background: edu.status === 'Completed' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(56, 189, 248, 0.2)',
-                        color: edu.status === 'Completed' ? '#34d399' : '#38bdf8',
-                        fontWeight: 600
-                      }}
-                    >
-                      {edu.period} • {edu.status}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>{edu.details}</p>
+                  <span style={{ fontSize: '20px', fontWeight: 800, color: '#38bdf8', fontFamily: 'var(--font-heading)' }}>
+                    {stat.heading}
+                  </span>
+                  <span style={{ fontSize: '12.5px', fontWeight: 600, color: '#f8fafc' }}>
+                    {stat.description}
+                  </span>
                 </div>
               ))}
             </div>
-          </div>
+          )}
+
+          {/* Activities / Extra Curricular from Admin Panel / DB */}
+          {data.activities && data.activities.length > 0 && (
+            <div>
+              <h3 style={{ fontSize: '15px', color: '#ffffff', fontFamily: 'var(--font-heading)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={18} color="#38bdf8" />
+                EXTRA CURRICULAR ACTIVITIES
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+                {data.activities.map((act, idx) => (
+                  <div
+                    key={idx}
+                    className="glass-panel"
+                    style={{
+                      padding: '16px',
+                      display: 'flex',
+                      gap: '12px',
+                      background: 'rgba(15, 23, 42, 0.5)',
+                      borderRadius: '12px',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {act.imageUrl && (
+                      <img
+                        src={act.imageUrl}
+                        alt={act.title}
+                        style={{ width: '60px', height: '60px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
+                      />
+                    )}
+                    <div>
+                      <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', margin: 0 }}>{act.title}</h4>
+                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0', lineHeight: '1.4' }}>{act.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Action Row */}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', paddingTop: '4px' }}>
