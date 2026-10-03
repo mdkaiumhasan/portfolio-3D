@@ -1941,22 +1941,9 @@ function handleEnter3D() {
     }
 
     if (isModal) {
-        const btnText = document.querySelector('.btn-floating-3d .btn-text');
-        if (btnText) btnText.textContent = 'Return to 3D World';
-
-        window.handleEnter3D = function() {
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({ type: 'CLOSE_PANEL' }, '*');
-                return;
-            }
-            const url = new URL(window.location.href);
-            url.searchParams.delete('view');
-            url.searchParams.delete('station');
-            url.searchParams.delete('panel');
-            url.pathname = '/';
-            if (window.top) window.top.location.href = url.toString();
-            else window.location.href = url.toString();
-        };
+        const modalStyle = document.createElement('style');
+        modalStyle.innerHTML = '.top-floating-bar { display: none !important; } #main-nav, .nav-menu { display: none !important; } main#main-content { padding-right: 0 !important; }';
+        document.head.appendChild(modalStyle);
 
         window.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
