@@ -40,10 +40,6 @@ scratch/
 # Root models folder (redundant, assets served via public/models)
 /models/
 
-# Large 3D Models (> 100MB, served via GitHub Releases / CDN)
-public/models/after_the_rain_2k.glb
-models/after_the_rain_2k.glb
-
 # Unused/duplicate model versions (saves ~900MB)
 models/*converted*
 public/models/*converted*
