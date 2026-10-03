@@ -11,36 +11,31 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const { progress, active } = useProgress();
   const [minTimerDone, setMinTimerDone] = useState(false);
-  const [displayProgress, setDisplayProgress] = useState(15);
+  const [nearComplete, setNearComplete] = useState(false);
   const { setMode, setAudioEnabled } = useGameStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setMinTimerDone(true);
-    }, 800);
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
-  // Smoothly increment and prevent stalling at 96%
+  // When assets reach 96%+, allow up to 2 seconds for final GPU buffer upload before considering ready
   useEffect(() => {
-    // If three.js progress reaches 88% or above, accelerate to 100%
-    const target = progress >= 88 ? 100 : Math.max(displayProgress, Math.round(progress));
-    setDisplayProgress((prev) => Math.max(prev, target));
+    if (progress >= 96) {
+      const finishTimer = setTimeout(() => {
+        setNearComplete(true);
+      }, 2000);
+      return () => clearTimeout(finishTimer);
+    }
   }, [progress]);
 
-  // Safety fallback timer so it never stays loading forever
-  useEffect(() => {
-    const safetyTimer = setTimeout(() => {
-      setDisplayProgress(100);
-      setMinTimerDone(true);
-    }, 2500);
-    return () => clearTimeout(safetyTimer);
-  }, []);
-
-  const isReady = (displayProgress >= 100 || !active) && minTimerDone;
+  const isReady = (progress >= 100 || !active || nearComplete) && minTimerDone;
+  const displayProgress = isReady ? 100 : Math.min(99, Math.max(15, Math.round(progress)));
 
   const statusText = !isReady
-    ? `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
+    ? `DOWNLOADING & PREPARING 3D ASSETS (${displayProgress}%)...`
     : 'SYSTEM READY // WORLD GENERATED';
 
   const handleEnterWorld = (enableAudio: boolean) => {
