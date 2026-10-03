@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="oyz9EWj9FOGLOR3BjjZw7AP0MfPGV3Tf1y9q5OBp71U" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- === PROFESSIONAL SEO & SOCIAL MEDIA META TAGS === -->
+
+<!-- 1. Google Search & Basic SEO -->
+
+<meta name="description" content="MD. Kaium Hasan, a skilled Network Engineer based in Bangladesh, specializing in Cisco, CCNA, VMware, MikroTik, Windows Server, Linux Server, and network security. View projects, experience,Robotics and blog.">
+<meta name="keywords" content="Network Engineer, Network Engineer, MD. Kaium Hasan, Cisco, CCNA, VMware, Network Security, Firewall, Routing, Switching, Network Blog, MikroTik, Windows Server, Linux Server, Bangladesh">
+<meta name="author" content="MD. Kaium Hasan">
+<meta name="robots" content="index, follow">
+<!-- Eti Google ke bolbe je ei URL ta-i ashol (duplicate na) -->
+<link rel="canonical" href="https://www.mdkaiumhasan.site/">
+
+<!-- 2. Social Media Share (Open Graph - Facebook, WhatsApp, LinkedIn) -->
+
+<meta property="og:title" content="MD. Kaium Hasan - Expert Network Engineer">
+<meta property="og:description" content="Skilled Network Engineer specializing in CCNA, MikroTik, Windows Server, Linux Server and network security. View my portfolio and blog.">
+<meta property="og:image" content="https://files.catbox.moe/zle99b.png">
+<meta property="og:url" content="https://www.mdkaiumhasan.site/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+
+<!-- 3. Twitter Card -->
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MD. Kaium Hasan - Expert Network Engineer">
+<meta name="twitter:description" content="Skilled Network Engineer specializing in CCNA, MikroTik, Windows Server, Linux Server and network security. View my portfolio and blog.">
+<meta name="twitter:image" content="https://files.catbox.moe/zle99b.png">
+<!-- Optional: Jodi apnar twitter account thake -->
+<meta name="twitter:creator" content="@mdkaium2005">
+
+<!-- === END OF SEO TAGS === -->
+
+    <title>MD. Kaium Hasan - Network Engineer</title>
+    <!-- === FAVICON (Website Icon) === -->
+<link rel="icon" type="image/png" href="https://files.catbox.moe/jfuo0s.png">
+<link rel="apple-touch-icon" href="https://files.catbox.moe/jfuo0s.png">
+<!-- === END FAVICON === -->
+
+    
+<script src="https://cdn.tailwindcss.com"></script>
+
+    
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- --- FIX: Added Inter font for loader --- -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+
+    <style>
+        /* Custom CSS variables for theme colors */
+        :root {
+            --accent-color: #ec407a; /* Pink for Light Mode */
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --bg-secondary: #f3f4f6;
+            --border-color: #e5e7eb;
+            --text-secondary: #6b7280;
+        }
+
+        html.dark {
+            --accent-color: #28a745; /* Green for Dark Mode */
+            --bg-color: #212529;
+            --text-color: #f8f9fa;
+            --bg-secondary: #343a40;
+            --border-color: #495057;
+            --text-secondary: #adb5bd;
+        }
+
+        /* --- FIX: Added global smooth scroll --- */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Body styles */
+        body {
+            /* --- FIX: Changed font to Poppins, Inter will be used by loader --- */
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Helper classes for accent colors */
+        .text-accent { color: var(--accent-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+
+        /* Custom button style */
+        .btn-custom {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 1rem; border: 2px solid var(--accent-color);
+            border-radius: 9999px; color: var(--text-color); font-weight: 600;
+            text-decoration: none; transition: all 0.3s ease; cursor: pointer;
+            margin-left: 1rem;
+        }
+        /* --- FIX: Reverted to space-between --- */
+        .form-buttons-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .form-buttons-container > .btn-custom { margin-left: 0; margin-bottom: 0.5rem; }
+        /* --- FIX: Added rule to push submit button right --- */
+        .form-buttons-container > button.btn-custom { margin-left: auto; }
+
+        /* --- FIX: Added hover fill effect --- */
+        .btn-custom:hover { 
+            background-color: var(--accent-color); 
+            color: white; 
+        }
+        html.dark .btn-custom:hover { 
+            color: #212529; /* Dark text on green button */
+        }
+        /* --- END FIX --- */
+
+        .btn-custom .btn-icon {
+            margin-left: 0.5rem; background-color: var(--accent-color); color: white;
+            border-radius: 50%; width: 28px; height: 28px; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 0.875rem;
+        }
+        html.dark .btn-custom { color: var(--text-color); }
+        /* html.dark .btn-custom:hover { color: #212529; } */ /* Removed by FIX */
+        html.dark .btn-custom .btn-icon { color: #212529; }
+
+        /* Navigation */
+        .nav-menu { position: fixed; top: 50%; right: 1.5rem; transform: translateY(-50%); z-index: 50; transition: opacity 0.3s ease; }
+        .nav-link {
+            width: 48px; height: 48px; margin-bottom: 0.75rem; border-radius: 50%;
+            background-color: var(--bg-secondary); color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+            transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .nav-link:hover { background-color: var(--accent-color); color: white; }
+        html.dark .nav-link:hover { color: #212529; }
+        .nav-link.active { background-color: var(--accent-color); color: white; }
+        html.dark .nav-link.active { color: #212529; }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed; top: 1.5rem; right: 1.5rem; width: 48px; height: 48px;
+            border-radius: 50%; background-color: var(--bg-secondary); color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+            cursor: pointer; z-index: 50; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: opacity 0.3s ease;
+        }
+
+        /* Section Title */
+        .section-title {
+            position: relative; font-size: 3rem; font-weight: 900; margin-bottom: 3rem;
+            text-align: center; text-transform: uppercase;
+        }
+        .section-title span { color: var(--accent-color); }
+        .section-title-bg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 6rem; font-weight: 900; color: var(--text-color); opacity: 0.05;
+            z-index: -1; width: 100%; text-align: center; text-transform: uppercase; letter-spacing: 2px;
+        }
+        html.dark .section-title-bg { opacity: 0.07; }
+
+        /* Box Hover Animation */
+        .stat-box, .timeline-item, .portfolio-item, .blog-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .stat-box:hover, .timeline-item:hover, .portfolio-item:hover, .blog-item:hover {
+            transform: translateY(-6px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+            border-color: var(--accent-color);
+        }
+        html.dark .stat-box:hover, html.dark .timeline-item:hover,
+        html.dark .portfolio-item:hover, html.dark .blog-item:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* --- Home Section Image Frame (Reworked based on last reference) --- */
+        .home-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+            max-height: 800px; /* Max height to control on larger screens */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Important to contain pseudo-elements */
+            box-sizing: border-box; /* Include padding in width/height */
+            padding: 0;
+            background-color: transparent; /* Ensure no default background */
+        }
+
+        /* Left Green Bar (using --accent-color) */
+        .home-img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 35%; /* Wider left bar as per reference */
+            height: 100%;
+            background-color: var(--accent-color); /* Green in dark, pink in light */
+            z-index: 1; /* Behind the image */
+            /* Aggressive clip-path for the modern diagonal cut */
+            clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%); /* Adjusted for more diagonal cut */
+        }
+
+        /* Right Dark Blue Bar (using --bg-secondary for dark mode) */
+        html.dark .home-img-wrapper::after { /* Apply only in dark mode */
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 35%; /* Wider right bar as per reference */
+            height: 100%;
+            background-color: var(--bg-secondary); /* Darker background color for contrast */
+            z-index: 1; /* Behind the image */
+            /* Aggressive clip-path for the modern diagonal cut */
+            clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%); /* Adjusted for more diagonal cut */
+        }
+        
+        /* Right Dark Blue Bar (using specific dark color for light mode) */
+        html:not(.dark) .home-img-wrapper::after { /* Apply only in light mode */
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 35%; /* Wider right bar as per reference */
+            height: 100%;
+            background-color: #343a40; /* Specific dark color for light mode right bar */
+            z-index: 1; /* Behind the image */
+            /* Aggressive clip-path for the modern diagonal cut */
+            clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%); /* Adjusted for more diagonal cut */
+        }
+
+
+        .home-img-wrapper .home-profile-image {
+            position: relative;
+            z-index: 2; /* Image on top of the bars */
+            width: 60%; /* Adjust image width to fit the frame */
+            height: 80%; /* Adjust image height to fit the frame */
+            max-width: 400px; /* Max width for the image */
+            max-height: 600px; /* Max height for the image */
+            object-fit: cover;
+            border-radius: 0; /* No border-radius */
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+            box-shadow: none; /* No shadow */
+
+            /* Add a white border around the image */
+            border: 8px solid white; /* Adjust thickness as needed */
+        }
+
+        html.dark .home-img-wrapper .home-profile-image {
+             border: 8px solid #212529; /* Dark border in dark mode */
+        }
+
+
+        .home-img-wrapper .home-profile-image:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Responsive adjustments for the image wrapper and pseudo-elements */
+        @media (max-width: 768px) {
+            .home-img-wrapper {
+                height: 50vh; /* Adjust height for mobile */
+            }
+            .home-img-wrapper::before {
+                width: 30%; /* Smaller left bar on mobile */
+                clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+            }
+            .home-img-wrapper::after {
+                width: 30%; /* Smaller right bar on mobile */
+                clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%);
+            }
+            .home-img-wrapper .home-profile-image {
+                width: 70%; /* Adjust image width for mobile */
+                height: 70%; /* Adjust image height for mobile */
+                border: 5px solid white; /* Smaller border on mobile */
+            }
+            html.dark .home-img-wrapper .home-profile-image {
+                 border: 5px solid #212529; /* Smaller dark border on mobile */
+            }
+        }
+        /* --- END Home Section Image Frame --- */
+
+
+        /* About Section Stats Box */
+        .stat-box {
+            background-color: transparent; border: 1.2px solid var(--border-color);
+            padding: 2rem; border-radius: 1rem; min-height: 202px; display: flex;
+            flex-direction: column; justify-content: center;
+        }
+        
+        html.dark .stat-box { background-color: var(--bg-secondary); }
+        .stat-box h3 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem); font-weight: 700; color: var(--accent-color);
+            line-height: 1.2; /* এই লাইনটি দরকার */
+            word-break: break-word; /* এই লাইনটিও দরকার */
+            margin-bottom: 0.5rem; transition: all 0.3s ease;
+        }
+        .stat-box p { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* Skills Section Progress Bar */
+        .skill-bar-bg {
+            width: 100%; height: 8px; background-color: var(--border-color);
+            border-radius: 4px; overflow: hidden;
+        }
+        .skill-bar-inner {
+            height: 100%; width: 0; background-color: var(--accent-color);
+            border-radius: 4px; transition: width 2s ease-out; /* Speed slowed from 1.5s to 2s */
+        }
+
+        /* Timeline Section */
+        .timeline-item {
+            position: relative; background-color: transparent; border: 1.2px solid var(--border-color);
+            border-radius: 1rem; overflow: hidden;
+        }
+        html.dark .timeline-item { background-color: var(--bg-secondary); }
+        .timeline-item-content { padding: 1.5rem; padding-left: 2.5rem; }
+        .timeline-img-container {
+            position: relative; display: block;
+            border-top-left-radius: calc(1rem - 1.2px); border-top-right-radius: calc(1rem - 1.2px);
+            overflow: hidden;
+        }
+        .timeline-icon {
+            position: absolute; top: 1.5rem; left: -20px; width: 40px; height: 40px;
+            background-color: var(--accent-color); color: #212529; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+        }
+        .timeline-date {
+            font-size: 0.875rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.5rem;
+            padding: 0.25rem 0.75rem; border: 1px solid var(--border-color);
+            border-radius: 9999px; display: inline-block;
+        }
+        .timeline-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+
+        /* Portfolio Section */
+        .portfolio-item {
+            background-color: var(--bg-color); border-radius: 0.5rem; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 0.6px solid var(--border-color);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        html.dark .portfolio-item { background-color: var(--bg-secondary); }
+        .portfolio-item img { transition: transform 0.4s ease; filter: grayscale(100%); }
+        .portfolio-item:hover img { transform: scale(1.1); filter: grayscale(0%); }
+        .portfolio-content { padding: 1.5rem; }
+        .portfolio-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color); }
+        .portfolio-details { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
+        .portfolio-details strong { color: var(--text-color); font-weight: 600; }
+        .btn-view-project {
+            display: inline-block; padding: 0.5rem 1rem; background-color: transparent;
+            border: 2px solid var(--accent-color); color: var(--accent-color); border-radius: 9999px;
+            font-weight: 600; font-size: 0.875rem; text-align: center; transition: all 0.3s ease;
+            cursor: pointer; margin: 0 1.5rem 1.5rem 1.5rem;
+        }
+        .btn-view-project:hover { background-color: var(--accent-color); color: white; }
+        html.dark .btn-view-project:hover { color: #212529; }
+
+        /* Blog Section */
+        .blog-item {
+            background-color: var(--bg-color); border-radius: 0.5rem; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 0.6px solid var(--border-color);
+            display: flex; flex-direction: column; /* Ensure content stacks */
+        }
+        html.dark .blog-item { background-color: var(--bg-secondary); }
+        .blog-item img { filter: grayscale(100%); transition: filter 0.3s ease, transform 0.3s ease; }
+        .blog-item:hover img { filter: grayscale(0%); transform: scale(1.1); }
+        .blog-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; } /* Grow to fill space */
+        .blog-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .blog-title a { color: var(--text-color); text-decoration: none; cursor: pointer; transition: color 0.3s ease; }
+        .blog-title a:hover { color: var(--accent-color); }
+        .blog-meta { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        .blog-description { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; flex-grow: 1; } /* Grow description */
+        .blog-read-more { /* New style for Read More */
+            margin-top: 1rem; /* Space above the link */
+            font-weight: 600;
+            color: var(--accent-color);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            align-self: flex-start; /* Align link to the start */
+        }
+        .blog-read-more:hover {
+            color: var(--text-color);
+        }
+        html.dark .blog-read-more:hover {
+           color: #f8f9fa; /* Lighter hover in dark mode */
+        }
+
+
+        /* Contact Form */
+        .form-input, .form-textarea {
+            width: 100%; padding: 1rem; border: 2px solid var(--border-color);
+            background-color: var(--bg-secondary); border-radius: 1rem; color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--accent-color); }
+        .contact-info-item { display: flex; align-items: center; margin-bottom: 1.5rem; }
+        .contact-info-icon {
+            width: 48px; height: 48px; background-color: var(--bg-secondary); color: var(--accent-color);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; margin-right: 1rem;
+        }
+        .social-icon {
+            width: 40px; height: 40px; background-color: var(--bg-secondary); color: var(--text-secondary);
+            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; margin-right: 0.5rem; transition: all 0.3s ease;
+        }
+        .social-icon:hover { background-color: var(--accent-color); color: white; }
+        html.dark .social-icon:hover { color: #212529; }
+
+        /* Section Navigation Animation */
+        @keyframes fadeInSection {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-fade-in { animation: fadeInSection 0.5s ease-out forwards; }
+
+        /* Detail Page Common Styles */
+        .detail-page-view {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color); z-index: 100; overflow-y: auto; padding: 2rem;
+            animation: fadeInSection 0.4s ease-out;
+        }
+        .detail-page-container { max-width: 900px; margin: 0 auto; padding-top: 5rem; }
+        .detail-page-title { font-size: 2.5rem; font-weight: 700; color: var(--text-color); margin-bottom: 2rem; }
+        .detail-page-header img {
+            width: 100%; max-height: 450px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 2rem;
+        }
+        .detail-page-content p, .detail-page-content div { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem; }
+        .detail-page-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin-top: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* Back Button */
+        #detail-view-back-btn {
+            position: fixed; top: 1.5rem; left: 1.5rem; width: 48px; height: 48px; border-radius: 50%;
+            background-color: var(--bg-secondary); color: var(--text-secondary); display: flex;
+            align-items: center; justify-content: center; font-size: 1.25rem; cursor: pointer;
+            z-index: 110; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #detail-view-back-btn:hover { background-color: var(--accent-color); color: white; }
+        html.dark #detail-view-back-btn:hover { color: #212529; }
+
+        /* Loading Indicator */
+        #loading-indicator { display: none !important;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            /* --- FIX: Use body background --- */
+            background-color: var(--bg-color); 
+            font-size: 1.5rem; color: var(--accent-color); z-index: 200;
+            font-family: 'Inter', sans-serif;
+        }
+        .hidden { display: none !important; }
+
+        /* --- FIX: Added Modern Scroll Animation Classes --- */
+        /* Initial state for elements to be animated on scroll */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            /* Slower transition for a more "premium" feel */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        /* Class added by JS when element is in view */
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* --- END FIX --- */
+
+        /* --- FIX: Added styles for Admin-generated HTML content --- */
+        /* Ei CSS gulo admin panel theke asa content ke style korbe (jemon headings, lists) */
+        .admin-html-content h1,
+        .admin-html-content h2,
+        .admin-html-content h3,
+        .admin-html-content h4,
+        .admin-html-content h5,
+        .admin-html-content h6 {
+            font-weight: 700;
+            color: var(--text-color);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        .admin-html-content h1 { font-size: 2.25rem; }
+        .admin-html-content h2 { font-size: 2rem; }
+        .admin-html-content h3 { font-size: 1.75rem; }
+        .admin-html-content h4 { font-size: 1.5rem; }
+        .admin-html-content h5 { font-size: 1.25rem; }
+        .admin-html-content h6 { font-size: 1rem; }
+
+        .admin-html-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .admin-html-content ul,
+        .admin-html-content ol {
+            margin-bottom: 1.5rem;
+            margin-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+        .admin-html-content ul {
+            list-style-type: disc;
+        }
+        .admin-html-content ol {
+            list-style-type: decimal;
+        }
+        .admin-html-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-html-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .admin-html-content th,
+        .admin-html-content td {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .admin-html-content th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .admin-html-content tr:nth-child(even) {
+            background-color: var(--bg-secondary);
+        }
+        html.dark .admin-html-content tr:nth-child(even) {
+            background-color: rgba(0,0,0,0.1);
+        }
+        
+        .admin-html-content a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        .admin-html-content a:hover {
+            color: var(--text-color);
+        }
+        html.dark .admin-html-content a:hover {
+             color: #f8f9fa;
+        }
+
+        .admin-html-content strong,
+        .admin-html-content b {
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .admin-html-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        /* --- END FIX --- */
+
+        /* --- FIX: Added Loader Animation CSS --- */
+        @keyframes node-pulse {
+            0%, 100% { filter: drop-shadow(0 0 4px var(--accent-color)); }
+            50% { filter: drop-shadow(0 0 10px var(--accent-color)); }
+        }
+        @keyframes wireless-wave {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        @keyframes file-send-arc {
+            0% { 
+                transform: translate(-100px, 0px) scale(0.8); /* Start near Server (Left) */
+                opacity: 0; 
+            } 
+            5% { opacity: 1; }
+            50% { 
+                transform: translate(0px, 0px) scale(1.1); /* Middle point */
+                opacity: 1; 
+            }
+            95% { 
+                transform: translate(100px, 0px) scale(0.8); /* End near PC (Right) */
+                opacity: 0; 
+            }
+            100% { 
+                transform: translate(-100px, 0px) scale(0.8); 
+                opacity: 0; /* Reset for next loop */
+            }
+        }
+        .loader-container {
+            position: relative;
+            width: 300px; 
+            height: 120px; 
+            display: flex;
+            flex-direction: row; 
+            justify-content: space-between;
+            align-items: center;
+            /* Added blur background for dark mode */
+            background-color: rgba(33, 37, 41, 0.9); /* var(--bg-color) dark, with alpha */
+            backdrop-filter: blur(4px);
+            padding: 0 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(40, 167, 69, 0.2); /* Green border (dark) */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        html:not(.dark) .loader-container {
+            /* Light mode background */
+            background-color: rgba(243, 244, 246, 0.9); /* var(--bg-secondary) light, with alpha */
+             border: 1px solid rgba(236, 64, 122, 0.2); /* Pink border */
+        }
+
+        .icon-wrapper {
+            position: relative;
+            width: 48px; 
+            height: 48px;
+            color: var(--accent-color); /* Use theme accent color */
+            animation: node-pulse 1.5s infinite alternate;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .server-icon-wrapper {
+            width: 40px; 
+            height: 70px; 
+        }
+
+        .wireless-path {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px; 
+            height: 100px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wireless-wave {
+            position: absolute;
+            border: 1px solid var(--accent-color); /* Use theme accent color */
+            border-radius: 50%;
+            opacity: 0;
+            animation: wireless-wave 2s infinite ease-out;
+        }
+
+        .wave-1 { width: 40px; height: 40px; animation-delay: 0s; }
+        .wave-2 { width: 60px; height: 60px; animation-delay: 0.5s; }
+        .wave-3 { width: 80px; height: 80px; animation-delay: 1s; }
+
+        .file-icon {
+            width: 28px; 
+            height: 28px;
+            position: absolute;
+            z-index: 20;
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            filter: drop-shadow(0 0 5px var(--accent-color)); /* Use theme accent color */
+            animation: file-send-arc 1s linear infinite; 
+        }
+
+        .file-icon svg path:nth-child(1) {
+            /* FIX: Use theme background color for fill */
+            fill: var(--bg-color); 
+            stroke: var(--accent-color); /* Use theme accent color */
+            stroke-width: 2;
+        }
+        .file-icon svg path:nth-child(2) {
+            fill: var(--accent-color); /* Use theme accent color */
+            stroke: var(--accent-color); /* Use theme accent color */
+            stroke-width: 1.5;
+        }
+        /* --- END FIX --- */
+
+    </style>
+
+<script>
+    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skills":[{"percent":95,"name":"ROUTING"},{"name":"SWITCHING","percent":95},{"name":"CONFIGURE","percent":90},{"name":"FIREWALL","percent":80},{"percent":75,"name":"C++"},{"percent":80,"name":"PYTHON"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://i.imgur.com/1dVmLEu.jpeg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"></script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"},{"fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>","category":"Web Design","imageUrl":"https://placehold.co/600x400/333/fff?text=Blog+Post+2","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://ik.imagekit.io/rp0mjzf41/portfolio/home/zle99b_k52_Xk_Ta.png","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://files.catbox.moe/f1wk8c.webp"},{"imageUrl":"https://files.catbox.moe/cz183c.PNG","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"imageUrl":"https://files.catbox.moe/qx0vri.jpg","shortDesc":"This app is a simple account management tool for mess Manager & Members. Easily track deposit, expenses, dues, and monthly reports.","technology":"JavaScript, CSS, HTML, Firebase, Android Studio","fullDetails":"<h2>How to Download & use the App?</h2>\n<p>First, click the <strong>Download App</strong> button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n</p>\n\n<!-- Shothik Image Link Button -->\n<p>\n  <a href=\"https://files.catbox.moe/zrgptp.zip\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n<!-- Image Link Button Shesh -->\n<h2>Manager Mode</h2>\n<p>As soon as you open the app, you will see two options:</p>\n<ul>\n  <strong><li> Manager</li></strong>\n  <strong><li>Member</li></strong>\n</ul>\n\n<p>To use the app as a Manager, first select the mode and sign up. Then, log in to your account. Once logged in, you’ll enter your Manager Dashboard.</p>\n <img src=\"https://files.catbox.moe/w0gg6m.png\">\n<p>From here, tap the “+” icon from the Member section to add new members. Next, go to the three-line (hamburger) menu, where you’ll find the following settings options:\n<ul>\n  <strong><li>Change App Name</li></strong>\n  <strong><li>Bind Code</li></strong>\n  <strong><li>Change Password</li></strong>\n  <strong><li>View Previous Reports</li></strong>\n  <strong><li>Support</li></strong>\n  <strong><li>Close Monthly Accounts</li></strong>\n</ul>\n<img src=\"https://files.catbox.moe/bwkjwl.png\">\n<p>From here, click on <strong>Bind Code</strong>, and you will get a code similar to an IPv4 address. Copy this code and share it with your members.</p>\n\n<h2>Member Mode</h2>\n<p>Once you select Member Mode, you’ll be asked to enter a Bind Code.\nPaste the Bind Code provided by your Manager and click Search. You’ll then see your Mess Name and a dropdown box below it. Click the dropdown, select your name, and click Enter. This will take you to the Member Dashboard. Here, you’ll find the options:\n<ul>\n  <strong><li>My Account</li></strong>\n  <strong><li>Everyone's Accounts</li></strong>\n  <strong><li>Market Request</li></strong>\n</ul>\n<p>From this section, you can view both your own and everyone’s accounts in the mess. If you spend your own money on market purchases, you can also <strong>submit a request to the Manager</strong> to add that expense.\n<h2>APP Features-Manager</h2>\n<p>The Manager only needs to add the members’ names, their deposited amounts, meal counts, and market expenses. That’s it. The Manager’s job is done. The app will automatically handle all complex calculations and provide instant results.\nOn the Dashboard, you can accurately view every calculation, including:\n<ul>\n  <strong><li>Total Deposits</li></strong>\n  <strong><li>Total Expenses</li></strong>\n  <strong><li>Remaining Funds</li></strong>\n  <strong><li>Total Meals</li></strong>\n  <strong><li>Meal Rate</li></strong>\n  <strong><li>Each Member’s Deposit</li></strong>\n  <strong><li>Each Member’s Meal Count</li></strong>\n  <strong><li>How much each Member should receive or pay</li></strong>\n</ul>\n<p>In short, the app shows everything from A to Z instantly and accurately.</p>\n<p>You’ll find many more amazing features in this app! From the Manager Panel, when you click the Meal button, a calendar of the month will appear along with the days of the week. If there are no meals added on certain days, you’ll see two colored boxes <strong>Dark Red</strong> and <strong>Green.</strong>\nWhen a meal is added for a specific date, that date’s box will turn <strong>Yellow.</strong></p>\n<strong><p>Here’s what the color codes mean:</p></strong>\n<ul>\n  <strong><li>Dark Red – No meal recorded on this date</li></strong>\n  <strong><li>Green – Today’s date</li></strong>\n  <strong><li>Yello – Meal updated for this date</li></strong>\n</ul>\n\n<p>These color indicators help the Manager easily identify which days’ meals have been updated. If a meal update is missed, the red box will make it immediately clear which date was left out. The most exciting features of this app are the <strong>Monthly Account Close</strong> and <strong>Previous Report View</strong> options. Making mess management smarter and more organized than ever!</p>\n\n<p>Let’s say, in a month, Sadiq deposited 3000 BDT and his total expenses for the month were 2500 BDT, while Abid deposited 1500 BDT and his total expenses were 2200 BDT. At the end of the month, Sadiq will receive 500 BDT, and Abid will have a 700 BDT deficit. The Manager does not need to keep track of this separately. When the Manager closes the month, the app will automatically update these balances in the current month’s deposits: \nSadiq’s 500 BDT will be added to his deposit. Abid’s 700 BDT deficit will appear as a negative balance. Even if, by any chance, the Manager forgets to close the month, the app will automatically close the month on the 1st of the next month, update all members’ balances, and start the new month’s account seamlessly.</p>\n<p>And Manager can view previously closed month’s accounts by clicking on “View Previous Reports”.\nThis allows them to see the reports for the last 3 months.</p>\n<h4>Support</h4>\n<p>Under the Support option, you’ll find Mail, Instagram, Facebook, and Website.From now on, you can easily get app-related support directly via Mail or the Website.</p>\n\n<h2>APP Features-Member</h2>\n<p>From the Dashboard, when a member clicks on <strong>My Account</strong>, they can view all their account details:</p>\n<ul>\n  <strong><li>Meal Rate</li></strong>\n  <strong><li>Total Meals</li></strong>\n  <strong><li>Total Expenses</li></strong>\n  <strong><li>Total Deposits</li></strong>\n  <strong><li>Remaining balance or amount they need to pay</li></strong>\n</ul>\n<p>Clicking on <strong>Total Meals</strong> will show the number of meals they had on each date of the month.</p>\n\n<p>Similarly, from the Dashboard, if they tap Everyone's Accounts, they can view everyone’s account details.\nClicking on Total Expenses will show what items the Manager purchased, when, and for how much.</p>\n\n<h4>Market Request</h4>\n<p>This is the most awesome feature in Member Mode! If, in the Manager’s absence, a member spends their own money for the mess:\n<ul>\n  <p><strong>1. </strong>They can enter the expense details and amount and tap Send.</p>\n  <p><strong>2. </strong>The request will be sent to the Manager, who will receive a notification in their app.</p>\n  <p><strong>3. </strong>A red dot will appear on the icon whenever a new notification arrives.</p>\n  <p><strong>4. </strong>The Manager can Approve or Decline the request.</p>\n</ul>\n<p>Once approved, the expense is automatically added to the mess’s total expenses, and the member’s amount is added to their deposit. No manual work is required at all. The app handles everything automatically.\n<h4>So Download and Enjoy the APP. Thank Me latter</h4>\n\n\n<!-- <h4>Technology Stack (Table):</h4>\n<table style=\"width:100%; border-collapse: collapse; border: 1px solid #495057;\">\n  <thead style=\"background-color: #343a40;\">\n    <tr>\n      <th style=\"padding: 10px; border: 1px solid #495057; text-align: left;\">Category</th>\n      <th style=\"padding: 10px; border: 1px solid #495057; text-align: left;\">Technology</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Frontend</td>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">HTML, TailwindCSS, JS</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Backend</td>\n      <td style=\"padding: 10px; border: 1px solid #495057;\">Firebase (Firestore)</td>\n    </tr>\n  </tbody>\n</table> --!>","role":"Developer","title":"Mess Management APP"},{"imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","role":"Administrator","technology":"NAT, VLAN, OSPF, ACL, DHCP...","fullDetails":"<img src=\"https://i.ibb.co.com/JRY977Rk/Screenshot-2026-01-04-235907.png\">\n<img src=\"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png\">\n<img src=\"https://i.ibb.co.com/bg3rbzrm/Screenshot-2026-01-04-232916.png\">\n\n","title":"Enterprise Network","shortDesc":"Building a Resilient Enterprise Network.\nDesigning a robust and scalable network for a 600-staff trading floor support center moving to a new, network-free building.\n\n"},{"shortDesc":"Ramadan Journey app is an your Real time Prayer Helper. Using this application you allways can be connect prayer and Allah Subhan-Wa-Ta'la.IT provide you the reminder of salah, set alarm for sahri and iftar. and contain so much cool feature instead.","role":"Developer","technology":"React.js, Android Studio","title":"Ramadan Journey","imageUrl":"https://files.catbox.moe/bcktxt.png","fullDetails":"<h2>How to Download & use the App?</h2>\n<p>First, click the <strong>Download App</strong> button below to download the app.Now unzip the downloaded file, then install and open the app on your phone.\n</p>\n\n<!-- Shothik Image Link Button -->\n<p>\n  <a href=\"https://files.catbox.moe/3juat0.zip\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n\n<p>After Finidhed download you will get a zip file, name <b>3juat0</b>. Unzip and open the file. Now you can see the app <b>Ramadan Journey</b>. install app and use.\n</p>\n\n\n<p>\n  <a href=\"https://files.catbox.moe/b5bgv1.apk\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://files.catbox.moe/zknv5g.png\" alt=\"App Download Button\" style=\"width: 154px; height: 35px; border: 0; margin-top: 1rem; margin-bottom: 1rem;\">\n  </a>\n</p>\n\n<p>After Finidhed download you will get a zip file, name <b>3juat0</b>. Unzip and open the file. Now you can see the app <b>Ramadan Journey</b>. install app and use.\n</p>\n"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"description":"Covering Network, Parameter Security and Virtualisation.","date":"2019 - PRESENT","imageUrl":"https://ik.imagekit.io/rp0mjzf41/portfolio/timeline/20230826_152307_S--62kZPx.jpg","title":"SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"},{"description":"Worked closely with Platform team for new networks provisioning, routing and firewall policy management.","title":"SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD","imageUrl":"https://placehold.co/600x400/b8860b/ffffff?text=FNZ+(UK)+LTD","date":"2018 – 2019"},{"date":"","description":"","imageUrl":"","title":""}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf"};
+    
+    // Auto-initialize instantly with cached clean data
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof updatePortfolioContent === 'function') {
+            updatePortfolioContent(INITIAL_PORTFOLIO_DATA);
+            const indicator = document.getElementById('loading-indicator');
+            if (indicator) indicator.classList.add('hidden');
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) mainContent.classList.remove('hidden');
+            const mainNav = document.getElementById('main-nav');
+            if (mainNav) mainNav.classList.remove('hidden');
+        }
+    });
+</script>
+
+</head>
+<body class="relative">
+
+<!-- Floating Switch to 3D World Button -->
+<div style="position: fixed; top: 1.25rem; left: 1.5rem; z-index: 100;">
+    <button onclick="handleEnter3D()" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 9999px; background: rgba(15, 23, 42, 0.9); color: #38bdf8; border: 1.5px solid #38bdf8; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35); backdrop-filter: blur(12px); transition: all 0.2s ease;">
+        <span style="font-size: 16px;">🎮</span>
+        <span>Enter 3D Interactive World</span>
+    </button>
+</div>
+<script>
+function handleEnter3D() {
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'ENTER_3D' }, '*');
+    }
+    // Also change URL search param or redirect
+    const url = new URL(window.location.href);
+    url.searchParams.delete('view');
+    url.pathname = '/';
+    if (window.top) window.top.location.href = url.toString();
+    else window.location.href = url.toString();
+}
+</script>
+
+
+    
+<div id="loading-indicator">
+        <!-- --- FIX: Replaced old loader with new animation --- -->
+        <div class="loader-container">
+            
+            <!-- Server Icon (LEFT) -->
+            <div class="icon-wrapper server-icon-wrapper" title="Server">
+                <!-- Realistic Server Rack Icon -->
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="4" width="18" height="16" rx="1"/> 
+                    <line x1="3" y1="7" x2="21" y2="7" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="3" y1="13" x2="21" y2="13" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="3" y1="16" x2="21" y2="16" stroke="currentColor" stroke-width="1.5"/>
+                    <line x1="3" y1="19" x2="21" y2="19" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="5" cy="5.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="7.5" cy="5.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="10" cy="5.5" r="0.7" fill="currentColor" stroke="none"/>
+                    <circle cx="5" cy="8.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="7.5" cy="8.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="10" cy="8.5" r="0.7" fill="currentColor" stroke="none"/>
+                    <circle cx="5" cy="11.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="7.5" cy="11.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="10" cy="11.5" r="0.7" fill="currentColor" stroke="none"/>
+                    <circle cx="5" cy="14.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="7.5" cy="14.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="10" cy="14.5" r="0.7" fill="currentColor" stroke="none"/>
+                    <circle cx="5" cy="17.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="7.5" cy="17.5" r="0.7" fill="currentColor" stroke="none"/> <circle cx="10" cy="17.5" r="0.7" fill="currentColor" stroke="none"/>
+                </svg>
+            </div>
+
+            <!-- Wireless Path Visuals -->
+            <div class="wireless-path">
+                <div class="wireless-wave wave-1"></div>
+                <div class="wireless-wave wave-2"></div>
+                <div class="wireless-wave wave-3"></div>
+            </div>
+
+            <!-- Animated File Icon (Server -> PC) -->
+            <div class="file-icon" title="Sending File">
+                <!-- Upgraded File Icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <!-- Main Body of the file -->
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                    <!-- Folded corner -->
+                    <path d="M14 2v6h6" stroke-linejoin="round"/>
+                </svg>
+            </div>
+
+            <!-- PC Icon (RIGHT) -->
+            <div class="icon-wrapper" title="PC">
+                <!-- Realistic PC Monitor Icon -->
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" class="p-0.5">
+                    <rect x="3" y="4" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M12 17v3M9 20h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+        <!-- --- END FIX --- -->
+    </div>
+
+    
+<button id="theme-toggle" class="theme-toggle">
+        <i id="moon-icon" class="fas fa-moon"></i>
+        <i id="sun-icon" class="fas fa-sun hidden"></i>
+    </button>
+
+    
+<button id="detail-view-back-btn" class="hidden" data-target-section="">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    
+<nav class="nav-menu hidden" id="main-nav">
+<a href="#home" class="nav-link active" data-nav-link> <i class="fas fa-home"></i> </a>
+        <a href="#about" class="nav-link" data-nav-link> <i class="fas fa-user"></i> </a>
+        <a href="#portfolio" class="nav-link" data-nav-link> <i class="fas fa-briefcase"></i> </a>
+        <a href="#timeline" class="nav-link" data-nav-link> <i class="fas fa-calendar-alt"></i> </a>
+        <a href="#blogs" class="nav-link" data-nav-link> <i class="fas fa-file-alt"></i> </a>
+        <a href="#contact" class="nav-link" data-nav-link> <i class="fas fa-envelope"></i> </a>
+    </nav>
+
+    
+<main class="pr-0 md:pr-24 hidden" id="main-content">
+<section id="home" class="main-section min-h-screen flex items-center px-6 md:px-16 py-16">
+            <div class="container mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-12">
+                    
+<div class="order-last md:order-first home-img-wrapper">
+                        
+<img id="home-profile-image" src="https://placehold.co/600x800/888/fff?text=Loading..."
+                             alt="MD. Kaium Hasan"
+                             class="home-profile-image"
+                             onerror="this.src='https://placehold.co/600x800/888/fff?text=Image+Not+Found'">
+                    </div>
+
+                    
+<div class="order-first md:order-last text-center md:text-left">
+                        <h1 id="home-heading" class="text-4xl md:text-6xl font-bold leading-tight mb-4">
+                            Hi, I'm.<span class="text-accent">MD. Kaium Hasan</span> A Network
+                            Engineer.
+                        </h1>
+                        <p id="home-subheading" class="text-lg text-secondary mb-8" style="color: var(--text-secondary);">
+                            I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and google maps etc..
+                        </p>
+                        <a id="home-cv-link" href="#" class="btn-custom">
+                            Download CV
+                            <span class="btn-icon"> <i class="fas fa-download"></i> </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+<section id="about" class="main-section min-h-screen px-6 md:px-16 py-24">
+            <div class="container mx-auto">
+                
+<h2 class="section-title">ABOUT <span class="text-accent">ME</span>
+                    <span class="section-title-bg">STATS</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    
+<div>
+                        <h3 id="about-info-heading" class="text-2xl font-bold mb-4">Loading...</h3>
+                        <p id="about-info-text" class="text-secondary mb-8 leading-relaxed" style="color: var(--text-secondary);">
+                            Loading information...
+                        </p>
+                        <a id="about-cv-link" href="#" class="btn-custom">
+                            Download CV
+                            <span class="btn-icon"> <i class="fas fa-download"></i> </span>
+                        </a>
+                    </div>
+
+                    
+<div id="stats-container" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        
+</div>
+                </div>
+
+                
+<div class="mt-24">
+                    <h2 class="section-title">MY <span class="text-accent">SKILLS</span>
+                        <span class="section-title-bg">SKILLS</span>
+                    </h2>
+                    <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                        
+</div>
+                </div>
+
+                
+<div class="mt-24">
+                    <h2 class="section-title">ACTIVITIES</span>
+                        <span class="section-title-bg">INTERESTS</span>
+                    </h2>
+                    <div id="activities-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                          
+</div>
+                </div>
+
+            </div>
+        </section>
+
+        
+<section id="portfolio" class="main-section min-h-screen px-6 md:px-16 py-24" style="background-color: var(--bg-secondary);">
+             <div class="container mx-auto">
+                <h2 class="section-title">MY <span class="text-accent">PORTFOLIO</span>
+                    <span class="section-title-bg">WORK</span>
+                </h2>
+
+                
+<p id="portfolio-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
+                    This Page Is Under Constuction!
+                </p>
+
+                <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+</div>
+            </div>
+          </section>
+
+        
+<section id="timeline" class="main-section min-h-screen px-6 md:px-16 py-24">
+             <div class="container mx-auto">
+                <h2 class="section-title">MY <span class="text-accent">TIMELINE</span>
+                    <span class="section-title-bg">EXPERIENCE</span>
+                </h2>
+
+                
+<p id="timeline-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
+                    This page is under Constuction!
+                </p>
+
+                <div id="timeline-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                    
+</div>
+            </div>
+          </section>
+
+        
+<section id="blogs" class="main-section min-h-screen px-6 md:px-16 py-24">
+             <div class="container mx-auto">
+                <h2 class="section-title">MY <span class="text-accent">BLOGS</span>
+                    <span class="section-title-bg">POSTS</span>
+                </h2>
+
+                
+<p id="blogs-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
+                    This Page Is Under Constuction!
+                </p>
+
+                <div id="blogs-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+</div>
+            </div>
+          </section>
+
+
+        
+<section id="contact" class="main-section min-h-screen px-6 md:px-16 py-24" style="background-color: var(--bg-secondary);">
+             <div class="container mx-auto">
+                <h2 class="section-title">CONTACT <span class="text-accent">ME</span>
+                    <span class="section-title-bg">CONTACT</span>
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    
+<div>
+                        <h3 id="contact-info-heading" class="text-2xl font-bold mb-4">Loading...</h3>
+                        <p id="contact-info-text" class="text-secondary mb-8 leading-relaxed" style="color: var(--text-secondary);">
+                            Loading information...
+                        </p>
+
+                        <div id="contact-details-container">
+                            
+</div>
+
+                        
+<div id="social-links-container" class="mt-8">
+                            
+</div>
+                    </div>
+
+                    
+<form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <input type="text" name="name" placeholder="YOUR NAME" class="form-input" required>
+                            <input type="email" name="email" placeholder="YOUR EMAIL" class="form-input" required>
+                        </div>
+                        <div>
+                            <input type="text" name="subject" placeholder="ENTER SUBJECT" class="form-input" required>
+                        </div>
+                        <div>
+                            <textarea name="message" placeholder="Message Here..." rows="6" class="form-textarea" required></textarea>
+                        </div>
+                        <div class="text-left form-buttons-container">
+                            <!-- --- FIX: Moved Download CV button back here (Left) --- -->
+                            <a id="contact-cv-link" href="#" class="btn-custom mb-4 sm:mb-0">
+                                Download CV
+                                <span class="btn-icon"> <i class="fas fa-download"></i> </span>
+                            </a>
+                            
+                            <!-- Send Message Button (Right) -->
+                            <button type="submit" class="btn-custom mb-4 sm:mb-0">
+                                Send Message 
+                                <span class="btn-icon"> <i class="fas fa-paper-plane"></i> </span>
+                            </button>
+                            
+                        </div>
+                        <div id="form-status" class="mt-4 text-center hidden"></div>
+                    </form>
+                </div>
+            </div>
+          </section>
+
+    </main>
+
+    
+<section id="project-detail-view" class="detail-page-view hidden">
+        <div class="detail-page-container">
+            <h2 id="project-detail-title" class="detail-page-title"></h2>
+            <div class="detail-page-header">
+                <img id="project-detail-image" src="" alt="Project Image"
+                     onerror="this.src='https://placehold.co/800x500/888/fff?text=Image+Not+Found'">
+            </div>
+            <!-- FIX: Added admin-html-content class -->
+            <div class="detail-page-content admin-html-content">
+                <div id="project-detail-details"> </div>
+            </div>
+        </div>
+    </section>
+
+    
+<section id="blog-detail-view" class="detail-page-view hidden">
+        <div class="detail-page-container">
+            <h2 id="blog-detail-title" class="detail-page-title"></h2>
+            <div class="detail-page-header">
+                <img id="blog-detail-image" src="" alt="Blog Post Image"
+                     onerror="this.src='https://placehold.co/800x500/888/fff?text=Image+Not+Found'">
+            </div>
+            <!-- FIX: Added admin-html-content class -->
+            <div class="detail-page-content admin-html-content">
+                <div id="blog-detail-content"> </div>
+            </div>
+        </div>
+    </section>
+
+    
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        // --- CHANGE: Removed Auth related imports ---
+        // import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, collection, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
+
+        // --- Firebase Configuration ---
+        let firebaseConfig;
+        try {
+            // Try to parse the config provided globally by the environment
+            firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+             if (!firebaseConfig.apiKey) {
+                 // Fallback to the user-provided config if global one is invalid/missing
+                 console.warn("Global Firebase config not found or invalid. Using user-provided config.");
+                 firebaseConfig = {
+                     apiKey: "AIzaSyBp3evowk04wo2EcPz_W5rMZqknQ7YTnIo", // USER PROVIDED
+                     authDomain: "portfolio-networking.firebaseapp.com", // USER PROVIDED
+                     projectId: "portfolio-networking", // USER PROVIDED
+                     storageBucket: "portfolio-networking.firebasestorage.app", // USER PROVIDED
+                     messagingSenderId: "1047423131909", // USER PROVIDED
+                     appId: "1:1047423131909:web:d628b1d10871e60522976c", // USER PROVIDED
+                     measurementId: "G-TX9QVHBB4M" // USER PROVIDED
+                 };
+             }
+        } catch (e) {
+             console.error("Error parsing Firebase config:", e);
+             // Use user-provided as a last resort if parsing fails
+             firebaseConfig = {
+                 apiKey: "AIzaSyBp3evowk04wo2EcPz_W5rMZqknQ7YTnIo", // USER PROVIDED
+                 authDomain: "portfolio-networking.firebaseapp.com", // USER PROVIDED
+                 projectId: "portfolio-networking", // USER PROVIDED
+                 storageBucket: "portfolio-networking.firebasestorage.app", // USER PROVIDED
+                 messagingSenderId: "1047423131909", // USER PROVIDED
+                 appId: "1:1047423131909:web:d628b1d10871e60522976c", // USER PROVIDED
+                 measurementId: "G-TX9QVHBB4M" // USER PROVIDED
+             };
+        }
+
+        // --- App ID Configuration ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId; // Use projectId as fallback
+
+        // --- Initialize Firebase ---
+        let app;
+        let db;
+        // --- CHANGE: Removed auth variable ---
+        // let auth;
+        let analytics;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            // --- CHANGE: Removed auth initialization ---
+            // auth = getAuth(app);
+            analytics = getAnalytics(app);
+            // Enable Firestore logging for debugging
+            // setLogLevel('debug');
+            console.log("Firebase Initialized Successfully.");
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+            displayError("Could not connect to the backend. Please refresh the page.");
+            // Hide loading indicator on init failure
+            document.getElementById('loading-indicator')?.classList.add('hidden');
+        }
+
+        // --- DOM Elements ---
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const mainContent = document.getElementById('main-content');
+        const mainNav = document.getElementById('main-nav');
+        // Section Containers
+        const statsContainer = document.getElementById('stats-container');
+        const skillsContainer = document.getElementById('skills-container');
+        const activitiesContainer = document.getElementById('activities-container');
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        const timelineGrid = document.getElementById('timeline-grid');
+        const blogsGrid = document.getElementById('blogs-grid');
+        const contactDetailsContainer = document.getElementById('contact-details-container');
+        const socialLinksContainer = document.getElementById('social-links-container');
+        // Construction Messages
+        const portfolioConstructionMsg = document.getElementById('portfolio-construction-message');
+        const timelineConstructionMsg = document.getElementById('timeline-construction-message');
+        const blogsConstructionMsg = document.getElementById('blogs-construction-message');
+        // Contact Form
+        const contactForm = document.getElementById('contact-form');
+        const formStatus = document.getElementById('form-status');
+
+        // --- CHANGE: Removed Authentication Block ---
+       
+        // --- CHANGE: Load Data Immediately ---
+        // We call setupRealtimeListener directly since auth is no longer needed.
+        if (db) { // Check if db was initialized successfully
+             console.log("Database initialized. Loading data...");
+             setupRealtimeListener();
+        } else {
+            console.error("Database not initialized. Cannot load data.");
+            if(loadingIndicator) loadingIndicator.classList.add('hidden');
+        }
+
+
+        // --- Realtime Data Listener ---
+        // Instant bootstrap with cached clean data
+  updatePortfolioContent(INITIAL_PORTFOLIO_DATA);
+  const loadingIndicatorEl = document.getElementById('loading-indicator');
+  if (loadingIndicatorEl) loadingIndicatorEl.classList.add('hidden');
+  const mainContentEl = document.getElementById('main-content');
+  if (mainContentEl) mainContentEl.classList.remove('hidden');
+  const mainNavEl = document.getElementById('main-nav');
+  if (mainNavEl) mainNavEl.classList.remove('hidden');
+
+  function setupRealtimeListener() {
+            // Assuming data is stored in a single document for simplicity
+            // Adjust the path if you use multiple documents or collections
+            // Public data path: /artifacts/{appId}/public/data/portfolioContent
+            const docRef = doc(db, `artifacts/${appId}/public/data/portfolioContent`, 'main');
+            console.log(`Listening for changes on: artifacts/${appId}/public/data/portfolioContent/main`);
+
+            const unsubscribe = onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    console.log("Data received from Firestore.");
+                    const data = docSnap.data();
+                    updatePortfolioContent(data);
+                    // Hide loading and show content after first successful load
+                    if (loadingIndicator && !loadingIndicator.classList.contains('hidden')) {
+                        loadingIndicator.classList.add('hidden');
+                        mainContent.classList.remove('hidden');
+                        mainNav.classList.remove('hidden');
+                    }
+                } else {
+                    console.warn("Portfolio data document does not exist!");
+                    displayError("Portfolio content not found. Please set it up in the admin panel.");
+                    loadingIndicator?.classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Error fetching portfolio data:", error);
+                // --- ADDED CHECK: Check for permission denied error ---
+                if (error.code === 'permission-denied') {
+                     console.error("Firestore Permission Denied. Make sure your security rules allow public read access to 'artifacts/{appId}/public/data/portfolioContent/main'.");
+                     displayError("Error: Could not access portfolio data. (Permission Denied)");
+                } else {
+                     displayError("Error loading portfolio content. Please try again later.");
+                }
+                loadingIndicator?.classList.add('hidden');
+            });
+
+            // Consider unsubscribing when the page unloads (optional)
+            // window.addEventListener('beforeunload', () => unsubscribe());
+        }
+
+        // --- Update Portfolio Content ---
+        function updatePortfolioContent(data) {
+            // Helper to safely get data or default
+            const get = (key, defaultValue = '') => data?.[key] ?? defaultValue;
+
+            // 1. Home Section
+            // --- FIX: Uncommented home heading update ---
+            document.getElementById('home-heading').innerHTML = sanitizeHTML(get('home_heading', 'Your Name - Your Title'));
+            // --- END FIX ---
+            document.getElementById('home-subheading').textContent = get('home_subheading', "I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and google maps etc..");
+            document.getElementById('home-cv-link').href = get('home_cv_link', '#');
+            const homeProfileImg = document.getElementById('home-profile-image');
+            if (homeProfileImg) homeProfileImg.src = get('home_profile_image', 'https://placehold.co/600x800/888/fff?text=Profile');
+
+            // 2. About Section
+            document.getElementById('about-info-heading').textContent = get('about_info_heading', 'Loading...');
+            document.getElementById('about-info-text').textContent = get('about_info_text', 'Loading information...');
+            document.getElementById('about-cv-link').href = get('about_cv_link', '#');
+
+            // Stats
+            renderStats(get('stats', []));
+
+            // Skills
+            renderSkills(get('skills', []));
+
+            // Activities
+            renderActivities(get('activities', []));
+
+            // 3. Portfolio Section
+            portfolioConstructionMsg.classList.toggle('hidden', !get('portfolio__showConstructionMessage', false));
+            renderPortfolio(get('projects', []));
+
+            // 4. Timeline Section
+            timelineConstructionMsg.classList.toggle('hidden', !get('timeline__showConstructionMessage', false));
+            renderTimeline(get('experiences', []));
+
+            // 5. Blogs Section
+            blogsConstructionMsg.classList.toggle('hidden', !get('blogs__showConstructionMessage', false));
+            renderBlogs(get('posts', []));
+
+            // 6. Contact Section
+            document.getElementById('contact-info-heading').textContent = get('contact_info_heading', 'Loading...');
+            document.getElementById('contact-info-text').textContent = get('contact_info_text', 'Loading information...');
+            document.getElementById('contact-cv-link').href = get('contact_cv_link', '#');
+            renderContactDetails(get('contactDetails', []));
+            renderSocialLinks(get('socialLinks', []));
+        }
+
+        // --- Rendering Functions ---
+
+        function renderStats(stats = []) {
+            if (!statsContainer) return;
+            statsContainer.innerHTML = ''; // Clear previous
+            stats.forEach(stat => {
+                const statDiv = document.createElement('div');
+                statDiv.className = 'stat-box';
+                // --- FIX: Use textContent for safety ---
+                statDiv.innerHTML = `
+                    <h3></h3>
+                    <p></p>
+                `;
+                statDiv.querySelector('h3').textContent = stat.heading || 'N/A';
+                statDiv.querySelector('p').textContent = stat.description || '';
+                // --- END FIX ---
+                statsContainer.appendChild(statDiv);
+            });
+        }
+
+        function renderSkills(skills = []) {
+            if (!skillsContainer) return;
+            skillsContainer.innerHTML = ''; // Clear previous
+            skills.forEach(skill => {
+                const skillDiv = document.createElement('div');
+                skillDiv.className = 'skill-item';
+                const percentage = Math.max(0, Math.min(100, parseInt(skill.percent || 0, 10)));
+                // --- FIX: Use textContent for safety ---
+                skillDiv.innerHTML = `
+                    <div class="flex justify-between mb-1">
+                        <span class="font-semibold text-lg"></span>
+                        <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">%</span>
+                    </div>
+                    <div class="skill-bar-bg">
+                        <div class="skill-bar-inner" data-percent="${percentage}%"></div>
+                    </div>
+                `;
+                skillDiv.querySelector('.font-semibold.text-lg').textContent = skill.name || 'Skill';
+                skillDiv.querySelector('.font-semibold.text-lg.text-secondary').textContent = `${percentage}%`;
+                // --- END FIX ---
+                skillsContainer.appendChild(skillDiv);
+            });
+            // Re-trigger animation if needed (or do it on scroll) - simple immediate trigger here
+            /* REMOVED: setTimeout block that triggered animation on load.
+               Animation is now handled by IntersectionObserver in the non-module script.
+            */
+        }
+
+        function renderActivities(activities = []) {
+            if (!activitiesContainer) return;
+            activitiesContainer.innerHTML = '';
+            activities.forEach(activity => {
+                const activityDiv = document.createElement('div');
+                activityDiv.className = 'blog-item'; // Reuse blog item style for consistency
+                // --- FIX: Use textContent/setAttribute and DOMPurify ---
+                const safeDescription = sanitizeHTML(activity.description || 'Activity description.');
+                activityDiv.innerHTML = `
+                    <div class="relative overflow-hidden rounded-t-lg">
+                        <img src="" alt="" class="w-full h-64 object-cover" loading="lazy">
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title"></h3>
+                        <!-- FIX: Added admin-html-content class -->
+                        <div class="blog-description admin-html-content" style="color: var(--text-secondary);">
+                            <!-- Sanitized HTML will be inserted here -->
+                        </div>
+                    </div>
+                `;
+                const img = activityDiv.querySelector('img');
+                img.src = activity.imageUrl || 'https://placehold.co/600x400/ccc/eee?text=Activity';
+                img.alt = activity.title || 'Activity Image';
+                
+                activityDiv.querySelector('.blog-title').textContent = activity.title || 'Activity Title';
+                activityDiv.querySelector('.blog-description').innerHTML = safeDescription;
+                // --- END FIX ---
+                activitiesContainer.appendChild(activityDiv);
+            });
+        }
+
+        function renderPortfolio(projects = []) {
+            if (!portfolioGrid) return;
+            portfolioGrid.innerHTML = ''; // Clear previous
+            projects.forEach(project => {
+                const projectDiv = document.createElement('div');
+                projectDiv.className = 'portfolio-item';
+                // --- FIX: Sanitize fullDetails with DOMPurify ---
+                const safeFullDetails = sanitizeHTML(project.fullDetails || '');
+                // --- END FIX ---
+                
+                // --- FIX: Use textContent for safety, add bold Description ---
+                projectDiv.innerHTML = `
+                    <div>
+                        <div class="relative overflow-hidden rounded-t-lg">
+                            <img src="" alt="" class="w-full h-64 object-cover" loading="lazy">
+                        </div>
+                        <div class="portfolio-content">
+                            <h3 class="portfolio-title"></h3>
+                            <p class="portfolio-details">
+                                <!-- Content will be built here -->
+                            </p>
+                        </div>
+                    </div>
+                    <button class="btn-view-project open-project-btn">
+                        View Project
+                    </button>
+                `;
+                
+                const img = projectDiv.querySelector('img');
+                img.src = project.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Project';
+                img.alt = project.title || 'Portfolio Item';
+
+                projectDiv.querySelector('.portfolio-title').textContent = project.title || 'Project Title';
+                
+                const detailsP = projectDiv.querySelector('.portfolio-details');
+                detailsP.innerHTML = ''; // Clear it first
+                if (project.role) {
+                    detailsP.innerHTML += `<strong>Role:</strong> ${escapeHTML(project.role)}<br>`;
+                }
+                if (project.technology) {
+                    detailsP.innerHTML += `<strong>Technology:</strong> ${escapeHTML(project.technology)}<br>`;
+                }
+                if (project.shortDesc) {
+                    // This is the fix you requested
+                    detailsP.innerHTML += `<strong>Description:</strong> ${escapeHTML(project.shortDesc)}`;
+                }
+
+                const button = projectDiv.querySelector('button');
+                button.setAttribute('data-project-image', project.imageUrl || 'https://placehold.co/800x500/eee/ccc?text=Project');
+                button.setAttribute('data-project-title', project.title || 'Project Details');
+                // --- SHOTHIK FIX: Removed .replace(/"/g, '&quot;') ---
+                button.setAttribute('data-project-details', safeFullDetails);
+                // --- END FIX ---
+
+                portfolioGrid.appendChild(projectDiv);
+            });
+        }
+
+        function renderTimeline(experiences = []) {
+             if (!timelineGrid) return;
+             timelineGrid.innerHTML = ''; // Clear previous
+             const column1 = document.createElement('div');
+             column1.className = 'space-y-8';
+             const column2 = document.createElement('div');
+             column2.className = 'space-y-8 md:mt-16'; // Add stagger effect
+
+             experiences.forEach((exp, index) => {
+                  const expDiv = document.createElement('div');
+                  expDiv.className = 'timeline-item';
+                  // --- FIX: Use textContent/setAttribute and DOMPurify ---
+                  const safeDescription = sanitizeHTML(exp.description || '');
+                  expDiv.innerHTML = `
+                       <div class="timeline-icon"><i class="fas fa-briefcase"></i></div>
+                       <div class="timeline-img-container">
+                            <img src="" alt="" class="w-full h-64 object-cover transition-transform duration-300 ease-in-out hover:scale-110">
+                       </div>
+                       <div class="timeline-item-content">
+                           <span class="timeline-date"></span>
+                           <h3 class="timeline-title"></h3>
+                           <!-- FIX: Added admin-html-content class -->
+                           <div class="text-secondary admin-html-content" style="color: var(--text-secondary);">
+                               <!-- Sanitized HTML will be inserted here -->
+                           </div>
+                       </div>
+                  `;
+                  
+                  const img = expDiv.querySelector('img');
+                  img.src = exp.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Experience';
+                  img.alt = exp.title || 'Experience Image';
+                  
+                  expDiv.querySelector('.timeline-date').textContent = exp.date || 'Date Range';
+                  expDiv.querySelector('.timeline-title').textContent = exp.title || 'Job Title';
+                  expDiv.querySelector('.text-secondary.admin-html-content').innerHTML = safeDescription;
+                  // --- END FIX ---
+
+                  if (index % 2 === 0) {
+                      column1.appendChild(expDiv);
+                  } else {
+                      column2.appendChild(expDiv);
+                  }
+             });
+             timelineGrid.appendChild(column1);
+             timelineGrid.appendChild(column2);
+        }
+
+        function renderBlogs(posts = []) {
+            if (!blogsGrid) return;
+            blogsGrid.innerHTML = ''; // Clear previous
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'blog-item';
+                // --- FIX: Sanitize HTML content with DOMPurify ---
+                const safeFullContent = sanitizeHTML(post.fullContent || '<p>No content available.</p>');
+                // --- END FIX ---
+                
+                // --- SHOTHIK FIX: Standardized setAttribute ---
+                postDiv.innerHTML = `
+                    <div class="relative overflow-hidden rounded-t-lg">
+                        <img src="" alt="" class="w-full h-65 object-cover" loading="lazy" onerror="this.src='https://placehold.co/600x400/eee/ccc?text=Error'">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span></span> | <span></span>
+                        </div>
+                        <h3 class="blog-title">
+                            <a href="#" class="open-blog-btn"> 
+                                <!-- Title here -->
+                            </a>
+                        </h3>
+                        <p class="blog-description" style="color: var(--text-secondary);"></p>
+                        <a href="#" class="blog-read-more open-blog-btn">
+                           Read More <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                `;
+
+                const img = postDiv.querySelector('img');
+                img.src = post.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Blog';
+                img.alt = post.title || 'Blog Post';
+
+                const metaSpans = postDiv.querySelectorAll('.blog-meta span');
+                metaSpans[0].textContent = post.date || '';
+                metaSpans[1].textContent = post.category || 'General';
+                
+                const titleLink = postDiv.querySelector('.blog-title a');
+                titleLink.textContent = post.title || 'Blog Post Title';
+
+                postDiv.querySelector('.blog-description').textContent = post.shortDesc || '';
+                
+                // Set data attributes using setAttribute (safer)
+                const safeImageData = post.imageUrl || 'https://placehold.co/800x500/eee/ccc?text=Blog';
+                const safeTitleData = post.title || 'Blog Post Details';
+
+                postDiv.querySelectorAll('.open-blog-btn').forEach(link => {
+                    link.setAttribute('data-blog-image', safeImageData);
+                    link.setAttribute('data-blog-title', safeTitleData);
+                    link.setAttribute('data-blog-content', safeFullContent); // Use raw sanitized string
+                });
+                // --- END FIX ---
+
+                blogsGrid.appendChild(postDiv);
+            });
+        }
+
+
+        function renderContactDetails(details = []) {
+            if (!contactDetailsContainer) return;
+            contactDetailsContainer.innerHTML = ''; // Clear previous
+            details.forEach(detail => {
+                const detailDiv = document.createElement('div');
+                detailDiv.className = 'contact-info-item';
+                // Simple icon mapping (can be expanded)
+                let iconClass = 'fas fa-info-circle'; // Default icon
+                const typeLower = (detail.type || '').toLowerCase();
+                if (typeLower.includes('location') || typeLower.includes('address')) iconClass = 'fas fa-map-marker-alt';
+                else if (typeLower.includes('email')) iconClass = 'fas fa-envelope';
+                else if (typeLower.includes('phone') || typeLower.includes('number')) iconClass = 'fas fa-phone-alt';
+                else if (typeLower.includes('language')) iconClass = 'fas fa-language';
+
+                // --- FIX: Use textContent for safety ---
+                detailDiv.innerHTML = `
+                    <div class="contact-info-icon"><i class="${iconClass}"></i></div>
+                    <div>
+                        <h4 class="font-semibold"></h4>
+                        <p class="text-secondary" style="color: var(--text-secondary);"></p>
+                    </div>
+                `;
+                detailDiv.querySelector('h4').textContent = detail.type || 'Detail';
+                detailDiv.querySelector('p').textContent = detail.value || '';
+                // --- END FIX ---
+                contactDetailsContainer.appendChild(detailDiv);
+            });
+        }
+
+        function renderSocialLinks(links = []) {
+             if (!socialLinksContainer) return;
+             socialLinksContainer.innerHTML = ''; // Clear previous
+             const platformToIcon = {
+                 'twitter': 'fab fa-twitter',
+                 'github': 'fab fa-github',
+                 'linkedin': 'fab fa-linkedin-in', // Use -in for branded icon
+                 'facebook': 'fab fa-facebook-f',
+                 'instagram': 'fab fa-instagram',
+                 'youtube': 'fab fa-youtube',
+                 'gitlab': 'fab fa-gitlab',
+                 'medium': 'fab fa-medium-m',
+                 'dribbble': 'fab fa-dribbble',
+                 // Add more mappings as needed
+             };
+             links.forEach(link => {
+                  const platform = (link.platform || '').toLowerCase().trim();
+                  const url = link.url || '#';
+                  const iconClass = platformToIcon[platform] || 'fas fa-link'; // Default link icon
+
+                  const linkA = document.createElement('a');
+                  linkA.href = escapeHTML(url); // --- FIX: Escape URL ---
+                  linkA.target = "_blank"; // Open social links in new tab
+                  linkA.rel = "noopener noreferrer"; // Security best practice
+                  linkA.className = 'social-icon';
+                  linkA.setAttribute('aria-label', `Visit my ${platform} profile`); // Accessibility
+                  linkA.innerHTML = `<i class="${iconClass}"></i>`;
+                  socialLinksContainer.appendChild(linkA);
+             });
+        }
+
+        // --- Contact Form Submission ---
+        contactForm?.addEventListener('submit', async function(e) {
+             e.preventDefault();
+             if (!formStatus) return;
+
+             // --- SECURITY WARNING ---
+             // This form is writing directly to Firestore from the client.
+             // You MUST have Firestore Security Rules set up to prevent abuse.
+             // e.g., allow create: if request.resource.data.body.size() < 1000;
+             // This prevents bots from spamming your database.
+             // --- END WARNING ---
+
+             formStatus.textContent = 'Sending...';
+             formStatus.className = 'mt-4 text-center text-blue-600 dark:text-blue-400';
+             formStatus.classList.remove('hidden');
+             const submitButton = contactForm.querySelector('button[type="submit"]');
+             if(submitButton) submitButton.disabled = true;
+
+             const formData = {
+                  fromName: contactForm.name.value,
+                  fromEmail: contactForm.email.value,
+                  subject: contactForm.subject.value,
+                  body: contactForm.message.value,
+                  timestamp: serverTimestamp() // Add server timestamp
+             };
+
+             try {
+                  // Save to a 'messages' collection - path: /artifacts/{appId}/public/data/messages
+                  const messagesColRef = collection(db, `artifacts/${appId}/public/data/messages`);
+                  await addDoc(messagesColRef, formData);
+
+                  formStatus.textContent = 'Message sent successfully!';
+                  formStatus.className = 'mt-4 text-center text-green-600 dark:text-green-400';
+                  contactForm.reset();
+             } catch (error) {
+                  console.error("Error sending message:", error);
+                  formStatus.textContent = 'Failed to send message. Please try again later.';
+                  formStatus.className = 'mt-4 text-center text-red-600 dark:text-red-400';
+             } finally {
+                  if(submitButton) submitButton.disabled = false;
+                  setTimeout(() => formStatus.classList.add('hidden'), 5000);
+             }
+        });
+
+        // --- Utility Functions ---
+        
+        // --- SHOTHIK FIX: 'a', 'href', 'rel' ADD KORA HOLO ---
+        function sanitizeHTML(str) {
+            if (typeof DOMPurify === 'undefined') {
+                console.warn("DOMPurify not loaded. Falling back to basic text escaping.");
+                return escapeHTML(str);
+            }
+            // Allow more tags and attributes for rich content
+            return DOMPurify.sanitize(str, {
+                ADD_TAGS: ['iframe', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'span', 'img', 'a'],
+                ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'src', 'style', 'width', 'height', 'alt', 'target', 'href', 'rel'] // Allow style for colors, etc.
+            });
+        }
+        // --- END FIX ---
+
+        function escapeHTML(str) {
+             if (!str) return '';
+             // Basic escaping for text content
+             return String(str)
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+
+        function displayError(message) {
+            // Simple error display (can be improved)
+            const errorDiv = document.createElement('div');
+            errorDiv.style.position = 'fixed';
+            errorDiv.style.top = '10px';
+            errorDiv.style.left = '50%';
+            errorDiv.style.transform = 'translateX(-50%)';
+            errorDiv.style.backgroundColor = 'var(--accent-color)'; // Use accent for error
+            errorDiv.style.color = 'white';
+            errorDiv.style.padding = '1rem';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.zIndex = '1000';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+            // Optionally remove after some time
+            // setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // --- Initial Setup Calls ---
+        // Firebase initialization happens at the top level
+        // Auth state change triggers data loading
+
+    </script>
+    <script>
+        // Separate script for non-module JS (Theme, Navigation, Detail Views)
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const html = document.documentElement;
+
+            const mainContent = document.getElementById('main-content');
+            const mainNav = document.getElementById('main-nav');
+            const projectDetailView = document.getElementById('project-detail-view');
+            const blogDetailView = document.getElementById('blog-detail-view');
+            const detailViewBackBtn = document.getElementById('detail-view-back-btn');
+
+            // Function to apply theme (duplicated for non-module scope)
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    html.classList.add('dark');
+                    if(sunIcon) sunIcon.classList.remove('hidden');
+                    if(moonIcon) moonIcon.classList.add('hidden');
+                } else {
+                    html.classList.remove('dark');
+                    if(sunIcon) sunIcon.classList.add('hidden');
+                    if(moonIcon) moonIcon.classList.remove('hidden');
+                }
+            }
+
+            // Theme handling logic
+            let savedTheme = localStorage.getItem('theme');
+            if (!savedTheme) {
+                savedTheme = 'dark'; // Default dark
+                localStorage.setItem('theme', savedTheme);
+            }
+            applyTheme(savedTheme);
+
+            themeToggleBtn?.addEventListener('click', () => {
+                const isDark = html.classList.toggle('dark');
+                const newTheme = isDark ? 'dark' : 'light';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+
+            const navLinks = document.querySelectorAll('[data-nav-link]');
+            const allSections = document.querySelectorAll('section.main-section');
+
+            function hideDetailViewsAndShowMain() {
+                projectDetailView?.classList.add('hidden');
+                blogDetailView?.classList.add('hidden');
+                detailViewBackBtn?.classList.add('hidden');
+
+                mainContent?.classList.remove('hidden');
+                mainNav?.classList.remove('hidden');
+                themeToggleBtn?.classList.remove('hidden');
+            }
+
+            // --- Navigation Logic ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideDetailViewsAndShowMain();
+
+                    const targetId = this.getAttribute('href');
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+                    allSections.forEach(s => s.classList.remove('section-fade-in'));
+
+                    if (targetId === '#home') {
+                        allSections.forEach(section => section.classList.remove('hidden'));
+                        // window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll handled by CSS
+                        window.scrollTo(0, 0);
+                    } else {
+                        allSections.forEach(section => {
+                            if (`#${section.id}` === targetId) {
+                                section.classList.remove('hidden');
+                                section.classList.add('section-fade-in');
+                            } else {
+                                section.classList.add('hidden');
+
+                            }
+                        });
+                        // window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll handled by CSS
+                        window.scrollTo(0, 0);
+                    }
+                });
+            });
+
+            // --- Active nav link on scroll ---
+            const sections = document.querySelectorAll('section.main-section');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.5 };
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    const isMainVisible = !mainContent?.classList.contains('hidden');
+                    const isProjectHidden = projectDetailView?.classList.contains('hidden');
+                    const isBlogHidden = blogDetailView?.classList.contains('hidden');
+
+                    if (entry.isIntersecting && isMainVisible && isProjectHidden && isBlogHidden) {
+                        const id = entry.target.getAttribute('id');
+                        const targetLink = document.querySelector(`[data-nav-link][href="#${id}"]`);
+                        if (targetLink && !targetLink.classList.contains('active')) {
+                            navLinks.forEach(link => link.classList.remove('active'));
+                            targetLink.classList.add('active');
+
+                        }
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => sectionObserver.observe(section));
+
+            // --- Skills Animation on Scroll (ADDED) ---
+            const skillsContainerForObserver = document.getElementById('skills-container');
+            if (skillsContainerForObserver) {
+                const skillObserverOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.3 // Trigger when 30% is visible
+                };
+
+                const skillObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        const skillBars = entry.target.querySelectorAll('.skill-bar-inner');
+                        if (entry.isIntersecting) {
+                            // User scroll kore ei section e asche
+                            skillBars.forEach(bar => {
+                                bar.style.width = bar.getAttribute('data-percent');
+                            });
+                            // --- FIX: Stop observing after animation ---
+                            observer.unobserve(entry.target);
+                        } 
+                        // --- FIX: Removed 'else' block to prevent reset ---
+                    });
+                }, skillObserverOptions);
+                
+                skillObserver.observe(skillsContainerForObserver);
+            }
+            // --- End of Skills Animation on Scroll ---
+
+
+            // --- FIX: Added Modern Scroll Animation (Fade-in on Scroll) ---
+            // Select all elements we want to animate
+            const animatedElements = document.querySelectorAll(
+                '.section-title, .stat-box, .skill-item, .portfolio-item, .timeline-item, .blog-item, .contact-info-item, .social-icon, .form-input, .form-textarea, .home-img-wrapper, #home-heading, #home-subheading, #home-cv-link, #about-info-heading, #about-info-text, #about-cv-link'
+            );
+
+            const scrollObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    // When the element is 10% visible
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Animate only once
+                    }
+                });
+            }, { threshold: 0.1 }); // Trigger when 10% visible
+
+            animatedElements.forEach(el => {
+                // Add the initial state class
+                el.classList.add('fade-in-up'); 
+                // Observe the element
+                scrollObserver.observe(el);
+            });
+            // --- END FIX ---
+
+
+            // --- Detail View Opening Logic (Using Event Delegation) ---
+            function openDetailView(targetView, backTargetSectionId, populateFunction) {
+                 populateFunction(); // Call the specific populate function
+
+                 mainContent?.classList.add('hidden');
+                 mainNav?.classList.add('hidden');
+                 themeToggleBtn?.classList.add('hidden');
+                 targetView?.classList.remove('hidden');
+                 detailViewBackBtn?.classList.remove('hidden');
+                 detailViewBackBtn?.setAttribute('data-target-section', backTargetSectionId);
+
+                 // window.scrollTo({ top: 0, behavior: 'smooth' }); // Smooth scroll handled by CSS
+                 window.scrollTo(0, 0);
+             }
+
+            // Project Detail Event Delegation
+            const portfolioGridDelegation = document.getElementById('portfolio-grid');
+            const projectDetailImage = document.getElementById('project-detail-image');
+            const projectDetailTitle = document.getElementById('project-detail-title');
+            const projectDetailDetails = document.getElementById('project-detail-details');
+
+            portfolioGridDelegation?.addEventListener('click', (e) => {
+                const button = e.target.closest('.open-project-btn');
+                if (button && projectDetailView && projectDetailImage && projectDetailTitle && projectDetailDetails) {
+                    const populateProject = () => {
+                         projectDetailImage.src = button.getAttribute('data-project-image') || '';
+                         projectDetailTitle.textContent = button.getAttribute('data-project-title') || '';
+                         // Directly set innerHTML for project details as it's pre-sanitized
+                         projectDetailDetails.innerHTML = button.getAttribute('data-project-details') || '';
+                    };
+                    openDetailView(projectDetailView, '#portfolio', populateProject);
+                }
+            });
+
+            // Blog Detail Event Delegation
+            const blogsGridDelegation = document.getElementById('blogs-grid');
+            const blogDetailImage = document.getElementById('blog-detail-image');
+            const blogDetailTitle = document.getElementById('blog-detail-title');
+            const blogDetailContent = document.getElementById('blog-detail-content');
+
+            blogsGridDelegation?.addEventListener('click', (e) => {
+                 const link = e.target.closest('.open-blog-btn'); // Use closest to target the link itself or its children
+                 if (link && blogDetailView && blogDetailImage && blogDetailTitle && blogDetailContent) {
+                       e.preventDefault(); // Prevent default link behavior
+                       const populateBlog = () => {
+                            blogDetailImage.src = link.getAttribute('data-blog-image') || '';
+                            blogDetailTitle.textContent = link.getAttribute('data-blog-title') || '';
+                            // Set innerHTML for blog content as it's pre-sanitized
+                            blogDetailContent.innerHTML = link.getAttribute('data-blog-content') || '';
+                       };
+                       openDetailView(blogDetailView, '#blogs', populateBlog);
+                 }
+            });
+
+             // --- Back Button Logic ---
+             detailViewBackBtn?.addEventListener('click', function() {
+                  const targetSectionId = this.getAttribute('data-target-section');
+                  hideDetailViewsAndShowMain();
+
+                  if (targetSectionId && targetSectionId !== '#home') {
+                         let sectionFound = false;
+                         allSections.forEach(section => {
+                              if (`#${section.id}` === targetSectionId) {
+                                  section.classList.remove('hidden');
+                                  sectionFound = true;
+                              } else {
+                                  section.classList.add('hidden');
+                              }
+                         });
+
+                         if (sectionFound) {
+                              navLinks.forEach(nl => nl.classList.remove('active'));
+                              const targetNavLink = document.querySelector(`a[href="${targetSectionId}"]`);
+                              if(targetNavLink) targetNavLink.classList.add('active');
+
+                              const targetSectionElement = document.querySelector(targetSectionId);
+                              if (targetSectionElement) {
+                                  setTimeout(() => {
+                                      //  window.scrollTo({ top: targetSectionElement.offsetTop - 30 , behavior: 'smooth'}); // Smooth scroll handled by CSS
+                                       window.scrollTo(0, targetSectionElement.offsetTop - 30);
+                                  }, 50);
+                              } else { window.scrollTo(0, 0); }
+                         } else { // Fallback to home if target section is invalid
+                              allSections.forEach(section => section.classList.remove('hidden'));
+                              navLinks.forEach(nl => nl.classList.remove('active'));
+                              document.querySelector('a[href="#home"]')?.classList.add('active');
+                              window.scrollTo(0, 0);
+                         }
+                  } else { // Default to home view
+                       allSections.forEach(section => section.classList.remove('hidden'));
+                       navLinks.forEach(nl => nl.classList.remove('active'));
+                       document.querySelector('a[href="#home"]')?.classList.add('active');
+                       window.scrollTo(0, 0);
+                  }
+             });
+
+
+        }); // End DOMContentLoaded for non-module script
+    </script>
+
+</body>
+</html>
