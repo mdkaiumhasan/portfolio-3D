@@ -26,7 +26,7 @@ export const RainParticles: React.FC = () => {
 
   const uniforms = useMemo(() => ({
     uTime: { value: 0 },
-    uPlayerPos: { value: new THREE.Vector3(0, 0, 32) },
+    uPlayerPos: { value: new THREE.Vector3(0, 0, 41) },
     uColor: { value: new THREE.Color('#cbd5e1') }
   }), []);
 

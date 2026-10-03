@@ -177,7 +177,7 @@ export const IronThrone: React.FC = () => {
   return (
     <group
       ref={groupRef}
-      position={[0, 0.48, 31.95]}
+      position={[0, 0.48, 40.95]}
       rotation={[0, Math.PI, 0]}
       scale={[0.72, 0.72, 0.72]}
     >

@@ -4,7 +4,7 @@ import { Project } from '../data/projects';
 import type { Octree } from 'three/examples/jsm/math/Octree.js';
 
 // Zero-latency 60FPS shared position reference for camera & particle tracking
-export const playerRealtimePos = { x: 0, y: 0, z: 32 };
+export const playerRealtimePos = { x: 0, y: 0, z: 41 };
 export const playerRealtimeHeading = { current: Math.PI };
 
 export type ActivePanel = 
@@ -234,7 +234,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   qualityTier: 'high',
   setQualityTier: (tier) => set({ qualityTier: tier }),
 
-  playerPosition: [0, 0, 32],
+  playerPosition: [0, 0, 41],
   setPlayerPosition: (playerPosition) => set({ playerPosition }),
   playerHeading: Math.PI,
   setPlayerHeading: (playerHeading) => set({ playerHeading }),
