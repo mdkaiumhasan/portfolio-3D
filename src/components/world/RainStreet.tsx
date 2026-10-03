@@ -226,35 +226,6 @@ const MapModel: React.FC = () => {
   );
 };
 
-// Procedural fallback environment if GLB is downloading or unsupported
-const ProceduralStreetFallback: React.FC = () => {
-  return (
-    <group>
-      {/* Wet Asphalt Street Ground */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-        <planeGeometry args={[18, 120]} />
-        <meshStandardMaterial
-          color="#0b0f19"
-          roughness={0.25}
-          metalness={0.65}
-        />
-      </mesh>
-
-      {/* Sidewalk Curb Left */}
-      <mesh position={[-7.5, 0.15, 0]}>
-        <boxGeometry args={[3, 0.3, 120]} />
-        <meshStandardMaterial color="#1e293b" roughness={0.7} />
-      </mesh>
-
-      {/* Sidewalk Curb Right */}
-      <mesh position={[7.5, 0.15, 0]}>
-        <boxGeometry args={[3, 0.3, 120]} />
-        <meshStandardMaterial color="#1e293b" roughness={0.7} />
-      </mesh>
-    </group>
-  );
-};
-
 const LANTERN_POSITIONS = [
   { z: 24, leftX: -4.4, rightX: 7.4 },
   { z: 10, leftX: -4.5, rightX: 7.2 },
@@ -272,10 +243,8 @@ const headMat = new THREE.MeshBasicMaterial({ color: '#fed7aa' });
 export const RainStreet: React.FC = () => {
   return (
     <group>
-      {/* GLB Map Model with Suspense Fallback */}
-      <Suspense fallback={<ProceduralStreetFallback />}>
-        <MapModel />
-      </Suspense>
+      {/* 2K Parisian Rain Street & Architectural Buildings */}
+      <MapModel />
 
       {/* Street Lighting Lantern Posts along curved sidewalks */}
       {LANTERN_POSITIONS.map((lp, idx) => (

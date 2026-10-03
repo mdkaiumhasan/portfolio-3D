@@ -3,6 +3,8 @@ import { Sparkles, Volume2, VolumeX, Layout } from 'lucide-react';
 import { useProgress } from '@react-three/drei';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { preloadAndCacheModel, isModelInCache } from '../../utils/assetCache';
+import { RAIN_STREET_MODEL_URL } from '../world/RainStreet';
 
 interface LoadingScreenProps {
   onLoaded: () => void;
@@ -11,32 +13,64 @@ interface LoadingScreenProps {
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const { progress, active } = useProgress();
   const [minTimerDone, setMinTimerDone] = useState(false);
-  const [nearComplete, setNearComplete] = useState(false);
+  const [modelReady, setModelReady] = useState(false);
+  const [downloadStats, setDownloadStats] = useState<{ percent: number; loadedMB: number; totalMB: number }>({
+    percent: 0,
+    loadedMB: 0,
+    totalMB: 89.5,
+  });
   const { setMode, setAudioEnabled } = useGameStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setMinTimerDone(true);
-    }, 1200);
+    }, 600);
     return () => clearTimeout(timer);
   }, []);
 
-  // When assets reach 96%+, allow up to 2 seconds for final GPU buffer upload before considering ready
+  // Preload and verify that the 90MB map model is 100% downloaded and stored in persistent cache
   useEffect(() => {
-    if (progress >= 96) {
-      const finishTimer = setTimeout(() => {
-        setNearComplete(true);
-      }, 2000);
-      return () => clearTimeout(finishTimer);
-    }
-  }, [progress]);
+    let isMounted = true;
 
-  const isReady = (progress >= 100 || !active || nearComplete) && minTimerDone;
-  const displayProgress = isReady ? 100 : Math.min(99, Math.max(15, Math.round(progress)));
+    // Check if already in persistent local disk cache
+    isModelInCache(RAIN_STREET_MODEL_URL).then((cached) => {
+      if (!isMounted) return;
+      if (cached) {
+        setDownloadStats({ percent: 100, loadedMB: 89.5, totalMB: 89.5 });
+        setModelReady(true);
+      } else {
+        // Stream download with live byte tracker and save to cache
+        preloadAndCacheModel(RAIN_STREET_MODEL_URL, (percent, loadedMB, totalMB) => {
+          if (!isMounted) return;
+          setDownloadStats({ percent, loadedMB, totalMB });
+          if (percent >= 100) {
+            setModelReady(true);
+          }
+        }).then(() => {
+          if (isMounted) setModelReady(true);
+        });
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const isReady = modelReady && (progress >= 90 || !active) && minTimerDone;
+
+  const displayProgress = isReady
+    ? 100
+    : modelReady
+    ? Math.max(90, Math.min(99, Math.round(progress)))
+    : Math.max(10, Math.min(99, Math.round(downloadStats.percent)));
 
   const statusText = !isReady
-    ? `DOWNLOADING & PREPARING 3D ASSETS (${displayProgress}%)...`
+    ? downloadStats.loadedMB > 0 && !modelReady
+      ? `DOWNLOADING 3D WORLD: ${downloadStats.loadedMB.toFixed(1)} MB / ${downloadStats.totalMB.toFixed(1)} MB (${Math.round(downloadStats.percent)}%)...`
+      : `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
     : 'SYSTEM READY // WORLD GENERATED';
+
 
   const handleEnterWorld = (enableAudio: boolean) => {
     if (enableAudio) {
