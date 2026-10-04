@@ -14,7 +14,7 @@ interface PlayerProps {
 export const Player: React.FC<PlayerProps> = () => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
-  const MODEL_URL = '/models/cool_man.glb?v=v8_wave_dance';
+  const MODEL_URL = '/models/cool_man.glb?v=v9_wave_dance_fixed';
   const { scene, animations } = useGLTF(MODEL_URL);
 
   // Prepare full 501-channel natural idle animation (with relaxed arms alongside coat and breathing cycle)
@@ -448,4 +448,4 @@ export const Player: React.FC<PlayerProps> = () => {
   );
 };
 
-useGLTF.preload('/models/cool_man.glb?v=v8_wave_dance');
+useGLTF.preload('/models/cool_man.glb?v=v9_wave_dance_fixed');
