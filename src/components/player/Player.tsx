@@ -14,7 +14,7 @@ interface PlayerProps {
 export const Player: React.FC<PlayerProps> = () => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
-  const MODEL_URL = '/models/cool_man.glb?v=v7_grounded_fix';
+  const MODEL_URL = '/models/cool_man.glb?v=v8_wave_dance';
   const { scene, animations } = useGLTF(MODEL_URL);
 
   // Prepare full 501-channel natural idle animation (with relaxed arms alongside coat and breathing cycle)
@@ -90,6 +90,7 @@ export const Player: React.FC<PlayerProps> = () => {
       if (e.key === '1') setActiveEmote('salute');
       if (e.key === '2') setActiveEmote('shakehand');
       if (e.key === '3') setActiveEmote('cough');
+      if (e.key === '4') setActiveEmote('dance');
 
       // Interact shortcut
       if (e.key.toLowerCase() === 'e') {
@@ -140,6 +141,7 @@ export const Player: React.FC<PlayerProps> = () => {
         salute: 2800,
         shakehand: 4400,
         cough: 2200,
+        dance: 16800,
         sit: 7000
       };
       const dur = durationMap[activeEmote] || 3000;
@@ -446,4 +448,4 @@ export const Player: React.FC<PlayerProps> = () => {
   );
 };
 
-useGLTF.preload('/models/cool_man.glb?v=v7_grounded_fix');
+useGLTF.preload('/models/cool_man.glb?v=v8_wave_dance');

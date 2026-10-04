@@ -79,8 +79,8 @@ interface GameState {
   setIsRunning: (isRunning: boolean) => void;
   isJumping: boolean;
   setIsJumping: (isJumping: boolean) => void;
-  activeEmote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough';
-  setActiveEmote: (emote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough') => void;
+  activeEmote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough' | 'dance';
+  setActiveEmote: (emote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough' | 'dance') => void;
   isSeatedOnThrone: boolean;
   setIsSeatedOnThrone: (isSeated: boolean) => void;
 
