@@ -39,24 +39,24 @@ export function preparePlayerAnimations(rawClips: THREE.AnimationClip[]): THREE.
   // 2. Ground the 'cough' emote so character lies down directly on the street (eliminates floating 0.9m in air)
   const coughClip = rawClips.find((a) => a.name === 'cough');
   if (coughClip) {
-    const rootNodesToDrop = new Set([
-      'mixamorig:Hips_94',
-      'Ctrl_Hips_128',
-      'Ctrl_ArmPole_IK_Left_130',
-      'Ctrl_Hand_IK_Left_131',
-      'Ctrl_ArmPole_IK_Right_132',
-      'Ctrl_Hand_IK_Right_133',
-      'Ctrl_Foot_IK_Left_149',
-      'Ctrl_LegPole_IK_Left_150',
-      'Ctrl_Foot_IK_Right_166',
-      'Ctrl_LegPole_IK_Right_167'
-    ]);
+    const isRootNodeToDrop = (trackName: string) => {
+      const l = trackName.toLowerCase();
+      if (!l.endsWith('.position')) return false;
+      return (
+        l.includes('hips') ||
+        l.includes('foot_ik') ||
+        l.includes('legpole_ik') ||
+        l.includes('hand_ik') ||
+        l.includes('armpole_ik')
+      );
+    };
+
     const dropHeight = 0.90;
     coughClip.tracks.forEach((track) => {
-      if (track.name.endsWith('.position')) {
-        const nodeName = track.name.replace('.position', '');
-        if (rootNodesToDrop.has(nodeName)) {
-          const values = track.values;
+      if (isRootNodeToDrop(track.name)) {
+        const values = track.values;
+        // Safeguard: only drop if track is currently at elevated standing height (~1.0m)
+        if (values.length > 1 && values[1] > 0.5) {
           for (let i = 1; i < values.length; i += 3) {
             values[i] -= dropHeight;
           }

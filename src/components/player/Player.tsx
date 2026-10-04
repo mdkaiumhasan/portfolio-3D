@@ -14,7 +14,7 @@ interface PlayerProps {
 export const Player: React.FC<PlayerProps> = () => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
-  const MODEL_URL = '/models/cool_man.glb?v=v6_grounded_cough';
+  const MODEL_URL = '/models/cool_man.glb?v=v7_grounded_fix';
   const { scene, animations } = useGLTF(MODEL_URL);
 
   // Prepare full 501-channel natural idle animation (with relaxed arms alongside coat and breathing cycle)
@@ -446,4 +446,4 @@ export const Player: React.FC<PlayerProps> = () => {
   );
 };
 
-useGLTF.preload('/models/cool_man.glb?v=v6_grounded_cough');
+useGLTF.preload('/models/cool_man.glb?v=v7_grounded_fix');
