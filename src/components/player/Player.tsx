@@ -108,11 +108,31 @@ export const Player: React.FC<PlayerProps> = () => {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
+    if (typeof window !== 'undefined') {
+      (window as any).__teleportPlayer = (x: number, y: number, z: number, h?: number) => {
+        pos.current.set(x, y, z);
+        playerCollider.current.start.set(x, y + 0.35, z);
+        playerCollider.current.end.set(x, y + 1.45, z);
+        playerRealtimePos.x = x;
+        playerRealtimePos.y = y;
+        playerRealtimePos.z = z;
+        if (h !== undefined) {
+          heading.current = h;
+          playerRealtimeHeading.current = h;
+        }
+        setPlayerPosition([x, y, z]);
+        useGameStore.getState().setIsSeatedOnThrone(false);
+      };
+    }
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      if (typeof window !== 'undefined') {
+        delete (window as any).__teleportPlayer;
+      }
     };
-  }, [setActivePanel, setActiveEmote]);
+  }, [setActivePanel, setActiveEmote, setPlayerPosition]);
 
   // Adjust materials for cool_man
   useEffect(() => {

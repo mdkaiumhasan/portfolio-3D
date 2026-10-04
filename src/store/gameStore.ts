@@ -14,6 +14,7 @@ export type ActivePanel =
   | 'experience'
   | 'resume'
   | 'contact'
+  | 'blog'
   | 'settings'
   | 'tutorial'
   | null;
@@ -158,6 +159,15 @@ export const STATIONS: StationInfo[] = [
     position: [5.2, 0, -32.0],
     color: '#06b6d4',
     icon: 'Send'
+  },
+  {
+    id: 'station-blog',
+    title: 'Cyber Chronicles',
+    subtitle: 'Network Guides & Tech Articles',
+    panel: 'blog',
+    position: [10.5, 0, -40.5],
+    color: '#f43f5e',
+    icon: 'BookOpen'
   }
 ];
 
@@ -167,7 +177,8 @@ const INITIAL_ACHIEVEMENTS: Achievement[] = [
   { id: 'network_architect', title: 'Network Architect', description: 'Visited the Network Operations Center (NOC)', unlocked: false, icon: 'Network' },
   { id: 'credential_hunter', title: 'Credential Hunter', description: 'Examined Kaium\'s dual-track resumes', unlocked: false, icon: 'Award' },
   { id: 'transmission_sent', title: 'Frequency Locked', description: 'Reached the Transmission Tower', unlocked: false, icon: 'Radio' },
-  { id: 'grand_tourist', title: 'Grand Tour Master', description: 'Discovered all 6 world stations', unlocked: false, icon: 'Sparkles' }
+  { id: 'chronicler', title: 'Cyber Chronicler', description: 'Accessed the Cyber Chronicles blog tower', unlocked: false, icon: 'BookOpen' },
+  { id: 'grand_tourist', title: 'Grand Tour Master', description: 'Discovered all 7 world stations', unlocked: false, icon: 'Sparkles' }
 ];
 
 const getInitialMode = (): '3d' | '2d' => {
@@ -202,6 +213,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (panel === 'experience') get().unlockAchievement('network_architect');
     if (panel === 'resume') get().unlockAchievement('credential_hunter');
     if (panel === 'contact') get().unlockAchievement('transmission_sent');
+    if (panel === 'blog') get().unlockAchievement('chronicler');
   },
   selectedProject: null,
   setSelectedProject: (project) => set({ selectedProject: project }),

@@ -10,6 +10,7 @@ import { SkillsModal } from './components/ui/SkillsModal';
 import { ExperienceModal } from './components/ui/ExperienceModal';
 import { ResumeModal } from './components/ui/ResumeModal';
 import { ContactModal } from './components/ui/ContactModal';
+import { BlogModal } from './components/ui/BlogModal';
 import { SettingsModal } from './components/ui/SettingsModal';
 import { TutorialModal } from './components/ui/TutorialModal';
 import { useGameStore } from './store/gameStore';
@@ -76,6 +77,7 @@ export const App: React.FC = () => {
       {activePanel === 'experience' && <ExperienceModal />}
       {activePanel === 'resume' && <ResumeModal />}
       {activePanel === 'contact' && <ContactModal />}
+      {activePanel === 'blog' && <BlogModal />}
       {activePanel === 'settings' && <SettingsModal />}
       {activePanel === 'tutorial' && <TutorialModal />}
     </div>

@@ -222,6 +222,137 @@ const FALLBACK_DATA: PortfolioData = {
     { platform: "facebook", url: "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr" },
     { platform: "Linkedin", url: "https://www.linkedin.com/in/md-kaium-hasan-bb6009372/" },
     { platform: "github", url: "https://github.com/mdkaiumhasan" }
+  ],
+  posts: [
+    {
+      title: "Access Control List (ACL) – সম্পূর্ণ গাইড",
+      date: "Oct 26, 2025",
+      category: "Networking Guide",
+      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg",
+      shortDesc: "Access Control List (ACL) হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। Cisco Packet Tracer এ বাস্তব কনফিগারেশন গাইড।",
+      fullContent: `<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>
+
+<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>
+
+<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>
+<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।<br/>
+এই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>
+
+<h2>🔍 ACL এর ধরন:</h2>
+<ul>
+<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে (রেন্জ: 1-99 এবং 1300-1999)।</li>
+<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছুর ভিত্তিতে সূক্ষ্মভাবে নিয়ন্ত্রণ করতে পারে (রেন্জ: 100-199 এবং 2000-2699)।</li>
+</ul>
+
+<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>
+
+<h3>Step 1: Basic Network Setup</h3>
+<p>দুটি নেটওয়ার্ক ও রাউটার ইন্টারফেস সেটআপ:</p>
+<pre>
+Network 1 (Accounts): 192.168.10.0/24  
+Network 2 (HR Server): 192.168.20.0/24
+Router Interface:
+- G0/0 → 192.168.10.1 (Gateway for Net 1)
+- G0/1 → 192.168.20.1 (Gateway for Net 2)
+</pre>
+
+<h3>Step 2: IP Configuration</h3>
+<p>PC এবং রাউটারের ইন্টারফেসে সঠিক IP অ্যাসাইন করুন এবং ইন্টারফেসগুলো <code>no shutdown</code> করুন।</p>
+
+<h3>Step 3: ACL তৈরি (Access Control Rule)</h3>
+<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা, কিন্তু বাকি সব ইন্টারনেট/অন্যান্য ট্রাফিক সচল রাখা:</p>
+<pre>
+Router> enable
+Router# configure terminal
+Router(config)# access-list 10 deny 192.168.10.0 0.0.0.255
+Router(config)# access-list 10 permit any
+</pre>
+
+<h3>Step 4: ইন্টারফেসে ACL Apply করা</h3>
+<p>যে ইন্টারফেসে ফিল্টারিং কার্যকর করতে চান, সেখানে ইনবাউন্ড (in) বা আউটবাউন্ড (out) হিসেবে Apply করুন:</p>
+<pre>
+Router(config)# interface g0/1
+Router(config-if)# ip access-group 10 out
+Router(config-if)# exit
+Router# end
+Router# write memory
+</pre>
+
+<h3>Step 5: ভেরিফিকেশন ও টেস্ট</h3>
+<p>Accounts PC থেকে HR সার্ভারে ping করে দেখুন — Network 10 থেকে 20 তে ট্রাফিক ব্লক হয়েছে কিনা (Destination Host Unreachable আসা উচিত)।</p>
+
+<h2>🧠 প্র্যাকটিক্যাল টিপস ও বেস্ট প্র্যাকটিস:</h2>
+<ul>
+<li>ACL সবসময় <b>“Top to Bottom”</b> ক্রমানুসারে এক্সিকিউট হয়। প্রথম ম্যাচ করা রুল কার্যকর হয়।</li>
+<li>প্রতিটি ACL-এর শেষে একটি গোপন অদৃশ্য <b>“implicit deny any”</b> থাকে — তাই সব রুলের শেষে স্পেসিফিক অনুমোদন দিতে <code>permit any</code> দিতে ভুলবেন না।</li>
+<li>Standard ACL সাধারণত ডেস্টিনেশনের সবচেয়ে কাছাকাছি ইন্টারফেসে এবং Extended ACL সোর্সের সবচেয়ে কাছাকাছি ইন্টারফেসে বসানো সর্বোত্তম।</li>
+</ul>`
+    },
+    {
+      title: "CCNA কি? Networking Career-er Sothik Shuruvat",
+      date: "Oct 25, 2025",
+      category: "Career & Certification",
+      imageUrl: "https://files.catbox.moe/pasmm0.jpg",
+      shortDesc: "Amra ek digital jogote baas kori, aar ei digital jogoter backbone holo network. CCNA certification holo network engineer hishebe journey shuru korar prothom ebong sobcheye guruttwopurno dhap.",
+      fullContent: `<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>
+
+<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>
+
+<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification (Cisco Certified Network Associate)</strong>.</p>
+
+<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>
+
+<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu "kivabe" (how) noy, eti "keno" (why) shekhay. Ei foundational knowledge apnake complex enterprise network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>
+
+<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>
+
+<img src="https://files.catbox.moe/pasmm0.jpg" alt="CCNA Network Topology & Architecture" style="width:100%; max-width:680px; margin: 20px auto; display: block; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.3);" />
+
+<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>
+
+<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>
+
+<ul>
+<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python scripting, REST APIs, JSON data encoding, ebong Cisco DNA Center-er sathe porichoy.</li>
+<li><strong>Security Fundamentals:</strong> VPNs, wireless security (WPA3), DHCP snooping, Dynamic ARP Inspection (DAI), ebong port security-r mool dharona.</li>
+<li><strong>Wireless Networking:</strong> Wi-Fi 6 architecture ebong WLC (Wireless LAN Controller) centralized management concepts.</li>
+<li><strong>Cloud Architecture:</strong> On-premise enterprise infrastructure theke hybrid cloud ebong virtualization (Hypervisors, VMs, Containers).</li>
+</ul>
+
+<h3>Porishesh</h3>
+
+<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, NOC Engineer, Network Support), borong apnar poroborti specialization (jemon CCNP, Enterprise Infrastructure, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>`
+    },
+    {
+      title: "Enterprise Trading Network: Fault-Tolerant Campus Topology",
+      date: "Nov 15, 2025",
+      category: "Network Architecture",
+      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035639/portfolio/projects/i1m0u1m6q1y3b4h8q1w2.png",
+      shortDesc: "A deep dive into engineering a high-availability network infrastructure for 600 financial traders using multi-area OSPF, 802.1Q VLAN trunking, and sub-second convergence.",
+      fullContent: `<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3>
+
+<p>Financial trading environments cannot tolerate network downtime. A 3-second packet delay or failover stall can result in millions in losses. Here is how we engineered a multi-tier fault-tolerant campus and trading floor topology for 600 active operators.</p>
+
+<h3>Core Architectural Pillars:</h3>
+<ul>
+<li><strong>Multi-Area OSPF:</strong> Structured area hierarchies (Area 0 Backbone + Area 10 Floor Distribution) with route summarization to reduce link-state database (LSDB) size and prevent SPF calculation storms.</li>
+<li><strong>Sub-Second BFD (Bidirectional Forwarding Detection):</strong> Coupled with OSPF to achieve 250ms link failure detection and instant convergence to redundant fiber paths.</li>
+<li><strong>Strict 802.1Q VLAN Isolation:</strong> Segmenting Trading Terminals, Management VTY, VoIP Phones, and Guest Wi-Fi with isolated broadcast domains and DHCP snooping.</li>
+<li><strong>Stateful Edge ACLs & Port Security:</strong> Sticky MAC address limits to eliminate rogue switches, and strict ingress/egress filtering for financial APIs.</li>
+</ul>
+
+<pre>
+! Sample Multi-Area OSPF Core Configuration
+router ospf 1
+ router-id 10.255.255.1
+ auto-cost reference-bandwidth 100000
+ network 10.0.0.0 0.0.0.3 area 0
+ network 10.10.0.0 0.0.255.255 area 10
+ bfd all-interfaces
+</pre>
+
+<p>Through redundant core switches, LACP EtherChannels, and automated failover, this architecture delivered 99.999% uptime with zero packet loss across peak market operating hours.</p>`
+    }
   ]
 };
 
@@ -250,7 +381,10 @@ export function usePortfolioData() {
             // Ensure projects has at least the items if empty
             projects: (fetchedData.projects && fetchedData.projects.length > 0)
               ? fetchedData.projects
-              : FALLBACK_DATA.projects
+              : FALLBACK_DATA.projects,
+            posts: (fetchedData.posts && fetchedData.posts.length > 0)
+              ? fetchedData.posts
+              : FALLBACK_DATA.posts
           };
           cachedData = merged;
           setData(merged);
@@ -264,7 +398,16 @@ export function usePortfolioData() {
           .then((res) => res.ok ? res.json() : null)
           .then((staticData) => {
             if (mounted && staticData) {
-              const merged: PortfolioData = { ...FALLBACK_DATA, ...staticData };
+              const merged: PortfolioData = {
+                ...FALLBACK_DATA,
+                ...staticData,
+                projects: (staticData.projects && staticData.projects.length > 0)
+                  ? staticData.projects
+                  : FALLBACK_DATA.projects,
+                posts: (staticData.posts && staticData.posts.length > 0)
+                  ? staticData.posts
+                  : FALLBACK_DATA.posts
+              };
               cachedData = merged;
               setData(merged);
             }

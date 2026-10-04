@@ -13,7 +13,8 @@ import {
   Send,
   User,
   Compass,
-  Trophy
+  Trophy,
+  BookOpen
 } from 'lucide-react';
 import { useGameStore, STATIONS, ActivePanel } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
@@ -281,6 +282,14 @@ export const HUD: React.FC = () => {
           >
             <Send size={13} color="#06b6d4" />
             Contact
+          </button>
+          <button
+            onClick={() => handleOpenPanel('blog')}
+            className="btn-cyber"
+            style={{ padding: '6px 12px', fontSize: '11px', borderColor: '#f43f5e' }}
+          >
+            <BookOpen size={13} color="#f43f5e" />
+            Blog
           </button>
         </div>
 
