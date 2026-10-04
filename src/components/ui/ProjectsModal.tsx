@@ -9,25 +9,25 @@ export const ProjectsModal: React.FC = () => {
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'Enterprise Fullstack', 'Mobile & Realtime', 'Networking & Security', 'AI & Hardware'];
+  const categories = ['All', 'Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
 
   const projects = data.projects || [];
 
   const getProjectCategory = (p: ProjectItem): string => {
     const tech = (p.technology || '').toLowerCase();
     const title = (p.title || '').toLowerCase();
-    if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile')) return 'Mobile & Realtime';
-    if (tech.includes('cisco') || tech.includes('ospf') || tech.includes('vlan') || tech.includes('network')) return 'Networking & Security';
-    if (tech.includes('mcp') || tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware')) return 'AI & Hardware';
-    return 'Enterprise Fullstack';
+    if (tech.includes('cisco') || tech.includes('ospf') || tech.includes('vlan') || tech.includes('network') || title.includes('network')) return 'Networking & Security';
+    if (tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware') || title.includes('robot') || title.includes('lfr')) return 'Robotics & Hardware';
+    if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile') || title.includes('mess') || title.includes('ramadan')) return 'Mobile & Realtime';
+    return 'Networking & Security';
   };
 
   const getProjectColor = (category: string): string => {
     switch (category) {
-      case 'Mobile & Realtime': return '#00e5ff';
       case 'Networking & Security': return '#39ff14';
-      case 'AI & Hardware': return '#a855f7';
-      default: return '#ff007f';
+      case 'Mobile & Realtime': return '#00e5ff';
+      case 'Robotics & Hardware': return '#ff007f';
+      default: return '#a855f7';
     }
   };
 

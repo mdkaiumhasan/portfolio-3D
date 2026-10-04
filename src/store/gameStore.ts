@@ -118,7 +118,7 @@ export const STATIONS: StationInfo[] = [
   {
     id: 'station-projects',
     title: 'Software Lab',
-    subtitle: 'GravityEats, Parentra & More',
+    subtitle: 'EasyMess, Enterprise Network & More',
     panel: 'projects',
     position: [5.6, 0, 13.0],
     color: '#ff007f',

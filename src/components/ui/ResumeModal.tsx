@@ -23,12 +23,12 @@ export const ResumeModal: React.FC = () => {
       color: '#a855f7',
       url: cvLink,
       fileName: 'Md_Kaium_Hasan_Software_Engineer_Resume.pdf',
-      summary: data.about_info_text || "Fullstack developer with 2+ years of hands-on experience building production React, Next.js, and TypeScript applications across food-delivery, child-safety, and content-automation platforms. Comfortable owning features end-to-end — states, edge cases, and performance, not just the happy path — while pairing REST/GraphQL data layers with clean, accessible UI.",
+      summary: data.about_info_text || "Fullstack and Android developer with hands-on experience building mobile apps, real-time reactive databases, and clean modern interfaces.",
       highlights: [
-        'GravityEats: Multi-platform food delivery ecosystem with NestJS, Kotlin Android, Next.js 16, Kafka event streaming, and KEDA autoscaling.',
-        'Parentra: Dual native Android apps & React dashboard with Go (Fiber) backend, sub-150ms WebRTC live video/audio streaming, and geofencing.',
-        'Waypoint Challenge: Model Context Protocol (MCP) server in TypeScript with 17 tools and 100% IDEA legal compliance, invited to CEO interview.',
-        'Cradle & Care: Headless maternal care e-commerce with Next.js 15, MedusaJS, Redis, and FEFO inventory batch row-level locks.'
+        'Mess Management APP (EasyMess): Bachelor mess accounting app in Android with real-time Firebase sync, live meal rates, and bilingual localization.',
+        'Enterprise Network: Resilient 600-staff trading floor topology with multi-area OSPF routing, 802.1Q VLAN trunking, and stateful ACL security.',
+        'Ramadan Journey: Islamic companion and prayer helper with background alarm scheduling and offline calculation.',
+        'Autonomous Line Follower Robot (LFR): Path tracking robot with ATmega328P and IR sensor array presented at District Science Fair 2024.'
       ]
     },
     network: {

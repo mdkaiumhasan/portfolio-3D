@@ -29,22 +29,6 @@ export const experienceData: ExperienceItem[] = [
     skills: ["MikroTik RouterOS", "GPON OLT/ONU", "PPPoE", "Bandwidth Management", "VLAN", "Network Triage", "Cisco IOS"]
   },
   {
-    id: "independent-dev",
-    role: "Independent Fullstack & Systems Developer",
-    organization: "Self-Employed / Remote Collaborations",
-    location: "Dhaka, Bangladesh (Remote)",
-    period: "2025 – Present",
-    type: "Work Experience",
-    description: "Engineering production-grade web applications, distributed backend services, native Android mobile apps, and protocol servers.",
-    highlights: [
-      "Engineered GravityEats food delivery ecosystem with NestJS microservices, Kafka event streaming, and KEDA-autoscaled Kubernetes pods.",
-      "Constructed Parentra child safety suite featuring LiveKit WebRTC real-time audio/video streaming and Android Device Admin policy enforcement.",
-      "Developed high-performance headless digital commerce platforms (Cradle & Care) with MedusaJS, Redis caching, and Meilisearch (<250ms latency).",
-      "Created the Waypoint Challenge IEP MCP server, reducing special education lesson modification from hours to minutes."
-    ],
-    skills: ["React", "Next.js", "TypeScript", "Kotlin", "Go", "Kafka", "Kubernetes", "PostgreSQL", "MCP"]
-  },
-  {
     id: "ccna-cert",
     role: "CCNA 200-301 (Cisco Certified Network Associate)",
     organization: "Cisco Systems",
