@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { useGameStore, STATIONS, playerRealtimePos, playerRealtimeHeading } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { preparePlayerAnimations } from './characterAnimations';
 
 interface PlayerProps {
   cameraRef?: React.RefObject<THREE.Camera>;
@@ -13,99 +14,16 @@ interface PlayerProps {
 export const Player: React.FC<PlayerProps> = () => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
-  const MODEL_URL = '/models/cool_man.glb?v=v3_smooth_walk';
+  const MODEL_URL = '/models/cool_man.glb?v=v6_grounded_cough';
   const { scene, animations } = useGLTF(MODEL_URL);
-  const { actions } = useAnimations(animations, groupRef);
 
-  // Animation Rig Safeguards:
-  // 1. In-place walk cycle root-motion stabilization
-  // 2. Augment 'Pose' clip with complete 501-channel upright skeleton data
-  //    (Eliminates crouching/half-seated bug when rising up from the throne)
-  useEffect(() => {
-    if (!animations || animations.length === 0) return;
-
-    // 1. In-place walking
-    const walkClip = animations.find((a) => a.name === 'walking');
-    if (walkClip) {
-      walkClip.tracks.forEach((track) => {
-        if (track.name.endsWith('.position')) {
-          const values = track.values;
-          const count = values.length / 3;
-          if (count < 2) return;
-          const startZ = values[2];
-          const endZ = values[values.length - 1];
-          const deltaZ = endZ - startZ;
-          if (Math.abs(deltaZ) > 0.02) {
-            for (let i = 0; i < count; i++) {
-              const progress = i / (count - 1);
-              values[i * 3 + 2] -= deltaZ * progress;
-            }
-          }
-        }
-      });
-    }
-
-    // 2. Transform stiff A-pose 'Pose' into natural relaxed standing idle
-    //    (Brings arms naturally down along the sides of the jacket instead of flaring wide open)
-    const poseClip = animations.find((a) => a.name === 'Pose');
-    const standingRefClip = animations.find((a) => a.name === 'salute') || walkClip;
-
-    if (poseClip && standingRefClip) {
-      const isArmOrUpperBody = (name: string) => {
-        const l = name.toLowerCase();
-        return (
-          l.includes('arm') ||
-          l.includes('shoulder') ||
-          l.includes('hand') ||
-          l.includes('thumb') ||
-          l.includes('index') ||
-          l.includes('middle') ||
-          l.includes('ring') ||
-          l.includes('pinky') ||
-          l.includes('spine') ||
-          l.includes('neck') ||
-          l.includes('head')
-        );
-      };
-
-      // Replace flared A-pose arm tracks with relaxed resting posture from natural standing mocap
-      poseClip.tracks = poseClip.tracks.map((track) => {
-        if (isArmOrUpperBody(track.name)) {
-          const sTrack = standingRefClip.tracks.find((t) => t.name === track.name);
-          if (sTrack) {
-            const valSize = sTrack.getValueSize();
-            const v0 = sTrack.values.slice(0, valSize);
-            const TrackType = (sTrack as any).constructor;
-            const times = [0, poseClip.duration];
-            const values = new (sTrack.values as any).constructor(valSize * 2);
-            values.set(v0, 0);
-            values.set(v0, valSize);
-            return new TrackType(sTrack.name, times, values);
-          }
-        }
-        return track;
-      });
-
-      // Add any remaining missing skeleton tracks (e.g. upright standing hips translation)
-      const existingTrackNames = new Set(poseClip.tracks.map((t) => t.name));
-      const newTracks: THREE.KeyframeTrack[] = [];
-
-      standingRefClip.tracks.forEach((track) => {
-        if (!existingTrackNames.has(track.name)) {
-          const valueSize = track.getValueSize();
-          const val0 = track.values.slice(0, valueSize);
-          const TrackType = (track as any).constructor;
-          const times = [0, poseClip.duration];
-          const values = new (track.values as any).constructor(valueSize * 2);
-          values.set(val0, 0);
-          values.set(val0, valueSize);
-          newTracks.push(new TrackType(track.name, times, values));
-        }
-      });
-
-      poseClip.tracks.push(...newTracks);
-    }
+  // Prepare full 501-channel natural idle animation (with relaxed arms alongside coat and breathing cycle)
+  // and in-place walking stabilization BEFORE Drei's useAnimations compiles the AnimationActions
+  const processedAnimations = useMemo(() => {
+    return preparePlayerAnimations(animations);
   }, [animations]);
+
+  const { actions } = useAnimations(processedAnimations, groupRef);
 
   // Real 3D Physical Capsule Collider (radius = 0.35m, height = 1.8m)
   const playerCollider = useRef(
@@ -124,7 +42,7 @@ export const Player: React.FC<PlayerProps> = () => {
   const isGrounded = useRef(true);
   const footstepTimer = useRef(0);
   const hudSyncTimer = useRef(0);
-  const currentAction = useRef<string>('Pose');
+  const currentAction = useRef<string>('idle');
   const isMovingLocal = useRef(false);
   const isRunningLocal = useRef(false);
 
@@ -221,7 +139,7 @@ export const Player: React.FC<PlayerProps> = () => {
       const durationMap: { [key: string]: number } = {
         salute: 2800,
         shakehand: 4400,
-        cough: 1700,
+        cough: 2200,
         sit: 7000
       };
       const dur = durationMap[activeEmote] || 3000;
@@ -238,7 +156,7 @@ export const Player: React.FC<PlayerProps> = () => {
   useEffect(() => {
     if (!actions || hasInitializedAnim.current) return;
     hasInitializedAnim.current = true;
-    const initialAnim = isSeatedOnThrone && actions['sit'] ? 'sit' : 'Pose';
+    const initialAnim = isSeatedOnThrone && actions['sit'] ? 'sit' : 'idle';
     if (actions[initialAnim]) {
       const initialAction = actions[initialAnim];
       initialAction.reset();
@@ -376,11 +294,11 @@ export const Player: React.FC<PlayerProps> = () => {
 
         if (activeEmote && activeEmote !== 'idle' && actions[activeEmote]) {
           if (isSeatedOnThrone) setIsSeatedOnThrone(false);
-          switchAnimation(activeEmote, 1.0, 0.25);
+          switchAnimation(activeEmote, 1.0, activeEmote === 'cough' ? 0.35 : 0.25);
         } else if (isSeatedOnThrone && actions['sit']) {
           switchAnimation('sit', 1.0, 0.22);
         } else {
-          switchAnimation('Pose', 1.0, 0.22);
+          switchAnimation('idle', 1.0, 0.32);
         }
       } else {
         // Seamlessly scale down walking cadence during deceleration (eliminates stopping jerk)
@@ -528,4 +446,4 @@ export const Player: React.FC<PlayerProps> = () => {
   );
 };
 
-useGLTF.preload('/models/cool_man.glb?v=v3_smooth_walk');
+useGLTF.preload('/models/cool_man.glb?v=v6_grounded_cough');
