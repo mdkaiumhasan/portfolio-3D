@@ -94,7 +94,6 @@ export const TutorialModal: React.FC = () => {
               <span className="tech-tag">[1] Salute</span>
               <span className="tech-tag">[2] Handshake</span>
               <span className="tech-tag">[3] Cough</span>
-              <span className="tech-tag" style={{ color: '#c084fc', borderColor: 'rgba(192, 132, 252, 0.4)' }}>[4] Dance</span>
             </div>
           </div>
 

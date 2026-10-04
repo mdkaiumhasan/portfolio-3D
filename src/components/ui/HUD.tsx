@@ -518,13 +518,6 @@ export const HUD: React.FC = () => {
         >
           [3] Cough
         </button>
-        <button
-          onClick={() => setActiveEmote('dance')}
-          className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '10px', color: '#c084fc', borderColor: 'rgba(192, 132, 252, 0.4)' }}
-        >
-          [4] Dance
-        </button>
       </div>
     </div>
   );

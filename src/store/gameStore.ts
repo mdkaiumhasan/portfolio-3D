@@ -7,15 +7,15 @@ import type { Octree } from 'three/examples/jsm/math/Octree.js';
 export const playerRealtimePos = { x: 1.35, y: 0, z: 41 };
 export const playerRealtimeHeading = { current: Math.PI };
 
-export type ActivePanel = 
-  | 'about' 
-  | 'projects' 
-  | 'skills' 
-  | 'experience' 
-  | 'resume' 
-  | 'contact' 
-  | 'settings' 
-  | 'tutorial' 
+export type ActivePanel =
+  | 'about'
+  | 'projects'
+  | 'skills'
+  | 'experience'
+  | 'resume'
+  | 'contact'
+  | 'settings'
+  | 'tutorial'
   | null;
 
 export type QualityTier = 'high' | 'medium' | 'low';
@@ -79,8 +79,8 @@ interface GameState {
   setIsRunning: (isRunning: boolean) => void;
   isJumping: boolean;
   setIsJumping: (isJumping: boolean) => void;
-  activeEmote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough' | 'dance';
-  setActiveEmote: (emote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough' | 'dance') => void;
+  activeEmote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough';
+  setActiveEmote: (emote: 'idle' | 'walk' | 'run' | 'salute' | 'shakehand' | 'sit' | 'cough') => void;
   isSeatedOnThrone: boolean;
   setIsSeatedOnThrone: (isSeated: boolean) => void;
 
