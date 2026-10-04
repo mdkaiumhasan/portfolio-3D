@@ -11,9 +11,10 @@
   --purple-glow: #a855f7;
   --text-main: #f1f5f9;
   --text-muted: #94a3b8;
-  --font-heading: 'Orbitron', 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-hud: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Rajdhani', monospace;
 }
 
 * {
@@ -59,10 +60,10 @@ body {
   color: #ffffff;
   padding: 8px 16px;
   border-radius: 8px;
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: var(--font-hud);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -183,12 +184,31 @@ body {
   align-items: center;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 11px;
-  font-family: var(--font-mono);
-  font-weight: 500;
+  font-size: 12px;
+  font-family: var(--font-hud);
+  font-weight: 700;
+  letter-spacing: 0.5px;
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(148, 163, 184, 0.2);
   color: #38bdf8;
+}
+
+/* Typography Role Helpers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-hud {
+  font-family: var(--font-hud);
+  letter-spacing: 0.5px;
+}
+
+.font-body {
+  font-family: var(--font-body);
 }
 
 /* Pulse animation */

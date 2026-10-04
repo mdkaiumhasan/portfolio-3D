@@ -242,9 +242,11 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
                   ? `0 0 10px ${station.color}88, inset 0 0 6px ${station.color}22`
                   : `0 0 4px ${station.color}44`,
                 color: '#ffffff',
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '11px',
-                fontWeight: 600,
+                fontFamily: 'var(--font-hud)',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                letterSpacing: '0.6px',
+                textTransform: 'uppercase',
                 whiteSpace: 'nowrap',
                 display: 'flex',
                 flexDirection: 'column',
@@ -264,15 +266,17 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
                     display: 'inline-block',
                   }}
                 />
-                <span style={{ letterSpacing: '0.2px' }}>{station.title}</span>
+                <span style={{ letterSpacing: '0.6px' }}>{station.title}</span>
               </div>
 
               {isNearby && (
                 <div
                   style={{
-                    fontSize: '9px',
+                    fontSize: '10px',
+                    fontFamily: 'var(--font-hud)',
                     color: station.color,
-                    fontWeight: 500,
+                    fontWeight: 700,
+                    letterSpacing: '0.5px'
                   }}
                 >
                   ⚡ Press [E] to Inspect

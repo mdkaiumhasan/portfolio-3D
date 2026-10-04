@@ -152,7 +152,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: 900, color: '#ffffff', letterSpacing: '1px', margin: 0 }}>
             MD. KAIUM HASAN
           </h1>
-          <p style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 600, marginTop: '4px', margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-hud)', fontSize: '13px', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.8px', marginTop: '4px', margin: 0 }}>
             3D INTERACTIVE DEVELOPER PORTFOLIO
           </p>
         </div>

@@ -39,7 +39,7 @@ const StreetRadar: React.FC = React.memo(() => {
         pointerEvents: 'auto'
       }}
     >
-      <div style={{ fontSize: '10px', fontFamily: 'var(--font-heading)', color: '#38bdf8', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', fontWeight: 700, letterSpacing: '0.8px', color: '#38bdf8', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
         <Compass size={12} />
         STREET RADAR
       </div>
@@ -214,10 +214,10 @@ export const HUD: React.FC = () => {
           </div>
 
           <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 700, color: '#ffffff', letterSpacing: '0.5px' }}>
               MD. KAIUM HASAN
             </div>
-            <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-hud)', fontSize: '11px', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.8px' }}>
               FULLSTACK & SYSTEMS // CCNA ENGINEER
             </div>
           </div>
@@ -305,9 +305,10 @@ export const HUD: React.FC = () => {
               borderRadius: '6px',
               background: 'rgba(15, 23, 42, 0.65)',
               border: '1px solid rgba(56, 189, 248, 0.2)',
-              fontFamily: 'monospace',
-              fontSize: '11px',
-              fontWeight: 600,
+              fontFamily: 'var(--font-hud)',
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '0.5px',
               color: fps >= 50 ? '#22c55e' : fps >= 30 ? '#eab308' : '#ef4444'
             }}
             title="Real-time frame rate"
@@ -390,10 +391,10 @@ export const HUD: React.FC = () => {
       >
         <Trophy size={16} color="#fbbf24" />
         <div>
-          <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
             Exploration Quests
           </div>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff' }}>
+          <div style={{ fontSize: '13px', fontFamily: 'var(--font-hud)', fontWeight: 700, color: '#ffffff', letterSpacing: '0.4px' }}>
             {discoveredStations.length} / {STATIONS.length} Stations Discovered
           </div>
         </div>
@@ -421,10 +422,10 @@ export const HUD: React.FC = () => {
         >
           <Trophy size={22} color="#fbbf24" />
           <div>
-            <div style={{ fontSize: '11px', color: '#fcd34d', fontWeight: 700, letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#fcd34d', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
               {activeNotification.title}
             </div>
-            <div style={{ fontSize: '13px', color: '#ffffff', fontWeight: 600 }}>
+            <div style={{ fontSize: '13px', fontFamily: 'var(--font-body)', color: '#ffffff', fontWeight: 500 }}>
               {activeNotification.subtitle}
             </div>
           </div>
@@ -462,19 +463,20 @@ export const HUD: React.FC = () => {
               borderRadius: '6px',
               background: nearbyStation.color,
               color: '#000000',
-              fontWeight: 900,
-              fontFamily: 'var(--font-heading)',
-              fontSize: '14px'
+              fontWeight: 800,
+              fontFamily: 'var(--font-hud)',
+              fontSize: '15px',
+              letterSpacing: '0.5px'
             }}
           >
             [E]
           </span>
 
           <div>
-            <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
               Enter {nearbyStation.title}
             </div>
-            <div style={{ fontSize: '12px', color: nearbyStation.color, fontWeight: 500 }}>
+            <div style={{ fontFamily: 'var(--font-hud)', fontSize: '12px', color: nearbyStation.color, fontWeight: 600, letterSpacing: '0.5px' }}>
               Press [E] or Click to inspect station
             </div>
           </div>
@@ -496,25 +498,25 @@ export const HUD: React.FC = () => {
           pointerEvents: 'auto'
         }}
       >
-        <span style={{ fontSize: '10px', color: '#94a3b8', marginRight: '4px' }}>Emotes:</span>
+        <span style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', marginRight: '4px', fontWeight: 700, letterSpacing: '0.6px' }}>Emotes:</span>
         <button
           onClick={() => setActiveEmote('salute')}
           className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '10px' }}
+          style={{ padding: '4px 8px', fontSize: '11px' }}
         >
           [1] Salute
         </button>
         <button
           onClick={() => setActiveEmote('shakehand')}
           className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '10px' }}
+          style={{ padding: '4px 8px', fontSize: '11px' }}
         >
           [2] Handshake
         </button>
         <button
           onClick={() => setActiveEmote('cough')}
           className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '10px' }}
+          style={{ padding: '4px 8px', fontSize: '11px' }}
         >
           [3] Cough
         </button>

@@ -202,8 +202,9 @@ export const MobileControls: React.FC = () => {
               justifyContent: 'center',
               boxShadow: `0 0 25px ${nearbyStation.color}`,
               fontWeight: 800,
-              fontSize: '11px',
-              fontFamily: 'var(--font-heading)',
+              fontSize: '12px',
+              fontFamily: 'var(--font-hud)',
+              letterSpacing: '0.6px',
               animation: 'pulseGlow 1.5s infinite'
             }}
             aria-label="Interact"
