@@ -340,25 +340,322 @@
 
         /* Portfolio Section */
         .portfolio-item {
-            background-color: var(--bg-color); border-radius: 0.5rem; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 0.6px solid var(--border-color);
-            display: flex; flex-direction: column; justify-content: space-between;
+            background-color: #ffffff;
+            border-radius: 0.85rem;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
         }
-        html.dark .portfolio-item { background-color: var(--bg-secondary); }
-        .portfolio-item img { transition: transform 0.4s ease; filter: grayscale(100%); }
-        .portfolio-item:hover img { transform: scale(1.1); filter: grayscale(0%); }
-        .portfolio-content { padding: 1.5rem; }
-        .portfolio-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-color); }
-        .portfolio-details { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
-        .portfolio-details strong { color: var(--text-color); font-weight: 600; }
+        html.dark .portfolio-item {
+            background: rgba(18, 24, 32, 0.88); /* Clean dark card, no dull gray */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+        }
+        .portfolio-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+        html.dark .portfolio-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 14px rgba(40, 167, 69, 0.18);
+        }
+        .portfolio-item img {
+            transition: transform 0.4s ease, filter 0.3s ease;
+            filter: grayscale(15%);
+            object-fit: cover;
+            width: 100%;
+            height: 10.5rem; /* Compact 168px height instead of 256px */
+            display: block;
+            background: #111418;
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+        .portfolio-content {
+            padding: 0.85rem 1rem 0.35rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .portfolio-title {
+            font-size: 1.025rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .portfolio-meta-role {
+            font-size: 0.775rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .portfolio-meta-tech {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .portfolio-details {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.3rem;
+        }
         .btn-view-project {
-            display: inline-block; padding: 0.5rem 1rem; background-color: transparent;
-            border: 2px solid var(--accent-color); color: var(--accent-color); border-radius: 9999px;
-            font-weight: 600; font-size: 0.875rem; text-align: center; transition: all 0.3s ease;
-            cursor: pointer; margin: 0 1.5rem 1.5rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0.42rem 0.85rem;
+            background-color: transparent;
+            border: 1.5px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.775rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin: 0.35rem 1rem 1rem 1rem;
         }
-        .btn-view-project:hover { background-color: var(--accent-color); color: white; }
-        html.dark .btn-view-project:hover { color: #212529; }
+        .btn-view-project:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+        html.dark .btn-view-project:hover {
+            color: #0b0f17;
+        }
+
+        /* --- Portfolio Category Filter Dropdown & Badges --- */
+        .portfolio-filter-bar {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.85rem;
+            padding: 0.75rem 1.25rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 50;
+        }
+        html.dark .portfolio-filter-bar {
+            background-color: rgba(18, 24, 32, 0.75); /* Clean glassmorphic dark, no dull gray */
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+        }
+
+        .portfolio-dropdown-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+        }
+        @media (max-width: 640px) {
+            .portfolio-dropdown-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        .portfolio-dropdown-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1.15rem;
+            border-radius: 0.75rem;
+            background-color: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            outline: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+        html.dark .portfolio-dropdown-trigger {
+            background-color: var(--bg-color);
+        }
+
+        .portfolio-dropdown-trigger:hover,
+        .portfolio-dropdown-trigger.open {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        }
+        html:not(.dark) .portfolio-dropdown-trigger:hover,
+        html:not(.dark) .portfolio-dropdown-trigger.open {
+            box-shadow: 0 0 0 3px rgba(236, 64, 122, 0.15);
+        }
+
+        .portfolio-dropdown-trigger.open #dropdown-chevron-icon {
+            transform: rotate(180deg);
+            color: var(--accent-color);
+        }
+
+        .category-dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .portfolio-filter-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+        }
+        html.dark .portfolio-filter-badge {
+            background-color: var(--bg-secondary);
+        }
+
+        .portfolio-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            left: 0;
+            z-index: 60;
+            background-color: var(--bg-color);
+            border: 1.5px solid var(--border-color);
+            border-radius: 0.85rem;
+            padding: 6px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(12px);
+            animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        html.dark .portfolio-dropdown-menu {
+            background-color: #212529;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        @keyframes dropdownSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .portfolio-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.9rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: all 0.18s ease;
+            user-select: none;
+        }
+
+        .portfolio-dropdown-item:hover {
+            background-color: var(--bg-secondary);
+            color: var(--accent-color);
+            transform: translateX(3px);
+        }
+
+        .portfolio-dropdown-item.active {
+            background-color: var(--bg-secondary);
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .portfolio-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .cat-networking {
+            background-color: rgba(57, 255, 20, 0.12);
+            border: 1px solid rgba(57, 255, 20, 0.35);
+            color: #16a34a;
+        }
+        html.dark .cat-networking {
+            color: #39ff14;
+        }
+
+        .cat-mobile {
+            background-color: rgba(0, 229, 255, 0.12);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            color: #0284c7;
+        }
+        html.dark .cat-mobile {
+            color: #00e5ff;
+        }
+
+        .cat-robotics {
+            background-color: rgba(255, 0, 127, 0.12);
+            border: 1px solid rgba(255, 0, 127, 0.35);
+            color: #db2777;
+        }
+        html.dark .cat-robotics {
+            color: #ff007f;
+        }
+
+        .cat-all {
+            background-color: rgba(168, 85, 247, 0.12);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            color: #9333ea;
+        }
+        html.dark .cat-all {
+            color: #c084fc;
+        }
+
+        @keyframes projectCardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .portfolio-item {
+            animation: projectCardAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
 
         /* Blog Section */
         .blog-item {
@@ -847,7 +1144,7 @@
 
 <script>
     // Safely escaped portfolio data - 100% Local, zero Firebase dependency
-    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skills":[{"percent":95,"name":"ROUTING"},{"name":"SWITCHING","percent":95},{"name":"CONFIGURE","percent":90},{"name":"FIREWALL","percent":80},{"percent":75,"name":"C++"},{"percent":80,"name":"PYTHON"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"\u003c!DOCTYPE html>\n\u003chtml lang=\"bn\">\n\u003chead>\n\u003cmeta charset=\"UTF-8\">\n\u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\u003ctitle>Access Control List (ACL) – সম্পূর্ণ গাইড\u003c/title>\n\u003c/head>\n\u003cbody>\n\n\u003ch1>Access Control List (ACL) – সম্পূর্ণ গাইড\u003c/h1>\n\n\u003cp>\u003cb>Access Control List (ACL)\u003c/b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।\u003c/p>\n\n\u003ch2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:\u003c/h2>\n\u003cp>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।\u003c/p>\n\u003cblockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" >\u003ca href=\"//imgur.com/a/Geaj8KR\">\u003c/a>\u003c/blockquote>\u003cscript async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\">\u003c/script>\n\u003ch2>🔍 ACL এর ধরন:\u003c/h2>\n\u003cul>\n\u003cli>\u003cb>Standard ACL:\u003c/b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।\u003c/li>\n\u003cli>\u003cb>Extended ACL:\u003c/b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।\u003c/li>\n\u003c/ul>\n\n\u003ch2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):\u003c/h2>\n\n\u003ch3>Step 1: Basic Network Setup\u003c/h3>\n\u003cp>দুটি নেটওয়ার্ক নাও:\u003c/p>\n\u003cpre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n\u003c/pre>\n\n\u003ch3>Step 2: IP Assign\u003c/h3>\n\u003cp>PC এবং রাউটারে IP অ্যাসাইন করো।\u003c/p>\n\n\u003ch3>Step 3: ACL তৈরি\u003c/h3>\n\u003cp>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা\u003c/p>\n\u003cpre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n\u003c/pre>\n\n\u003ch3>Step 4: ACL Apply করা\u003c/h3>\n\u003cp>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।\u003c/p>\n\u003cpre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n\u003c/pre>\n\n\u003ch3>Step 5: Verify\u003c/h3>\n\u003cp>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।\u003c/p>\n\n\u003ch2>🧠 টিপস:\u003c/h2>\n\u003cul>\n\u003cli>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।\u003c/li>\n\u003cli>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।\u003c/li>\n\u003c/ul>\n\n\u003cp>\u003ca href=\"https://www.mdkaiumhasan.site\">Visit Now\u003c/a>\u003c/p>\n\n\u003c/body>\n\u003c/html>"},{"fullContent":"\u003ch3>CCNA ki? Networking Career-er Sothik Shuruvat\u003c/h3>\n\n\u003cp>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.\u003c/p>\n\n\u003cp>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo \u003cstrong>CCNA certification\u003c/strong>.\u003c/p>\n\n\u003ch3>Keno CCNA Ekhono Eto Guruttwopurno?\u003c/h3>\n\n\u003cp>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.\u003c/p>\n\n\u003cp>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.\u003c/p>\n\n\u003c!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n\u003ca href=\"https://www.arduino.cc\" target=\"_blank\">\n\u003cimg src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n\u003c/a>\n\n\u003ch3>Adhunik CCNA-te (200-301) Notun ki ache?\u003c/h3>\n\n\u003cp>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:\u003c/p>\n\n\u003cul>\n\u003cli>\u003cstrong>Automation & Programmability:\u003c/strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.\u003c/li>\n\u003cli>\u003cstrong>Security Fundamentals:\u003c/strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.\u003c/li>\n\u003cli>\u003cstrong>Wireless Networking:\u003c/strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.\u003c/li>\n\u003c/ul>\n\n\u003ch3>Porishesh\u003c/h3>\n\n\u003cp>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.\u003c/p>","category":"Web Design","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035637/portfolio/projects/l3h5n5p8k7s1j3x4m8r2.jpg","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"\u003ch3>EasyMess - Bachelor Mess & Meal Expense Tracker\u003c/h3>\u003cp>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.\u003c/p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035639/portfolio/projects/i1m0u1m6q1y3b4h8q1w2.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"\u003ch3>High-Availability 600-Staff Trading Floor Network Infrastructure\u003c/h3>\u003cp>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.\u003c/p>\u003cul>\u003cli>600 Active Hosts across 3 floors\u003c/li>\u003cli>Sub-second OSPF convergence & redundant failover\u003c/li>\u003cli>Tier-1 packet inspection & Port Security\u003c/li>\u003c/ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035641/portfolio/projects/t9v5x2k4m7p1j3w6s8r4.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"\u003ch3>Ramadan Journey - Real-Time Prayer Helper\u003c/h3>\u003cp>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.\u003c/p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/b1c4e7k2m9p3j5w8s0r2.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"\u003ch3>Autonomous Line Follower Robot (LFR)\u003c/h3>\u003cp>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.\u003c/p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"description":"Covering Network, Parameter Security and Virtualisation.","date":"2019 - PRESENT","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035644/portfolio/experiences/oviaxzqzuolf1c9hdbmd.jpg","title":"SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"},{"description":"Worked closely with Platform team for new networks provisioning, routing and firewall policy management.","title":"SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035646/portfolio/experiences/uaz8dts2s2mexbvbkkyb.svg","date":"2018 – 2019"},{"date":"","description":"","imageUrl":"","title":""}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf"};
+    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skills":[{"percent":95,"name":"ROUTING"},{"name":"SWITCHING","percent":95},{"name":"CONFIGURE","percent":90},{"name":"FIREWALL","percent":80},{"percent":75,"name":"C++"},{"percent":80,"name":"PYTHON"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"><\/script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"},{"fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>","category":"Web Design","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","category":"Mobile & Realtime","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","category":"Networking & Security","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","category":"Mobile & Realtime","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://files.catbox.moe/bcktxt.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","category":"Robotics & Hardware","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"description":"Covering Network, Parameter Security and Virtualisation.","date":"2019 - PRESENT","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035644/portfolio/experiences/oviaxzqzuolf1c9hdbmd.jpg","title":"SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"},{"description":"Worked closely with Platform team for new networks provisioning, routing and firewall policy management.","title":"SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035646/portfolio/experiences/uaz8dts2s2mexbvbkkyb.svg","date":"2018 – 2019"},{"date":"","description":"","imageUrl":"","title":""}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf","project_categories":["Networking & Security","Mobile & Realtime","Robotics & Hardware"]};
 
     // Auto-initialize instantly with cached clean data
     document.addEventListener('DOMContentLoaded', () => {
@@ -1059,20 +1356,64 @@ function handleEnter3D() {
         </section>
 
         
-<section id="portfolio" class="main-section min-h-screen px-6 md:px-16 py-24" style="background-color: var(--bg-secondary);">
+<section id="portfolio" class="main-section min-h-screen px-4 sm:px-8 md:px-16 py-20" style="background-color: transparent;">
              <div class="container mx-auto">
                 <h2 class="section-title">MY <span class="text-accent">PORTFOLIO</span>
                     <span class="section-title-bg">WORK</span>
                 </h2>
 
-                
-<p id="portfolio-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
+                <p id="portfolio-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
                     This Page Is Under Constuction!
                 </p>
 
-                <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Portfolio Category Filter Bar & Dropdown -->
+                <div class="portfolio-filter-bar mb-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="filter-lead-icon flex items-center justify-center w-9 h-9 rounded-full" style="background-color: var(--bg-color); border: 1.5px solid var(--border-color); color: var(--accent-color);">
+                            <i class="fas fa-layer-group text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold tracking-wider uppercase" style="color: var(--text-secondary);">Filter Projects</h3>
+                            <p class="text-sm font-semibold" id="portfolio-showing-count-text" style="color: var(--text-color);">
+                                Showing <span id="portfolio-showing-count" class="font-bold text-accent">4</span> Dynamic Projects
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Custom Category Dropdown -->
+                    <div class="portfolio-dropdown-wrapper" id="portfolio-dropdown-container">
+                        <button type="button" id="portfolio-filter-btn" class="portfolio-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter projects by category">
+                            <span class="flex items-center gap-2.5">
+                                <span id="current-filter-dot" class="category-dot" style="background-color: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
+                                <span class="text-xs uppercase font-semibold text-secondary">Category:</span>
+                                <span id="current-filter-label" class="font-semibold text-sm">All</span>
+                            </span>
+                            <span class="flex items-center gap-2 ml-4">
+                                <span id="current-filter-count" class="portfolio-filter-badge">4</span>
+                                <i id="dropdown-chevron-icon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                            </span>
+                        </button>
+
+                        <!-- Floating Dropdown Menu -->
+                        <div id="portfolio-filter-menu" class="portfolio-dropdown-menu hidden" role="listbox" tabindex="-1">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     
-</div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="portfolio-empty-state" class="hidden text-center py-16">
+                    <i class="fas fa-folder-open text-4xl mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                    <p class="text-base font-semibold" style="color: var(--text-color);">No projects found in this category.</p>
+                    <p class="text-xs mt-1" style="color: var(--text-secondary);">Try selecting "All" to view all available projects.</p>
+                    <button type="button" onclick="selectPortfolioCategory('All')" class="btn-custom mt-4 text-xs">
+                        View All Projects
+                    </button>
+                </div>
             </div>
           </section>
 
@@ -1258,7 +1599,10 @@ function handleEnter3D() {
 
             // 3. Portfolio Section
             portfolioConstructionMsg.classList.toggle('hidden', !get('portfolio__showConstructionMessage', false));
-            renderPortfolio(get('projects', []));
+            window.portfolioCategories = get('project_categories', null);
+            allProjectsList = get('projects', []);
+            initPortfolioDropdown();
+            updatePortfolioCategoryFilter();
 
             // 4. Timeline Section
             timelineConstructionMsg.classList.toggle('hidden', !get('timeline__showConstructionMessage', false));
@@ -1355,59 +1699,261 @@ function handleEnter3D() {
             });
         }
 
+        // --- Portfolio Category & Filtering Logic ---
+        let allProjectsList = [];
+        let activeProjectCategory = 'All';
+
+        function getProjectCategory(project) {
+            if (project.category) return project.category;
+            const tech = (project.technology || '').toLowerCase();
+            const title = (project.title || '').toLowerCase();
+            const desc = (project.shortDesc || '').toLowerCase();
+            if (tech.includes('cisco') || tech.includes('ospf') || tech.includes('vlan') || tech.includes('network') || title.includes('network')) return 'Networking & Security';
+            if (tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware') || title.includes('robot') || title.includes('lfr') || desc.includes('robot')) return 'Robotics & Hardware';
+            if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile') || title.includes('mess') || title.includes('ramadan') || desc.includes('app')) return 'Mobile & Realtime';
+            return 'Networking & Security';
+        }
+
+        function getProjectCategoryStyle(category) {
+            switch (category) {
+                case 'Networking & Security':
+                    return {
+                        className: 'cat-networking',
+                        dotColor: '#39ff14'
+                    };
+                case 'Mobile & Realtime':
+                    return {
+                        className: 'cat-mobile',
+                        dotColor: '#00e5ff'
+                    };
+                case 'Robotics & Hardware':
+                    return {
+                        className: 'cat-robotics',
+                        dotColor: '#ff007f'
+                    };
+                case 'All':
+                    return {
+                        className: 'cat-all',
+                        dotColor: '#a855f7'
+                    };
+                default: {
+                    const vibrantColors = ['#a855f7', '#f59e0b', '#ec4899', '#06b6d4', '#10b981', '#6366f1'];
+                    let hash = 0;
+                    for (let i = 0; i < (category || '').length; i++) hash = category.charCodeAt(i) + ((hash << 5) - hash);
+                    return {
+                        className: 'cat-custom',
+                        dotColor: vibrantColors[Math.abs(hash) % vibrantColors.length]
+                    };
+                }
+            }
+        }
+
+        function updatePortfolioCategoryFilter() {
+            const filterMenu = document.getElementById('portfolio-filter-menu');
+            const currentDot = document.getElementById('current-filter-dot');
+            const currentLabel = document.getElementById('current-filter-label');
+            const currentCount = document.getElementById('current-filter-count');
+            const showingCount = document.getElementById('portfolio-showing-count');
+            const emptyState = document.getElementById('portfolio-empty-state');
+
+            const filteredProjects = activeProjectCategory === 'All'
+                ? allProjectsList
+                : allProjectsList.filter(p => getProjectCategory(p) === activeProjectCategory);
+
+            const countTextContainer = document.getElementById('portfolio-showing-count-text');
+            if (countTextContainer) {
+                countTextContainer.innerHTML = `Showing <span id="portfolio-showing-count" class="font-bold text-accent">${filteredProjects.length}</span> ${filteredProjects.length === 1 ? 'Dynamic Project' : 'Dynamic Projects'}`;
+            } else if (showingCount) {
+                showingCount.textContent = filteredProjects.length;
+            }
+
+            const currentStyle = getProjectCategoryStyle(activeProjectCategory);
+            if (currentDot) {
+                currentDot.style.backgroundColor = currentStyle.dotColor;
+                currentDot.style.boxShadow = `0 0 8px ${currentStyle.dotColor}`;
+            }
+            if (currentLabel) {
+                currentLabel.textContent = activeProjectCategory === 'All' ? 'All' : activeProjectCategory;
+            }
+            if (currentCount) {
+                currentCount.textContent = filteredProjects.length;
+            }
+
+            // Build Dropdown Options dynamically
+            if (filterMenu) {
+                const defaultCats = ['Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
+                const configuredCats = (window.portfolioCategories && Array.isArray(window.portfolioCategories) && window.portfolioCategories.length > 0)
+                    ? window.portfolioCategories
+                    : defaultCats;
+                const categories = ['All', ...configuredCats];
+                filterMenu.innerHTML = categories.map(cat => {
+                    const catCount = cat === 'All' 
+                        ? allProjectsList.length 
+                        : allProjectsList.filter(p => getProjectCategory(p) === cat).length;
+                    const style = getProjectCategoryStyle(cat);
+                    const isSelected = cat === activeProjectCategory;
+                    return `
+                        <div class="portfolio-dropdown-item ${isSelected ? 'active' : ''}" data-category="${escapeHTML(cat)}" role="option" aria-selected="${isSelected}">
+                            <span class="flex items-center gap-2.5">
+                                <span class="category-dot" style="background-color: ${style.dotColor}; box-shadow: 0 0 6px ${style.dotColor};"></span>
+                                <span>${cat === 'All' ? 'All' : escapeHTML(cat)}</span>
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <span class="portfolio-filter-badge">${catCount}</span>
+                                ${isSelected ? '<i class="fas fa-check text-xs text-accent"></i>' : ''}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+
+                filterMenu.querySelectorAll('.portfolio-dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const cat = item.getAttribute('data-category');
+                        selectPortfolioCategory(cat);
+                    });
+                });
+            }
+
+            renderPortfolio(filteredProjects);
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', filteredProjects.length > 0);
+            }
+        }
+
+        function selectPortfolioCategory(cat) {
+            activeProjectCategory = cat;
+            const dropdownBtn = document.getElementById('portfolio-filter-btn');
+            const dropdownMenu = document.getElementById('portfolio-filter-menu');
+            if (dropdownBtn) {
+                dropdownBtn.classList.remove('open');
+                dropdownBtn.setAttribute('aria-expanded', 'false');
+            }
+            if (dropdownMenu) {
+                dropdownMenu.classList.add('hidden');
+            }
+            updatePortfolioCategoryFilter();
+        }
+
+        window.selectPortfolioCategory = selectPortfolioCategory;
+
+        function initPortfolioDropdown() {
+            const filterBtn = document.getElementById('portfolio-filter-btn');
+            const filterMenu = document.getElementById('portfolio-filter-menu');
+            const dropdownContainer = document.getElementById('portfolio-dropdown-container');
+
+            if (filterBtn && filterMenu && !filterBtn.dataset.initialized) {
+                filterBtn.dataset.initialized = 'true';
+                filterBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isCurrentlyHidden = filterMenu.classList.contains('hidden');
+                    if (isCurrentlyHidden) {
+                        filterMenu.classList.remove('hidden');
+                        filterBtn.classList.add('open');
+                        filterBtn.setAttribute('aria-expanded', 'true');
+                    } else {
+                        filterMenu.classList.add('hidden');
+                        filterBtn.classList.remove('open');
+                        filterBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (dropdownContainer && !dropdownContainer.contains(e.target)) {
+                        filterMenu.classList.add('hidden');
+                        filterBtn.classList.remove('open');
+                        filterBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !filterMenu.classList.contains('hidden')) {
+                        filterMenu.classList.add('hidden');
+                        filterBtn.classList.remove('open');
+                        filterBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
+
         function renderPortfolio(projects = []) {
             if (!portfolioGrid) return;
             portfolioGrid.innerHTML = ''; // Clear previous
             projects.forEach(project => {
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'portfolio-item';
-                // --- FIX: Sanitize fullDetails with DOMPurify ---
                 const safeFullDetails = sanitizeHTML(project.fullDetails || '');
-                // --- END FIX ---
+                const category = getProjectCategory(project);
+                const catStyle = getProjectCategoryStyle(category);
                 
-                // --- FIX: Use textContent for safety, add bold Description ---
                 projectDiv.innerHTML = `
                     <div>
-                        <div class="relative overflow-hidden rounded-t-lg">
-                            <img src="" alt="" class="w-full h-64 object-cover" loading="lazy">
+                        <div class="relative overflow-hidden rounded-t-[0.85rem] bg-black/40">
+                            <img src="" alt="" class="w-full h-40 object-cover" loading="lazy">
+                            <div class="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+                                <span class="portfolio-category-badge ${catStyle.className} shadow-sm backdrop-blur-md" style="margin-bottom: 0; padding: 2.5px 8.5px; font-size: 0.68rem;">
+                                    <span class="category-dot" style="background-color: ${catStyle.dotColor}; box-shadow: 0 0 6px ${catStyle.dotColor}; width: 6.5px; height: 6.5px;"></span>
+                                    <span>${escapeHTML(category)}</span>
+                                </span>
+                            </div>
                         </div>
                         <div class="portfolio-content">
                             <h3 class="portfolio-title"></h3>
-                            <p class="portfolio-details">
-                                <!-- Content will be built here -->
-                            </p>
+                            <div class="portfolio-meta-role"></div>
+                            <div class="portfolio-meta-tech"></div>
+                            <p class="portfolio-details"></p>
                         </div>
                     </div>
                     <button class="btn-view-project open-project-btn">
-                        View Project
+                        <span>View Project</span>
+                        <i class="fas fa-arrow-right text-[10px]"></i>
                     </button>
                 `;
                 
                 const img = projectDiv.querySelector('img');
-                img.src = project.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Project';
-                img.alt = project.title || 'Portfolio Item';
+                const projectTitle = project.title || 'Project';
+                const defaultFallback = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%230b1120"/><stop offset="100%" stop-color="%231a2333"/></linearGradient></defs><rect width="600" height="380" fill="url(%23bg)"/><rect x="1" y="1" width="598" height="378" rx="8" fill="none" stroke="%2328a745" stroke-width="1.5" stroke-opacity="0.3"/><circle cx="300" cy="140" r="36" fill="%2328a745" fill-opacity="0.12"/><path d="M290 128l-12 12 12 12m20-24l12 12-12 12" stroke="%2328a745" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><text x="300" y="210" fill="%23f1f5f9" font-family="system-ui, sans-serif" font-size="16" font-weight="700" text-anchor="middle">${encodeURIComponent(projectTitle)}</text><text x="300" y="235" fill="%2328a745" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="1.5" text-anchor="middle">ACTIVE PROJECT</text></svg>`;
+                img.src = project.imageUrl || defaultFallback;
+                img.alt = projectTitle;
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = defaultFallback;
+                };
 
-                projectDiv.querySelector('.portfolio-title').textContent = project.title || 'Project Title';
-                
+                const titleEl = projectDiv.querySelector('.portfolio-title');
+                titleEl.textContent = projectTitle;
+                titleEl.title = projectTitle;
+
+                const roleEl = projectDiv.querySelector('.portfolio-meta-role');
+                if (roleEl) {
+                    if (project.role) {
+                        roleEl.innerHTML = `<i class="fas fa-user-tag text-[10px] mr-1 text-accent flex-shrink-0"></i><span class="truncate">${escapeHTML(project.role)}</span>`;
+                        roleEl.title = project.role;
+                    } else {
+                        roleEl.style.display = 'none';
+                    }
+                }
+
+                const techEl = projectDiv.querySelector('.portfolio-meta-tech');
+                if (techEl) {
+                    if (project.technology) {
+                        techEl.innerHTML = `<i class="fas fa-code text-[10px] mr-1 opacity-70 flex-shrink-0"></i><span class="truncate">${escapeHTML(project.technology)}</span>`;
+                        techEl.title = project.technology;
+                    } else {
+                        techEl.style.display = 'none';
+                    }
+                }
+
                 const detailsP = projectDiv.querySelector('.portfolio-details');
-                detailsP.innerHTML = ''; // Clear it first
-                if (project.role) {
-                    detailsP.innerHTML += `<strong>Role:</strong> ${escapeHTML(project.role)}<br>`;
-                }
-                if (project.technology) {
-                    detailsP.innerHTML += `<strong>Technology:</strong> ${escapeHTML(project.technology)}<br>`;
-                }
-                if (project.shortDesc) {
-                    // This is the fix you requested
-                    detailsP.innerHTML += `<strong>Description:</strong> ${escapeHTML(project.shortDesc)}`;
-                }
+                const descText = project.shortDesc || '';
+                detailsP.textContent = descText;
+                detailsP.title = descText;
 
                 const button = projectDiv.querySelector('button');
-                button.setAttribute('data-project-image', project.imageUrl || 'https://placehold.co/800x500/eee/ccc?text=Project');
-                button.setAttribute('data-project-title', project.title || 'Project Details');
-                // --- SHOTHIK FIX: Removed .replace(/"/g, '&quot;') ---
+                button.setAttribute('data-project-image', project.imageUrl || defaultFallback);
+                button.setAttribute('data-project-title', projectTitle);
                 button.setAttribute('data-project-details', safeFullDetails);
-                // --- END FIX ---
 
                 portfolioGrid.appendChild(projectDiv);
             });

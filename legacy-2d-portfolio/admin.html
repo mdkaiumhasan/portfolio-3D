@@ -14,51 +14,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --accent-color: #ec407a; /* Pink Light */
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --bg-secondary: #f3f4f6;
-            --border-color: #e5e7eb;
-            --text-secondary: #6b7280;
-            --modal-bg-overlay: rgba(0, 0, 0, 0.6);
-            --btn-cancel-bg: #6c757d;
-            --btn-cancel-hover-bg: #5a6268;
-            --btn-danger-bg: #dc3545;
-            --btn-danger-hover-bg: #c82333;
-            --msg-success-bg: #d4edda;
-            --msg-success-border: #c3e6cb;
-            --msg-success-text: #155724;
-            --msg-error-bg: #f8d7da;
-            --msg-error-border: #f5c6cb;
-            --msg-error-text: #721c24;
-            --btn-disabled-bg: #adb5bd;
-            --sidebar-width: 80px;
-            --btn-gemini-bg: #8e44ad; /* Gemini Purple */
-            --btn-gemini-hover-bg: #732d91;
-            --mobile-breakpoint: 768px; /* Added breakpoint variable */
+            --accent-color: #06b6d4; /* Cyan */
+            --accent-hover: #0891b2;
+            --accent-glow: rgba(6, 182, 212, 0.25);
+            --bg-color: #f8fafc;
+            --text-color: #0f172a;
+            --bg-secondary: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-secondary: #64748b;
+            --modal-bg-overlay: rgba(15, 23, 42, 0.65);
+            --btn-cancel-bg: #64748b;
+            --btn-cancel-hover-bg: #475569;
+            --btn-danger-bg: #ef4444;
+            --btn-danger-hover-bg: #dc2626;
+            --msg-success-bg: #dcfce7;
+            --msg-success-border: #bbf7d0;
+            --msg-success-text: #166534;
+            --msg-error-bg: #fee2e2;
+            --msg-error-border: #fecaca;
+            --msg-error-text: #991b1b;
+            --btn-disabled-bg: #cbd5e1;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --btn-gemini-bg: #8b5cf6;
+            --btn-gemini-hover-bg: #7c3aed;
+            --mobile-breakpoint: 768px;
         }
 
         html.dark {
-            --accent-color: #28a745; /* Green Dark */
-            --bg-color: #212529;
-            --text-color: #f8f9fa;
-            --bg-secondary: #343a40;
-            --border-color: #495057;
-            --text-secondary: #adb5bd;
-            --modal-bg-overlay: rgba(0, 0, 0, 0.8);
-            --btn-cancel-bg: #495057;
-            --btn-cancel-hover-bg: #343a40;
-            --btn-danger-bg: #c82333;
-            --btn-danger-hover-bg: #bd2130;
-             --msg-success-bg: #2a4c33;
-            --msg-success-border: #3b6a4a;
-            --msg-success-text: #d1f7d9;
-            --msg-error-bg: #582f34;
-            --msg-error-border: #723b47;
-            --msg-error-text: #fcc2c8;
-            --btn-disabled-bg: #495057;
-            --btn-gemini-bg: #9b59b6; /* Lighter Gemini Purple for dark */
-            --btn-gemini-hover-bg: #8e44ad;
+            --accent-color: #10b981; /* Emerald Green */
+            --accent-hover: #059669;
+            --accent-glow: rgba(16, 185, 129, 0.25);
+            --bg-color: #0b0f17; /* Deep Slate */
+            --text-color: #f1f5f9;
+            --bg-secondary: #131c2e;
+            --card-bg: #162035;
+            --border-color: #23314d;
+            --text-secondary: #94a3b8;
+            --modal-bg-overlay: rgba(3, 7, 18, 0.85);
+            --btn-cancel-bg: #334155;
+            --btn-cancel-hover-bg: #1e293b;
+            --btn-danger-bg: #dc2626;
+            --btn-danger-hover-bg: #b91c1c;
+            --msg-success-bg: rgba(16, 185, 129, 0.15);
+            --msg-success-border: rgba(16, 185, 129, 0.4);
+            --msg-success-text: #6ee7b7;
+            --msg-error-bg: rgba(239, 68, 68, 0.15);
+            --msg-error-border: rgba(239, 68, 68, 0.4);
+            --msg-error-text: #fca5a5;
+            --btn-disabled-bg: #334155;
+            --btn-gemini-bg: #a855f7;
+            --btn-gemini-hover-bg: #9333ea;
         }
 
         body {
@@ -78,106 +85,766 @@
             padding: 0.75rem 1rem;
             border: 1px solid var(--border-color);
             background-color: var(--bg-secondary);
-            border-radius: 0.375rem;
+            border-radius: 0.5rem;
             color: var(--text-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
-         html.dark .form-input, html.dark .form-textarea {
-             background-color: var(--bg-color);
-             box-shadow: inset 0 1px 2px rgba(255,255,255,0.05);
-         }
+        html.dark .form-input, html.dark .form-textarea {
+            background-color: var(--bg-color);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.02);
+        }
         .form-input:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--accent-color);
-             box-shadow: 0 0 0 2px var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-glow);
         }
 
-        /* --- Sidebar Styles (Responsive) --- */
+        /* --- Executive Sidebar Styles --- */
         #admin-sidebar {
-            position: fixed; top: 0; left: 0; height: 100vh;
-            width: var(--sidebar-width); background-color: var(--bg-secondary);
-            border-right: 1px solid var(--border-color); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; padding: 1.5rem 0; gap: 1.25rem;
-            z-index: 90; transition: transform 0.3s ease; transform: translateX(-100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem 0.85rem;
+            z-index: 90;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            overflow-y: auto;
+            box-sizing: border-box;
         }
         #admin-sidebar.active { transform: translateX(0); }
         @media (min-width: 768px) {
             #admin-sidebar { transform: translateX(0); z-index: 80; }
         }
 
+        .sidebar-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.25rem 0.5rem 1.25rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.75rem;
+            flex-shrink: 0;
+        }
+        .brand-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-color), #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.15rem;
+            box-shadow: 0 0 15px var(--accent-glow);
+            flex-shrink: 0;
+        }
+        .brand-info h2 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.2;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+        .brand-info span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .brand-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color);
+            animation: pulseLive 2s infinite;
+        }
+        @keyframes pulseLive {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .sidebar-nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 0.6rem 0.75rem 0.3rem 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex: 1;
+        }
+
         .sidebar-btn {
-            width: 50px; height: 50px; border-radius: 50%; background-color: var(--bg-color);
-            border: 1px solid var(--border-color); color: var(--text-secondary); display: flex;
-            align-items: center; justify-content: center; font-size: 1.25rem; transition: all 0.3s ease;
-            cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; flex-shrink: 0;
+            width: 100%;
+            height: auto;
+            padding: 0.65rem 0.85rem;
+            border-radius: 0.5rem;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            text-align: left;
+            box-shadow: none;
+            flex-shrink: 0;
         }
-        html.dark .sidebar-btn { background-color: var(--bg-secondary); }
-        .sidebar-btn .btn-text { display: none; }
-        .sidebar-btn:hover, .sidebar-btn.active {
-            background-color: var(--accent-color); border-color: var(--accent-color); color: white;
-            transform: scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        .sidebar-btn i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
         }
-         html.dark .sidebar-btn:hover, html.dark .sidebar-btn.active {
-             background-color: var(--accent-color); color: #212529; /* Dark text on green */
-             border-color: var(--accent-color); transform: scale(1.1); box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-         }
+        .sidebar-btn .btn-text {
+            display: inline-block !important;
+            flex: 1;
+            white-space: nowrap;
+        }
+        .sidebar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            border-color: var(--border-color);
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        html:not(.dark) .sidebar-btn:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+        .sidebar-btn.active {
+            background-color: rgba(16, 185, 129, 0.12) !important;
+            border-color: var(--accent-color) !important;
+            color: var(--accent-color) !important;
+            transform: none !important;
+            box-shadow: 0 0 12px var(--accent-glow) !important;
+        }
+        .sidebar-btn.active i {
+            color: var(--accent-color) !important;
+        }
+
+        .sidebar-nav-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-color);
+            margin-left: auto;
+        }
 
         .sidebar-btn .notification-dot {
-            position: absolute; top: 2px; right: 2px; width: 12px; height: 12px;
-            background-color: red; border-radius: 50%; border: 2px solid var(--bg-color); display: none;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+            display: none;
         }
-        html.dark .sidebar-btn .notification-dot { border: 2px solid var(--bg-secondary); }
         .sidebar-btn.has-notification .notification-dot { display: block; }
 
+        .sidebar-external-btn {
+            width: 100%;
+            padding: 0.55rem 0.85rem;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.825rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        .sidebar-external-btn i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .sidebar-external-btn:hover {
+            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-user-card {
+            margin-top: auto;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-shrink: 0;
+        }
+        .user-avatar-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, var(--accent-color));
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .user-meta-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        .user-meta-name {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .user-meta-role {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        .sidebar-quick-logout {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        .sidebar-quick-logout:hover {
+            background: var(--btn-danger-bg);
+            border-color: var(--btn-danger-bg);
+            color: #ffffff;
+        }
 
         /* --- Top Header (Responsive) --- */
         .admin-header {
-            position: fixed; top: 0; left: 0; width: 100%; display: flex;
-            justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem;
-            background-color: var(--bg-secondary); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 70; transition: opacity 0.5s ease-in, left 0.3s ease, width 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.5rem;
+            background-color: var(--bg-secondary);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            z-index: 70;
+            transition: opacity 0.5s ease-in, left 0.3s ease, width 0.3s ease;
+            box-sizing: border-box;
         }
         @media (min-width: 768px) {
             .admin-header { left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
         }
 
-         .admin-header-buttons-left, .admin-header-buttons-right { display: flex; align-items: center; gap: 1rem; }
-         #admin-initial-menu-container { display: none !important; }
+        .admin-header-left, .admin-header-right { display: flex; align-items: center; gap: 0.85rem; }
+        #admin-initial-menu-container { display: none !important; }
 
-         .header-btn {
-             width: 40px; height: 40px; border-radius: 0.375rem; background-color: var(--bg-secondary);
-             color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
-             font-size: 1.1rem; cursor: pointer; box-shadow: none; border: 1px solid var(--border-color); transition: all 0.3s ease;
-         }
-        #hamburger-btn-main { display: flex !important; }
-
-         .header-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); color: white; }
-         html.dark .header-btn:hover { color: #212529; }
-
-         .hamburger-menu { position: relative; }
-         .hamburger-dropdown {
-             position: absolute; top: calc(100% + 10px); left: 0; background-color: var(--bg-color);
-             border: 1px solid var(--border-color); border-radius: 0.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-             padding: 0.5rem 0; min-width: 220px; z-index: 80; opacity: 0; transform: translateY(-10px);
-             transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
-         }
-         .hamburger-dropdown.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
-         .hamburger-dropdown a { display: block; padding: 0.75rem 1.25rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s ease; white-space: nowrap; cursor: pointer; }
-         .hamburger-dropdown a:hover { background-color: var(--bg-secondary); }
-         .hamburger-dropdown a i { margin-right: 0.75rem; width: 20px; text-align: center; }
-
-        /* --- Main content area (Responsive) --- */
-        .admin-content {
-            margin-left: 0; padding: 1.5rem; padding-top: 5.5rem; width: 100%;
-            transition: opacity 0.5s ease-in, margin-left 0.3s ease, width 0.3s ease; box-sizing: border-box;
+        .header-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
         }
-         @media (min-width: 768px) {
-             .admin-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
-         }
+        .breadcrumb-root { font-weight: 500; }
+        .breadcrumb-sep { font-size: 0.75rem; opacity: 0.5; }
+        .breadcrumb-current { font-weight: 600; color: var(--text-color); }
 
-        .editor-section { background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-         html.dark .editor-section { background-color: var(--bg-secondary); }
+        .header-save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1rem;
+            border-radius: 0.375rem;
+            background-color: var(--accent-color);
+            color: #0b0f17;
+            font-weight: 600;
+            font-size: 0.825rem;
+            border: 1px solid var(--accent-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px var(--accent-glow);
+        }
+        .header-save-btn:hover:not(:disabled) {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+        .header-save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .system-status-pill {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-color);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        @media (min-width: 960px) {
+            .system-status-pill { display: inline-flex; }
+        }
+
+        .header-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 0.375rem;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: none;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        #hamburger-btn-main { display: flex !important; }
+        .header-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); color: #0b0f17; }
+        html.dark .header-btn:hover { color: #0b0f17; }
+
+        .hamburger-menu { position: relative; }
+        .hamburger-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0; left: auto; background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color); border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 0.5rem 0; min-width: 220px; z-index: 80; opacity: 0; transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+        }
+        .hamburger-dropdown.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .hamburger-dropdown a { display: block; padding: 0.75rem 1.25rem; color: var(--text-color); text-decoration: none; transition: background-color 0.2s ease; white-space: nowrap; cursor: pointer; font-size: 0.875rem; }
+        .hamburger-dropdown a:hover { background-color: var(--bg-color); color: var(--accent-color); }
+        .hamburger-dropdown a i { margin-right: 0.75rem; width: 18px; text-align: center; }
+
+        /* --- Main Content Area --- */
+        .admin-content {
+            margin-left: 0;
+            padding: 1.5rem;
+            padding-top: calc(var(--header-height) + 1.5rem);
+            width: 100%;
+            transition: opacity 0.5s ease-in, margin-left 0.3s ease, width 0.3s ease;
+            box-sizing: border-box;
+            max-width: 1280px;
+        }
+        @media (min-width: 768px) {
+            .admin-content { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
+        }
+
+        .editor-section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        html.dark .editor-section { background-color: var(--card-bg); }
+        .editor-section h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .editor-section label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .editor-section input[type="text"], .editor-section input[type="number"], .editor-section input[type="password"],
+        .editor-section input[type="email"], .editor-section input[type="file"], .editor-section textarea, .editor-section select {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+        .editor-section select {
+            cursor: pointer;
+        }
+
+        .editor-section .btn-save, .editor-section .btn-add, .editor-section .btn-delete, .editor-section .btn-upload,
+        .editor-section .btn-gemini, .modal-footer button {
+            padding: 0.6rem 1.1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid transparent;
+            font-size: 0.825rem;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .editor-section button:last-child, .dynamic-item-container div:last-child > button, .dynamic-item-container > button:last-of-type,
+        .message-item button:last-of-type, .modal-footer button:last-child { margin-right: 0; }
+        .editor-section button:disabled, .modal-footer button:disabled {
+            background-color: var(--btn-disabled-bg);
+            border-color: var(--btn-disabled-bg);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .editor-section .btn-save { background-color: var(--accent-color); color: #0b0f17; border-color: var(--accent-color); }
+        .editor-section .btn-save:hover:not(:disabled) { filter: brightness(110%); transform: translateY(-1px); }
+        .editor-section .btn-add { background-color: #0284c7; color: white; border-color: #0284c7; }
+        .editor-section .btn-add:hover:not(:disabled) { background-color: #0369a1; border-color: #0369a1; }
+        .editor-section .btn-delete { background-color: var(--btn-danger-bg); color: white; border-color: var(--btn-danger-bg); }
+        .editor-section .btn-delete:hover:not(:disabled) { background-color: var(--btn-danger-hover-bg); border-color: var(--btn-danger-hover-bg); }
+        .editor-section .btn-upload { background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); }
+        .editor-section .btn-upload:hover:not(:disabled) { background-color: var(--border-color); }
+        .editor-section .btn-gemini { background-color: var(--btn-gemini-bg); color: white; border-color: var(--btn-gemini-bg); }
+        .editor-section .btn-gemini:hover:not(:disabled) { background-color: var(--btn-gemini-hover-bg); border-color: var(--btn-gemini-hover-bg); }
+
+        .save-status { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; text-align: center; }
+        .save-status.success { background-color: var(--msg-success-bg); border: 1px solid var(--msg-success-border); color: var(--msg-success-text); }
+        .save-status.error { background-color: var(--msg-error-bg); border: 1px solid var(--msg-error-border); color: var(--msg-error-text); }
+
+        /* Dynamic Item Card */
+        .dynamic-item-container {
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-radius: 0.65rem;
+            background-color: var(--bg-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        html.dark .dynamic-item-container { background-color: rgba(11, 15, 23, 0.6); }
+        .dynamic-item-container:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .dynamic-item-container h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- Category & Section Manager Card --- */
+        .category-manager-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+        .category-manager-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.25rem;
+        }
+        @media (min-width: 640px) {
+            .category-manager-header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+        .category-manager-title-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+        }
+        .category-icon-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+        }
+        .category-manager-title-wrap h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0 0 0.25rem 0;
+        }
+        .category-manager-subtitle {
+            font-size: 0.825rem;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.4;
+        }
+        .category-summary-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-color);
+            font-size: 0.775rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .active-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .category-chip {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.65rem;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .category-chip:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .category-chip-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .category-chip-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color);
+            flex-shrink: 0;
+        }
+        .category-chip-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .category-chip-count {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 7px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .category-chip-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            flex-shrink: 0;
+        }
+        .btn-chip-action {
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-chip-rename:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #0b0f17;
+        }
+        .btn-chip-delete:hover {
+            background: var(--btn-danger-bg);
+            border-color: var(--btn-danger-bg);
+            color: #ffffff;
+        }
+
+        .add-category-bar {
+            display: flex;
+            gap: 0.75rem;
+            flex-direction: column;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+        @media (min-width: 640px) {
+            .add-category-bar { flex-direction: row; }
+        }
+        .add-category-input-wrap {
+            position: relative;
+            flex: 1;
+        }
+        .add-category-input-wrap .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .add-category-input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-color);
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+        }
+        .add-category-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+        .btn-add-category {
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.5rem;
+            background: var(--accent-color);
+            color: #0b0f17;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+        .btn-add-category:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* Project Category Tag & Select */
+        .project-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Toast notifications */
+        #admin-toast-container {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            pointer-events: none;
+        }
+        .admin-toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            padding: 0.85rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            pointer-events: auto;
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 380px;
+        }
+        .admin-toast.success { border-left: 4px solid var(--accent-color); }
+        .admin-toast.success i { color: var(--accent-color); }
+        .admin-toast.error { border-left: 4px solid var(--btn-danger-bg); }
+        .admin-toast.error i { color: var(--btn-danger-bg); }
+        .admin-toast.warning { border-left: 4px solid #f59e0b; }
+        .admin-toast.warning i { color: #f59e0b; }
+        .admin-toast.hide { opacity: 0; transform: translateX(100px); }
+
+        .section-editor-container { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .section-editor-container.active { display: block; opacity: 1; }
         .editor-section h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; }
         .editor-section label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.9rem; }
         .editor-section input[type="text"], .editor-section input[type="number"], .editor-section input[type="password"],
@@ -337,7 +1004,7 @@
                 </div>
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-                    <input type="password" id="password" placeholder="Password" class="form-input" required>
+                    <input type="password" id="password" placeholder="Enter Password" class="form-input" required>
                 </div>
                 <button type="submit" class="w-full bg-accent text-white py-2.5 rounded-md font-semibold hover:opacity-90 transition-opacity">Login</button>
                 <p id="login-error" class="text-red-500 dark:text-red-400 text-center mt-4 hidden">Invalid email or password.</p>
@@ -350,16 +1017,76 @@
 
         <!-- Admin Sidebar -->
         <aside id="admin-sidebar" class="">
-           <button class="sidebar-btn" data-target="home-edit" title="Edit Home"> <i class="fas fa-home"></i> </button>
-           <button class="sidebar-btn" data-target="about-edit" title="Edit About/Skills/Activities"> <i class="fas fa-user"></i> </button>
-           <button class="sidebar-btn" data-target="portfolio-edit" title="Edit Portfolio"> <i class="fas fa-briefcase"></i> </button>
-           <button class="sidebar-btn" data-target="timeline-edit" title="Edit Timeline"> <i class="fas fa-calendar-alt"></i> </button>
-           <button class="sidebar-btn" data-target="blogs-edit" title="Edit Blogs"> <i class="fas fa-file-alt"></i> </button>
-           <button class="sidebar-btn" data-target="contact-edit" title="Edit Contact"> <i class="fas fa-envelope"></i> </button>
-           <button class="sidebar-btn" data-target="inbox-edit" title="Inbox">
-               <i class="fas fa-inbox"></i>
-               <span id="inbox-notification" class="notification-dot"></span>
-           </button>
+            <!-- Brand Header -->
+            <div class="sidebar-brand-header">
+                <div class="brand-icon-box">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <div class="brand-info">
+                    <h2>MD. KAIUM HASAN</h2>
+                    <span><span class="brand-live-dot"></span> Admin Console</span>
+                </div>
+            </div>
+
+            <!-- Navigation Sections -->
+            <div class="sidebar-nav-label">Management Sections</div>
+            <nav class="sidebar-nav-list">
+                <button class="sidebar-btn" data-target="home-edit" title="Home Hero">
+                    <i class="fas fa-home"></i>
+                    <span class="btn-text">Home Hero</span>
+                </button>
+                <button class="sidebar-btn" data-target="about-edit" title="About & Skills">
+                    <i class="fas fa-user"></i>
+                    <span class="btn-text">About & Skills</span>
+                </button>
+                <button class="sidebar-btn" data-target="portfolio-edit" title="Projects & Categories">
+                    <i class="fas fa-briefcase"></i>
+                    <span class="btn-text">Projects & Categories</span>
+                    <span id="sidebar-projects-count" class="sidebar-nav-badge">4</span>
+                </button>
+                <button class="sidebar-btn" data-target="timeline-edit" title="Experience Timeline">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="btn-text">Timeline</span>
+                </button>
+                <button class="sidebar-btn" data-target="blogs-edit" title="Blog Posts">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="btn-text">Blog Posts</span>
+                </button>
+                <button class="sidebar-btn" data-target="contact-edit" title="Contact Details">
+                    <i class="fas fa-envelope"></i>
+                    <span class="btn-text">Contact Details</span>
+                </button>
+                <button class="sidebar-btn" data-target="inbox-edit" title="Message Inbox">
+                    <i class="fas fa-inbox"></i>
+                    <span class="btn-text">Message Inbox</span>
+                    <span id="inbox-notification" class="notification-dot"></span>
+                </button>
+            </nav>
+
+            <!-- External Portfolio Links -->
+            <div class="sidebar-nav-label mt-4">Live Portfolios</div>
+            <div class="space-y-1 mb-2">
+                <a href="/classic.html" target="_blank" class="sidebar-external-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Classic 2D Portfolio</span>
+                </a>
+                <a href="/" target="_blank" class="sidebar-external-btn">
+                    <i class="fas fa-cube"></i>
+                    <span>Cyber 3D Portfolio</span>
+                </a>
+            </div>
+
+            <!-- User Profile Card in Sidebar -->
+            <div class="sidebar-user-card">
+                <div class="user-avatar-badge">KH</div>
+                <div class="user-meta-info">
+                    <div class="user-meta-name">Kaium Hasan</div>
+                    <div class="user-meta-role">Super Admin</div>
+                </div>
+                <button type="button" id="sidebar-logout-btn" class="sidebar-quick-logout" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
         </aside>
 
         <!-- Sidebar Overlay for Mobile -->
@@ -367,17 +1094,39 @@
 
         <!-- Admin Header -->
         <header id="admin-header" class="admin-header hidden">
-            <div class="admin-header-buttons-left">
+            <div class="admin-header-left">
+                <button id="hamburger-btn-main" class="header-btn md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-breadcrumb">
+                    <span class="breadcrumb-root"><i class="fas fa-layer-group mr-1.5 text-accent"></i> Console</span>
+                    <span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>
+                    <span id="header-active-section-name" class="breadcrumb-current">Home Hero</span>
+                </div>
+            </div>
+
+            <div class="admin-header-right">
+                <div class="system-status-pill">
+                    <span class="brand-live-dot"></span>
+                    <span>MongoDB Live</span>
+                </div>
+
+                <button type="button" id="global-save-btn" class="header-save-btn" title="Save all pending changes to MongoDB">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Save All Changes</span>
+                </button>
+
+                <div id="theme-toggle-placeholder"></div>
+
                 <div class="hamburger-menu" id="main-hamburger-menu">
-                    <button id="hamburger-btn-main" class="header-btn"> <i class="fas fa-bars"></i> </button>
+                    <button id="hamburger-btn-dropdown" class="header-btn" title="User Options">
+                        <i class="fas fa-cog"></i>
+                    </button>
                     <div id="hamburger-dropdown-main" class="hamburger-dropdown">
-                        <a id="change-credentials-btn"><i class="fas fa-user-shield"></i>Change Credentials</a>
+                        <a id="change-credentials-btn"><i class="fas fa-user-shield"></i>Change Password</a>
                         <a id="logout-menu-btn"><i class="fas fa-sign-out-alt"></i>Logout</a>
                     </div>
                 </div>
-            </div>
-            <div class="admin-header-buttons-right">
-                <div id="theme-toggle-placeholder"></div> <!-- Placeholder for theme toggle -->
             </div>
         </header>
 
@@ -447,7 +1196,7 @@
             <!-- Portfolio Section Editor -->
             <section id="portfolio-edit" class="section-editor-container">
                 <div class="editor-section">
-                    <h3>Portfolio Section Editing</h3>
+                    <h3><i class="fas fa-briefcase text-accent"></i> Portfolio & Projects Management</h3>
                     <!-- Updated Toggle Text -->
                     <div class="construction-message-toggle-container">
                         <span class="construction-message-toggle-label">Show "Under Construction" Message:</span>
@@ -460,8 +1209,48 @@
                      <label for="portfolio-cv-link">CV Download Link (Portfolio Section):</label>
                      <input type="text" id="portfolio-cv-link" value="#" class="form-input">
 
-                    <p>Edit existing projects or add new ones.</p>
-                    <div id="portfolio-items-container" class="space-y-6 mt-4"></div>
+                    <!-- Executive Category & Section Manager Card -->
+                    <div class="category-manager-card mt-6">
+                        <div class="category-manager-header">
+                            <div class="category-manager-title-wrap">
+                                <div class="category-icon-badge">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <div>
+                                    <h4>Project Sections & Categories</h4>
+                                    <p class="category-manager-subtitle">
+                                        Customize sections for the 3D row filter & 2D dropdown filter. You can add new sections, rename existing ones (which automatically cascades to all tagged projects), and remove unused categories.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="category-summary-badge">
+                                <span id="category-total-count">3</span> Categories Active
+                            </div>
+                        </div>
+
+                        <!-- Active Categories List -->
+                        <div id="active-categories-list" class="active-categories-grid">
+                            <!-- Populated dynamically via renderCategoryManager() -->
+                        </div>
+
+                        <!-- Add Category Form -->
+                        <div class="add-category-bar">
+                            <div class="add-category-input-wrap">
+                                <i class="fas fa-folder-plus input-icon"></i>
+                                <input type="text" id="new-category-input" class="add-category-input" placeholder="Type new section name (e.g. AI & Machine Learning, Cloud Architecture)...">
+                            </div>
+                            <button type="button" id="add-category-btn" class="btn-add-category">
+                                <i class="fas fa-plus mr-1.5"></i> Add Category
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-8 mb-3">
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100 m-0">Project Cards</h4>
+                        <span class="text-sm text-secondary">Manage existing projects or add new ones</span>
+                    </div>
+
+                    <div id="portfolio-items-container" class="space-y-6 mt-2"></div>
                     <button class="btn-add mt-6" data-container="portfolio-items-container" data-template="project-template"><i class="fas fa-plus mr-1"></i>Add New Project</button>
                     <button class="btn-save mt-6 block">
                         <i class="fas fa-save mr-2"></i>Save All Changes (Portfolio)
@@ -692,21 +1481,68 @@
          </div>
       </template>
     <template id="project-template">
-         <div class="dynamic-item-container">
-             <h4>New Project</h4>
-             <label>Image URL:</label> <input type="text" data-key="imageUrl" class="form-input image-url-input">
-             <div class="image-preview-container"><img class="image-preview" src="" alt="Project Preview"></div>
-             <label>Image Upload:</label> <input type="file" accept="image/*" class="form-input mb-2 image-file-input">
-             <button class="btn-upload mb-4" data-target-input="[data-key='imageUrl']" data-target-preview=".image-preview"><i class="fas fa-upload mr-1"></i>Upload Image</button>
-             <div class="upload-progress"><i class="fas fa-spinner fa-spin"></i> Uploading... <span>0</span>%</div>
-             <label>Title:</label> <input type="text" data-key="title" class="form-input">
-             <label>Role:</label> <input type="text" data-key="role" class="form-input">
-             <label>Technology:</label> <input type="text" data-key="technology" class="form-input">
-             <label>Live Demo URL:</label> <input type="text" data-key="live" class="form-input" placeholder="https://...">
-             <label>GitHub Repository URL:</label> <input type="text" data-key="github" class="form-input" placeholder="https://github.com/...">
-             <label>Short Description:</label> <textarea rows="2" data-key="shortDesc" class="form-textarea"></textarea>
-             <label>Full Details (HTML Allowed):</label> <textarea rows="6" data-key="fullDetails" class="form-textarea"></textarea>
-             <button class="btn-delete mt-2"><i class="fas fa-trash-alt mr-1"></i>Delete Project</button>
+         <div class="dynamic-item-container project-item-card">
+             <div class="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border-color)]">
+                 <div class="flex items-center gap-3">
+                     <h4 class="m-0 font-bold text-base text-[var(--text-color)]">Project Card</h4>
+                     <span class="project-category-badge">Networking & Security</span>
+                 </div>
+                 <button class="btn-delete text-xs py-1 px-2.5 m-0"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
+             </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">Assign Section / Category:</label>
+                     <select data-key="category" class="form-input project-category-select">
+                         <!-- Dynamically populated from activeCategories -->
+                     </select>
+                 </div>
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">Project Title:</label>
+                     <input type="text" data-key="title" class="form-input" placeholder="e.g. Enterprise Network">
+                 </div>
+             </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">Role:</label>
+                     <input type="text" data-key="role" class="form-input" placeholder="e.g. Network Architect">
+                 </div>
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">Technology Stack:</label>
+                     <input type="text" data-key="technology" class="form-input" placeholder="e.g. Cisco IOS, OSPF, VLAN">
+                 </div>
+             </div>
+
+             <div>
+                 <label class="font-semibold text-xs text-secondary">Image URL:</label>
+                 <input type="text" data-key="imageUrl" class="form-input image-url-input" placeholder="https://...">
+                 <div class="image-preview-container"><img class="image-preview" src="" alt="Project Preview"></div>
+                 <label class="font-semibold text-xs text-secondary">Image Upload (Cloudinary):</label>
+                 <input type="file" accept="image/*" class="form-input mb-2 image-file-input">
+                 <button class="btn-upload mb-4" data-target-input="[data-key='imageUrl']" data-target-preview=".image-preview"><i class="fas fa-upload mr-1"></i>Upload Image</button>
+                 <div class="upload-progress"><i class="fas fa-spinner fa-spin"></i> Uploading... <span>0</span>%</div>
+             </div>
+
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">Live Demo URL:</label>
+                     <input type="text" data-key="live" class="form-input" placeholder="https://...">
+                 </div>
+                 <div>
+                     <label class="font-semibold text-xs text-secondary">GitHub Repository URL:</label>
+                     <input type="text" data-key="github" class="form-input" placeholder="https://github.com/...">
+                 </div>
+             </div>
+
+             <div>
+                 <label class="font-semibold text-xs text-secondary">Short Description:</label>
+                 <textarea rows="2" data-key="shortDesc" class="form-textarea" placeholder="Brief summary of the project"></textarea>
+             </div>
+             <div>
+                 <label class="font-semibold text-xs text-secondary">Full Details (HTML Allowed):</label>
+                 <textarea rows="5" data-key="fullDetails" class="form-textarea" placeholder="Full technical writeup & specifications"></textarea>
+             </div>
          </div>
       </template>
     <template id="timeline-template">
@@ -769,86 +1605,9 @@
 
 
     <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import {
-            getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
-            updatePassword as fbUpdatePassword, updateEmail as fbUpdateEmail, EmailAuthProvider, reauthenticateWithCredential,
-            setPersistence, browserLocalPersistence
-        } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
-        import {
-            getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs,
-            addDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp, setLogLevel
-        } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import {
-             getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
-        } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
-
-        // --- Firebase Configuration ---
-         let firebaseConfig;
-         try {
-             firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-              if (!firebaseConfig.apiKey) {
-                  console.warn("Global Firebase config not found or invalid. Using user-provided config.");
-                  firebaseConfig = {
-                     apiKey: "AIzaSyBp3evowk04wo2EcPz_W5rMZqknQ7YTnIo", // USER PROVIDED
-                     authDomain: "portfolio-networking.firebaseapp.com", // USER PROVIDED
-                     projectId: "portfolio-networking", // USER PROVIDED
-                     storageBucket: "portfolio-networking.firebasestorage.app", // USER PROVIDED
-                     messagingSenderId: "1047423131909", // USER PROVIDED
-                     appId: "1:1047423131909:web:d628b1d10871e60522976c", // USER PROVIDED
-                     measurementId: "G-TX9QVHBB4M" // USER PROVIDED
-                  };
-              }
-         } catch (e) {
-              console.error("Error parsing Firebase config:", e);
-              firebaseConfig = { // Fallback to user provided on error
-                     apiKey: "AIzaSyBp3evowk04wo2EcPz_W5rMZqknQ7YTnIo", // USER PROVIDED
-                     authDomain: "portfolio-networking.firebaseapp.com", // USER PROVIDED
-                     projectId: "portfolio-networking", // USER PROVIDED
-                     storageBucket: "portfolio-networking.firebasestorage.app", // USER PROVIDED
-                     messagingSenderId: "1047423131909", // USER PROVIDED
-                     appId: "1:1047423131909:web:d628b1d10871e60522976c", // USER PROVIDED
-                     measurementId: "G-TX9QVHBB4M" // USER PROVIDED
-              };
-         }
-
-        // --- App ID Configuration ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId; // Use projectId as fallback
-
-        // --- Initialize Firebase ---
-        let app;
-        let db;
-        let auth;
-        let storage;
-        let analytics;
-        let firestoreDocRef; // Reference to the main content document
-        let messagesColRef; // Reference to the messages collection
-        let inboxListenerUnsubscribe = null; // To detach listener on logout
-
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            storage = getStorage(app);
-            analytics = getAnalytics(app);
-             // setLogLevel('debug'); // Enable Firestore logging
-
-            // Define Firestore paths using appId
-            firestoreDocRef = doc(db, `artifacts/${appId}/public/data/portfolioContent`, 'main');
-            messagesColRef = collection(db, `artifacts/${appId}/public/data/messages`);
-
-            console.log("Firebase Initialized Successfully.");
-            console.log("Using App ID:", appId);
-            console.log("Content Doc Path:", firestoreDocRef.path);
-            console.log("Messages Collection Path:", messagesColRef.path);
-
-        } catch (e) {
-            console.error("Firebase initialization failed:", e);
-            alert("Critical Error: Could not initialize Firebase. Please check console and refresh.");
-        }
-
+    <script>
+        // MongoDB & Cloudinary API Base
+        const API_BASE = '/api';
 
         // --- DOM Element References ---
         const loginPanel = document.getElementById('login-panel');
@@ -959,43 +1718,53 @@
         };
 
 
-        // --- Authentication Logic ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log("Admin User is signed in:", user.email);
+        // --- Authentication Logic (Session & Token Check) ---
+        function checkAuthStatus() {
+            const token = localStorage.getItem('admin_token');
+            if (token) {
+                console.log("Admin session active.");
                 showAdminDashboard();
-                setupInboxListener(); // Start listening for inbox messages
             } else {
-                console.log("Admin User is signed out.");
-                if (inboxListenerUnsubscribe) {
-                     inboxListenerUnsubscribe(); // Stop listening when logged out
-                     inboxListenerUnsubscribe = null;
-                }
+                console.log("No active admin session.");
                 showLoginPanel();
             }
+        }
+
+        // Initialize check on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
         });
 
         loginForm?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = emailInput.value;
             const password = passwordInput.value;
             loginError.classList.add('hidden');
             const loginButton = loginForm.querySelector('button[type="submit"]');
             loginButton.disabled = true;
-            loginButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Logging In...`;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging In...';
 
             try {
-                // Persist session locally
-                await setPersistence(auth, browserLocalPersistence);
-                await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle showing the dashboard
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    localStorage.setItem('admin_token', data.token);
+                    showAdminDashboard();
+                } else {
+                    throw new Error(data.error || 'Invalid password');
+                }
             } catch (error) {
                 console.error("Login failed:", error);
-                loginError.textContent = `Login Failed: ${error.message}`;
+                loginError.textContent = 'Login Failed: ' + (error.message || 'Invalid password');
                 loginError.classList.remove('hidden');
                 loginButton.disabled = false;
                 loginButton.innerHTML = 'Login';
-                 setTimeout(() => loginError.classList.add('hidden'), 5000);
+                setTimeout(() => loginError.classList.add('hidden'), 5000);
             }
         });
 
@@ -1011,13 +1780,8 @@
         });
 
         async function performLogout() {
-            try {
-                await signOut(auth);
-                // onAuthStateChanged will handle showing the login panel
-            } catch (error) {
-                console.error("Logout failed:", error);
-                alert(`Logout Failed: ${error.message}`); // Use alert for critical errors like logout fail
-            }
+            localStorage.removeItem('admin_token');
+            showLoginPanel();
         }
 
 
@@ -1080,13 +1844,7 @@
                  });
             }
 
-            // Load data only if Firebase is ready
-            if(db && firestoreDocRef) {
-                loadInitialData(); // Load data AFTER showing dashboard and initializing refs
-            } else {
-                 console.error("Firebase not ready, cannot load initial data.");
-                 alert("Error: Could not connect to database. Please refresh.");
-            }
+            loadInitialData();
 
             // Set default section
             const homeButton = document.querySelector('.sidebar-btn[data-target="home-edit"]');
@@ -1137,6 +1895,16 @@
              }
          }
 
+        const sectionNames = {
+            'home-edit': 'Home Hero',
+            'about-edit': 'About & Skills',
+            'portfolio-edit': 'Projects & Categories',
+            'timeline-edit': 'Experience Timeline',
+            'blogs-edit': 'Blog Articles',
+            'contact-edit': 'Contact Information',
+            'inbox-edit': 'Message Inbox'
+        };
+
         function navigateToSection(targetId, targetBtn) {
             document.querySelector('.sidebar-btn.active')?.classList.remove('active');
             if(targetBtn) targetBtn.classList.add('active');
@@ -1145,10 +1913,14 @@
             activeEditorSectionId = targetId;
             hasUnsavedChanges = false;
 
+            const breadcrumbEl = document.getElementById('header-active-section-name');
+            if (breadcrumbEl && sectionNames[targetId]) {
+                breadcrumbEl.textContent = sectionNames[targetId];
+            }
+
             // Clear inbox notification only when navigating TO inbox
              if (targetId === 'inbox-edit' && targetBtn) {
                  targetBtn.classList.remove('has-notification');
-                 // Optionally mark messages as read in Firestore here if needed
              }
 
             pendingNavigationTarget = null;
@@ -1161,31 +1933,30 @@
              if(adminContentArea){ adminContentArea.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
 
-        // --- Hamburger Menu (Main: Desktop Dropdown / Mobile Sidebar Toggle) ---
-         if (hamburgerBtnMain && hamburgerDropdownMain && adminSidebar && sidebarOverlay) {
-             hamburgerBtnMain.addEventListener('click', (e) => {
-                 e.stopPropagation();
-                 if (window.innerWidth >= 768) { // Desktop
-                     hamburgerDropdownMain.classList.toggle('active');
-                 } else { // Mobile
-                     adminSidebar.classList.toggle('active');
-                     sidebarOverlay.classList.toggle('active');
-                     hamburgerDropdownMain.classList.remove('active'); // Close dropdown
-                 }
-             });
-
-             document.addEventListener('click', (event) => {
-                 // Close dropdown if clicking outside
-                 if (hamburgerDropdownMain.classList.contains('active') && !hamburgerBtnMain.contains(event.target) && !hamburgerDropdownMain.contains(event.target)) {
-                     hamburgerDropdownMain.classList.remove('active');
-                 }
-                 // Close mobile sidebar via overlay click
-                 if (sidebarOverlay.classList.contains('active') && event.target === sidebarOverlay) {
-                     adminSidebar.classList.remove('active');
-                     sidebarOverlay.classList.remove('active');
-                 }
-             });
-         } else { console.error("Hamburger menu elements missing.")}
+        // --- Hamburger & Settings Menu ---
+        const hamburgerBtnDropdown = document.getElementById('hamburger-btn-dropdown');
+        if (hamburgerBtnMain && adminSidebar && sidebarOverlay) {
+            hamburgerBtnMain.addEventListener('click', (e) => {
+                e.stopPropagation();
+                adminSidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+        }
+        if (hamburgerBtnDropdown && hamburgerDropdownMain) {
+            hamburgerBtnDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hamburgerDropdownMain.classList.toggle('active');
+            });
+        }
+        document.addEventListener('click', (event) => {
+            if (hamburgerDropdownMain?.classList.contains('active') && !hamburgerDropdownMain.contains(event.target) && !hamburgerBtnDropdown?.contains(event.target)) {
+                hamburgerDropdownMain.classList.remove('active');
+            }
+            if (sidebarOverlay?.classList.contains('active') && event.target === sidebarOverlay) {
+                adminSidebar?.classList.remove('active');
+                sidebarOverlay?.classList.remove('active');
+            }
+        });
 
         // --- Modals Logic ---
         modalCloseBtns.forEach(btn => {
@@ -1271,8 +2042,12 @@
                  } else if (deleteType === 'item' && elementToRemove) {
                      // Just remove dynamic item from UI, changes saved later
                      const parentContainer = elementToRemove.parentElement;
+                     const isProject = elementToRemove.closest('#portfolio-items-container') !== null;
                      elementToRemove.remove();
                      updateItemTitles(parentContainer); // Renumber items if needed
+                     if (isProject) {
+                         renderCategoryManager();
+                     }
                      hasUnsavedChanges = true; // Mark section as unsaved
                      console.log("Item removed from view. Save section to persist.");
                  } else {
@@ -1303,64 +2078,12 @@
          });
 
          saveCredentialsBtn?.addEventListener('click', async () => {
-            const currentPassword = currentPasswordCredInput.value;
-            const newEmail = newEmailCredInput.value.trim();
-            const newPassword = newPasswordCredInput.value;
-            const confirmPassword = confirmPasswordCredInput.value;
-            const user = auth.currentUser;
-
-            if (!user) {
-                showCredentialsMessage('error', 'Not logged in.');
-                return;
-            }
-            if (!currentPassword) {
-                 showCredentialsMessage('error', 'Current password is required.');
+             const newPassword = newPasswordCredInput?.value?.trim();
+             if (!newPassword) {
+                 showCredentialsMessage('error', 'Please enter a new password.');
                  return;
-            }
-
-            credentialsChangeMessage.classList.add('hidden');
-            saveCredentialsBtn.disabled = true;
-            saveCredentialsBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>Saving...`;
-
-            try {
-                 // Re-authenticate user first
-                 const credential = EmailAuthProvider.credential(user.email, currentPassword);
-                 await reauthenticateWithCredential(user, credential);
-                 console.log("User re-authenticated successfully.");
-
-                 // Update Email if provided
-                 if (newEmail && newEmail !== user.email) {
-                      await fbUpdateEmail(user, newEmail);
-                      console.log("Email updated successfully.");
-                      newEmailCredInput.placeholder = newEmail; // Update placeholder
-                 }
-
-                 // Update Password if provided
-                 if (newPassword) {
-                      if (newPassword.length < 6) {
-                          throw new Error("New password must be at least 6 characters.");
-                      }
-                      if (newPassword !== confirmPassword) {
-                          throw new Error("New passwords do not match.");
-                      }
-                      await fbUpdatePassword(user, newPassword);
-                      console.log("Password updated successfully.");
-                 }
-
-                 if (!newEmail && !newPassword) {
-                      showCredentialsMessage('success', 'Re-authentication successful. No changes made.');
-                 } else {
-                    showCredentialsMessage('success', 'Credentials updated successfully!');
-                 }
-                 changeCredentialsForm?.reset(); // Clear form after success
-                 setTimeout(() => changeCredentialsModal?.classList.remove('active'), 2000);
-
-            } catch (error) {
-                 console.error("Error updating credentials:", error);
-                 showCredentialsMessage('error', `Error: ${error.message}`);
-            } finally {
-                 resetSaveCredentialsButton();
-            }
+             }
+             showCredentialsMessage('success', 'To update your admin password, please set ADMIN_PASSWORD in .env.local or your Vercel Dashboard Environment Variables.');
          });
 
          function showCredentialsMessage(type, message) {
@@ -1373,88 +2096,304 @@
              saveCredentialsBtn.innerHTML = `<i class="fas fa-save mr-2"></i>Save Changes`;
          }
 
+        // --- Category Management State & Helpers ---
+        let activeCategories = ['Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
+
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, match => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[match]));
+        }
+
+        function getAutoCategoryForProject(p) {
+            if (p && p.category && p.category.trim() !== '') return p.category.trim();
+            const tech = ((p && p.technology) || '').toLowerCase();
+            const title = ((p && p.title) || '').toLowerCase();
+            const desc = ((p && p.shortDesc) || '').toLowerCase();
+            if (tech.includes('cisco') || tech.includes('ospf') || tech.includes('vlan') || tech.includes('network') || title.includes('network')) return 'Networking & Security';
+            if (tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware') || title.includes('robot') || title.includes('lfr') || desc.includes('robot')) return 'Robotics & Hardware';
+            if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile') || title.includes('mess') || title.includes('ramadan') || desc.includes('app')) return 'Mobile & Realtime';
+            return activeCategories[0] || 'Networking & Security';
+        }
+
+        function populateCategorySelectOptions(selectEl, selectedVal) {
+            if (!selectEl) return;
+            const current = selectedVal || selectEl.value || activeCategories[0] || '';
+            selectEl.innerHTML = activeCategories.map(cat => 
+                `<option value="${escapeHTML(cat)}" ${cat === current ? 'selected' : ''}>${escapeHTML(cat)}</option>`
+            ).join('');
+            if (activeCategories.includes(current)) {
+                selectEl.value = current;
+            } else if (activeCategories.length > 0) {
+                selectEl.value = activeCategories[0];
+            }
+        }
+
+        function renderCategoryManager() {
+            const container = document.getElementById('active-categories-list');
+            const countBadge = document.getElementById('category-total-count');
+            if (countBadge) countBadge.textContent = activeCategories.length;
+
+            const projectCards = document.querySelectorAll('#portfolio-items-container .dynamic-item-container');
+            const counts = {};
+            activeCategories.forEach(cat => counts[cat] = 0);
+            projectCards.forEach(card => {
+                const sel = card.querySelector('.project-category-select');
+                const val = sel ? sel.value : '';
+                if (counts[val] !== undefined) counts[val]++;
+            });
+
+            if (container) {
+                container.innerHTML = activeCategories.map((cat, idx) => {
+                    const cnt = counts[cat] || 0;
+                    return `
+                        <div class="category-chip" data-cat-index="${idx}" data-category="${escapeHTML(cat)}">
+                            <div class="category-chip-left">
+                                <span class="category-chip-dot"></span>
+                                <span class="category-chip-name">${escapeHTML(cat)}</span>
+                                <span class="category-chip-count">(${cnt} ${cnt === 1 ? 'project' : 'projects'})</span>
+                            </div>
+                            <div class="category-chip-actions">
+                                <button type="button" class="btn-chip-action btn-chip-rename" data-cat="${escapeHTML(cat)}" title="Rename section">
+                                    <i class="fas fa-edit"></i> Rename
+                                </button>
+                                <button type="button" class="btn-chip-action btn-chip-delete" data-cat="${escapeHTML(cat)}" title="Delete section">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.querySelectorAll('.btn-chip-rename').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        promptRenameCategory(btn.dataset.cat);
+                    });
+                });
+                container.querySelectorAll('.btn-chip-delete').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteCategory(btn.dataset.cat);
+                    });
+                });
+            }
+
+            const sidebarProjectsBadge = document.getElementById('sidebar-projects-count');
+            if (sidebarProjectsBadge) sidebarProjectsBadge.textContent = projectCards.length;
+        }
+
+        function addCategory(name) {
+            const trimmed = (name || '').trim();
+            if (!trimmed) {
+                showAdminToast('Please enter a section/category name.', 'warning');
+                return false;
+            }
+            if (activeCategories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+                showAdminToast(`Section "${trimmed}" already exists!`, 'warning');
+                return false;
+            }
+            activeCategories.push(trimmed);
+            syncAllProjectCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Section "${trimmed}" added! Click "Save All Changes" to persist.`, 'success');
+            return true;
+        }
+
+        function promptRenameCategory(oldName) {
+            const newName = prompt(`Enter new name for section "${oldName}":`, oldName);
+            if (!newName || newName.trim() === '' || newName.trim() === oldName) return;
+            const trimmed = newName.trim();
+            if (activeCategories.some(c => c.toLowerCase() === trimmed.toLowerCase() && c !== oldName)) {
+                showAdminToast(`Section "${trimmed}" already exists!`, 'warning');
+                return;
+            }
+            const idx = activeCategories.indexOf(oldName);
+            if (idx !== -1) {
+                activeCategories[idx] = trimmed;
+            }
+            let updatedCount = 0;
+            const projectCards = document.querySelectorAll('#portfolio-items-container .dynamic-item-container');
+            projectCards.forEach(card => {
+                const sel = card.querySelector('.project-category-select');
+                if (sel && sel.value === oldName) {
+                    sel.value = trimmed;
+                    const badge = card.querySelector('.project-category-badge');
+                    if (badge) badge.textContent = trimmed;
+                    updatedCount++;
+                }
+            });
+            syncAllProjectCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Renamed "${oldName}" to "${trimmed}". Updated ${updatedCount} project(s).`, 'success');
+        }
+
+        function deleteCategory(catToDelete) {
+            if (activeCategories.length <= 1) {
+                showAdminToast('You must keep at least one category.', 'warning');
+                return;
+            }
+            const projectCards = document.querySelectorAll('#portfolio-items-container .dynamic-item-container');
+            let affected = 0;
+            projectCards.forEach(card => {
+                const sel = card.querySelector('.project-category-select');
+                if (sel && sel.value === catToDelete) affected++;
+            });
+
+            const fallback = activeCategories.find(c => c !== catToDelete) || 'Uncategorized';
+            const confirmMsg = affected > 0
+                ? `Delete category "${catToDelete}"? ${affected} project(s) will be moved to "${fallback}".`
+                : `Delete category "${catToDelete}"?`;
+
+            if (!confirm(confirmMsg)) return;
+
+            activeCategories = activeCategories.filter(c => c !== catToDelete);
+            projectCards.forEach(card => {
+                const sel = card.querySelector('.project-category-select');
+                if (sel && sel.value === catToDelete) {
+                    sel.value = fallback;
+                    const badge = card.querySelector('.project-category-badge');
+                    if (badge) badge.textContent = fallback;
+                }
+            });
+
+            syncAllProjectCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Section "${catToDelete}" removed.`, 'info');
+        }
+
+        function syncAllProjectCategorySelects() {
+            const projectCards = document.querySelectorAll('#portfolio-items-container .dynamic-item-container');
+            projectCards.forEach(card => {
+                const sel = card.querySelector('.project-category-select');
+                if (sel) {
+                    const currentVal = sel.value;
+                    populateCategorySelectOptions(sel, currentVal);
+                    const badge = card.querySelector('.project-category-badge');
+                    if (badge) badge.textContent = sel.value;
+                }
+            });
+            renderCategoryManager();
+        }
+
+        function showAdminToast(message, type = 'success') {
+            let container = document.getElementById('admin-toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'admin-toast-container';
+                document.body.appendChild(container);
+            }
+            const toast = document.createElement('div');
+            toast.className = `admin-toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-triangle' : (type === 'warning' ? 'fa-exclamation-circle' : 'fa-info-circle'));
+            toast.innerHTML = `<i class="fas ${icon}"></i><span>${escapeHTML(message)}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 350);
+            }, 4000);
+        }
+
         // --- Data Loading & Saving ---
         async function loadInitialData() {
-            if (!firestoreDocRef) {
-                 console.error("Firestore document reference is not initialized.");
-                 alert("Database connection error. Cannot load data.");
-                 return;
-            }
-            console.log("Attempting to load initial data from Firestore...");
+            console.log("Loading portfolio data from MongoDB API...");
             try {
-                const docSnap = await getDoc(firestoreDocRef);
-                const loadedData = docSnap.exists() ? docSnap.data() : {};
+                const response = await fetch('/api/portfolio');
+                const loadedData = response.ok ? await response.json() : {};
 
                 editorSections.forEach(section => {
-                    loadSectionData(section.id, loadedData); // Pass all loaded data
+                    loadSectionData(section.id, loadedData);
                 });
 
-                console.log("Initial data load complete.");
-                hasUnsavedChanges = false; // Reset flag after initial load
-
+                console.log("Initial data load complete from MongoDB.");
+                hasUnsavedChanges = false;
             } catch (error) {
-                console.error("Error loading initial data from Firestore:", error);
-                alert(`Error loading data: ${error.message}. Loading default values.`);
-                 // Load defaults if fetch fails
-                 editorSections.forEach(section => {
-                    loadSectionData(section.id, {}); // Pass empty object to trigger defaults
+                console.error("Error loading initial data from API:", error);
+                editorSections.forEach(section => {
+                    loadSectionData(section.id, {});
                 });
             }
-         }
+        }
 
-         function loadSectionData(sectionId, allData) {
+        function loadSectionData(sectionId, allData) {
             const sectionElement = document.getElementById(sectionId);
             if (!sectionElement) return;
 
-             // Determine if we should use defaults for this *entire* section
-             // We use defaults if `allData` is empty (meaning initial load failed or doc doesn't exist)
-             // OR if the specific section's data is missing within `allData` (might happen if saved partially)
-             const useDefaultsForSection = Object.keys(allData).length === 0 || !Object.keys(allData).some(key => key.startsWith(sectionId.replace('-edit', '_')));
+            const useDefaultsForSection = Object.keys(allData).length === 0 || !Object.keys(allData).some(key => key.startsWith(sectionId.replace('-edit', '_')));
+            console.log(`Loading data for ${sectionId}. Use Defaults: ${useDefaultsForSection}`);
+            const dataToLoad = useDefaultsForSection ? defaultContent : allData;
 
-             console.log(`Loading data for ${sectionId}. Use Defaults: ${useDefaultsForSection}`);
-             const dataToLoad = useDefaultsForSection ? defaultContent : allData;
-
-            // --- Reset section to blank/defaults first ---
+            // Reset inputs
             sectionElement.querySelectorAll('input[type="text"]:not([type="file"]), input[type="number"], input[type="email"], textarea').forEach(input => {
-                if (!input.closest('template')) input.value = ''; // Reset to blank
+                if (!input.closest('template')) input.value = '';
             });
             sectionElement.querySelectorAll('input[type="file"]').forEach(input => {
                 if (!input.closest('template')) input.value = '';
             });
             sectionElement.querySelectorAll('.construction-message-toggle-container input[type="checkbox"]').forEach(input => {
-                 if (!input.closest('template')) input.checked = defaultContent[`${sectionId.replace('-edit', '_')}_showConstructionMessage`] ?? true; // Default to true if not specified
+                 if (!input.closest('template')) input.checked = defaultContent[`${sectionId.replace('-edit', '_')}_showConstructionMessage`] ?? true;
             });
+
+            // If portfolio section, load categories
+            if (sectionId === 'portfolio-edit') {
+                if (dataToLoad.project_categories && Array.isArray(dataToLoad.project_categories) && dataToLoad.project_categories.length > 0) {
+                    activeCategories = [...dataToLoad.project_categories];
+                } else if (defaultContent.project_categories && Array.isArray(defaultContent.project_categories)) {
+                    activeCategories = [...defaultContent.project_categories];
+                }
+                renderCategoryManager();
+            }
+
             // Clear dynamic containers
-             const dynamicContainersConfig = getDynamicContainersConfig(); // Get config
+            const dynamicContainersConfig = getDynamicContainersConfig();
             dynamicContainersConfig.forEach(config => {
                  const container = sectionElement.querySelector(`#${config.id}`);
                  if (container) container.innerHTML = '';
             });
 
-            // --- Load data ---
             // Simple inputs/textareas
             sectionElement.querySelectorAll(':scope > .editor-section > input[type="text"]:not([type="file"]), :scope > .editor-section > textarea, :scope > .editor-section > input[type="email"], :scope > .editor-section > input[type="number"], :scope > .editor-section > input[type="password"]').forEach(input => {
                 if (input.id) {
                     const key = input.id.replace(/-/g, '_');
-                    input.value = dataToLoad[key] ?? defaultContent[key] ?? ''; // Load saved, fallback to default, then blank
-                    if (input.id === 'home-heading' && input.value) { // Special handling for accent placeholder
+                    input.value = dataToLoad[key] ?? defaultContent[key] ?? '';
+                    if (input.id === 'home-heading' && input.value) {
                          input.value = input.value.replace(/<span class="text-accent">(.*?)<\/span>/g, '{{ACCENT}}$1{{/ACCENT}}');
                     }
                 }
             });
 
-
             // Dynamic items
             dynamicContainersConfig.forEach(config => {
                 const container = sectionElement.querySelector(`#${config.id}`);
                 if (container) {
-                     const itemsToLoad = dataToLoad[config.key] ?? defaultContent[config.key] ?? []; // Load saved, fallback to default, then empty array
-                     // console.log(`Rendering ${itemsToLoad.length} items for ${config.key}`);
+                     const itemsToLoad = dataToLoad[config.key] ?? defaultContent[config.key] ?? [];
                      itemsToLoad.forEach((itemData, index) => {
                          const newItem = createDynamicItem(config.template);
                          if (newItem) {
                              const titleElement = newItem.querySelector('h4');
                              if (titleElement) titleElement.textContent = titleElement.textContent.replace('New', '').trim() + ` ${index + 1}`;
+
+                             // Handle project category
+                             if (config.key === 'projects') {
+                                 itemData.category = itemData.category || getAutoCategoryForProject(itemData);
+                                 const catSelect = newItem.querySelector('.project-category-select');
+                                 if (catSelect) {
+                                     populateCategorySelectOptions(catSelect, itemData.category);
+                                     catSelect.addEventListener('change', () => {
+                                         const badge = newItem.querySelector('.project-category-badge');
+                                         if (badge) badge.textContent = catSelect.value;
+                                         hasUnsavedChanges = true;
+                                         renderCategoryManager();
+                                     });
+                                 }
+                                 const badge = newItem.querySelector('.project-category-badge');
+                                 if (badge) badge.textContent = itemData.category;
+                             }
 
                              Object.keys(itemData).forEach(itemKey => {
                                  const inputElement = newItem.querySelector(`[data-key="${itemKey}"]`);
@@ -1463,20 +2402,22 @@
                              container.appendChild(newItem);
                          }
                      });
+                     if (config.key === 'projects') {
+                         renderCategoryManager();
+                     }
                 }
             });
 
-             // Construction message toggle state
+            // Construction message toggle state
             const constructionSwitch = sectionElement.querySelector('.construction-message-toggle-container input[type="checkbox"]');
             if (constructionSwitch) {
                 const key = `${sectionId.replace('-edit', '_')}_showConstructionMessage`;
-                constructionSwitch.checked = dataToLoad[key] ?? defaultContent[key] ?? true; // Load saved, fallback to default (true)
+                constructionSwitch.checked = dataToLoad[key] ?? defaultContent[key] ?? true;
             }
 
-
-            initializeImagePreview(sectionElement); // Update image previews after loading URLs
+            initializeImagePreview(sectionElement);
             console.log(`Finished loading data for ${sectionId}.`);
-         }
+        }
 
         function collectSectionData(sectionId) {
              const sectionData = {};
@@ -1487,7 +2428,6 @@
              sectionElement.querySelectorAll(':scope > .editor-section > input[type="text"]:not([type="file"]), :scope > .editor-section > textarea, :scope > .editor-section > input[type="email"], :scope > .editor-section > input[type="number"], :scope > .editor-section > input[type="password"]').forEach(input => {
                  if (input.id) {
                      let value = input.value;
-                      // Replace accent placeholder back to HTML for Home heading
                      if (input.id === 'home-heading') {
                           value = value.replace(/{{ACCENT}}(.*?){{\/ACCENT}}/g, '<span class="text-accent">$1</span>');
                      }
@@ -1496,13 +2436,14 @@
              });
 
              // Dynamic items
-              const dynamicContainersConfig = getDynamicContainersConfig();
+             const dynamicContainersConfig = getDynamicContainersConfig();
              dynamicContainersConfig.forEach(config => {
                   const container = sectionElement.querySelector(`#${config.id}`);
                   if (container) {
                       sectionData[config.key] = Array.from(container.querySelectorAll('.dynamic-item-container')).map(item => {
                           const itemData = {};
-                          item.querySelectorAll('input[data-key]:not([type="file"]), textarea[data-key]').forEach(input => {
+                          // NOTE: Include select[data-key] for project categories!
+                          item.querySelectorAll('input[data-key]:not([type="file"]), textarea[data-key], select[data-key]').forEach(input => {
                               const dataKey = input.dataset.key;
                               if (dataKey) {
                                   itemData[dataKey] = input.type === 'number' ? (parseFloat(input.value) || 0) : input.value;
@@ -1513,45 +2454,105 @@
                   }
              });
 
-
              // Construction message toggle state
-            const constructionSwitch = sectionElement.querySelector('.construction-message-toggle-container input[type="checkbox"]');
-            if (constructionSwitch) {
-                 const key = `${sectionId.replace('-edit', '_')}_showConstructionMessage`;
-                 sectionData[key] = constructionSwitch.checked;
-            }
-
-             return sectionData;
-         }
-
-         async function saveAllDataToFirestore() {
-             if (!firestoreDocRef) {
-                 console.error("Firestore doc ref not set.");
-                 return { success: false, message: "Database connection error." };
+             const constructionSwitch = sectionElement.querySelector('.construction-message-toggle-container input[type="checkbox"]');
+             if (constructionSwitch) {
+                  const key = `${sectionId.replace('-edit', '_')}_showConstructionMessage`;
+                  sectionData[key] = constructionSwitch.checked;
              }
 
+             // Save project categories
+             if (sectionId === 'portfolio-edit') {
+                 sectionData.project_categories = [...activeCategories];
+             }
+
+             return sectionData;
+        }
+
+        async function saveAllDataToFirestore() {
              let allData = {};
              let success = true;
-             let message = "All changes saved successfully!";
+             let message = "All changes saved to MongoDB successfully!";
 
              editorSections.forEach(section => {
                   const sectionId = section.id;
                   const data = collectSectionData(sectionId);
-                  allData = { ...allData, ...data }; // Merge data from all sections
+                  allData = { ...allData, ...data };
              });
 
              try {
-                // Use setDoc with merge: true to update or create the document
-                await setDoc(firestoreDocRef, allData, { merge: true });
-                console.log("All data saved to Firestore:", firestoreDocRef.path);
-                hasUnsavedChanges = false; // Reset flag only on successful save
+                const token = localStorage.getItem('admin_token') || '';
+                const response = await fetch('/api/portfolio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(allData)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to save changes');
+                }
+
+                console.log("All data saved to MongoDB successfully!");
+                hasUnsavedChanges = false;
+                success = true;
+                message = "All changes saved to MongoDB successfully!";
             } catch (error) {
-                console.error("Error saving data to Firestore:", error);
+                console.error("Error saving data to MongoDB:", error);
                 success = false;
-                message = `Error saving changes: ${error.message}`;
+                message = "Error saving changes: " + (error.message || 'Unknown error');
             }
              return { success, message };
-         }
+        }
+
+        // --- Wire Top Bar Save, Quick Logout & Category Buttons ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const globalSaveBtn = document.getElementById('global-save-btn');
+            if (globalSaveBtn) {
+                globalSaveBtn.addEventListener('click', async () => {
+                    globalSaveBtn.disabled = true;
+                    globalSaveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5"></i><span>Saving...</span>';
+                    const { success, message } = await saveAllDataToFirestore();
+                    globalSaveBtn.disabled = false;
+                    globalSaveBtn.innerHTML = '<i class="fas fa-cloud-upload-alt mr-1.5"></i><span>Save All Changes</span>';
+                    showAdminToast(message, success ? 'success' : 'error');
+                });
+            }
+
+            const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
+            if (sidebarLogoutBtn) {
+                sidebarLogoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (hasUnsavedChanges) {
+                        pendingNavigationTarget = { id: 'logout', btn: null };
+                        unsavedChangesModal?.classList.add('active');
+                    } else {
+                        performLogout();
+                    }
+                });
+            }
+
+            const addCatBtn = document.getElementById('add-category-btn');
+            const newCatInput = document.getElementById('new-category-input');
+            if (addCatBtn && newCatInput) {
+                addCatBtn.addEventListener('click', () => {
+                    if (addCategory(newCatInput.value)) {
+                        newCatInput.value = '';
+                    }
+                });
+                newCatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (addCategory(newCatInput.value)) {
+                            newCatInput.value = '';
+                        }
+                    }
+                });
+            }
+        });
 
 
         // --- Event Delegation for Save, Upload, Delete ---
@@ -1628,47 +2629,43 @@
                      if(progressSpan) progressSpan.textContent = '0';
 
 
-                    // --- Firebase Storage Upload ---
-                    const storageRef = ref(storage, `portfolio_images/${appId}/${Date.now()}_${file.name}`);
-                    currentUploadTask = uploadBytesResumable(storageRef, file);
+                    // --- Image File Upload (Cloudinary Cloud API) ---
+                    const reader = new FileReader();
+                    reader.onload = async () => {
+                        try {
+                            targetButton.disabled = true;
+                            targetButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Uploading to Cloudinary...';
+                            if (progressIndicator) progressIndicator.style.display = 'block';
 
-                    currentUploadTask.on('state_changed',
-                        (snapshot) => {
-                             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                             console.log('Upload is ' + progress + '% done');
-                              if(progressSpan) progressSpan.textContent = Math.round(progress);
-                        },
-                        (error) => {
-                            console.error("Upload failed:", error);
-                            alert(`Image upload failed: ${error.message}`);
-                            // Reset button and progress
-                             targetButton.disabled = false;
-                             targetButton.innerHTML = `<i class="fas fa-upload mr-1"></i>Upload Image`;
-                             if(progressIndicator) progressIndicator.style.display = 'none';
-                             currentUploadTask = null; // Clear task state
-                        },
-                        async () => {
-                            // Upload completed successfully, now get the download URL
-                            try {
-                                const downloadURL = await getDownloadURL(currentUploadTask.snapshot.ref);
-                                console.log('File available at', downloadURL);
-                                imageUrlInput.value = downloadURL;
-                                // Trigger input event to update preview
+                            const token = localStorage.getItem('admin_token') || '';
+                            const res = await fetch('/api/upload', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + token
+                                },
+                                body: JSON.stringify({ image: reader.result, folder: 'portfolio_uploads' })
+                            });
+                            const uploadData = await res.json();
+                            if (res.ok && uploadData.url) {
+                                imageUrlInput.value = uploadData.url;
                                 imageUrlInput.dispatchEvent(new Event('input', { bubbles: true }));
-                                hasUnsavedChanges = true; // Mark as unsaved change
-                                fileInput.value = ''; // Clear file input
-                            } catch (urlError) {
-                                console.error("Error getting download URL:", urlError);
-                                alert(`Upload succeeded but failed to get URL: ${urlError.message}`);
-                            } finally {
-                                 // Reset button and progress
-                                targetButton.disabled = false;
-                                targetButton.innerHTML = `<i class="fas fa-upload mr-1"></i>Upload Image`;
-                                if(progressIndicator) progressIndicator.style.display = 'none';
-                                currentUploadTask = null; // Clear task state
+                                hasUnsavedChanges = true;
+                                fileInput.value = '';
+                                console.log('Successfully uploaded to Cloudinary:', uploadData.url);
+                            } else {
+                                throw new Error(uploadData.error || 'Upload to Cloudinary failed');
                             }
+                        } catch (err) {
+                            console.error('Cloudinary upload error:', err);
+                            alert('Image upload failed: ' + err.message);
+                        } finally {
+                            targetButton.disabled = false;
+                            targetButton.innerHTML = '<i class="fas fa-upload mr-1"></i>Upload Image';
+                            if (progressIndicator) progressIndicator.style.display = 'none';
                         }
-                    );
+                    };
+                    reader.readAsDataURL(file);
 
                 } else if (fileInput) {
                     alert("Please select an image file first."); // Use alert for direct user feedback
@@ -1728,9 +2725,26 @@
                         const dateInput = newItem.querySelector('[data-key="date"]');
                         if (dateInput) dateInput.value = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     }
+                    if (templateId === 'project-template') {
+                        const catSelect = newItem.querySelector('.project-category-select');
+                        const catBadge = newItem.querySelector('.project-category-badge');
+                        const defaultCat = activeCategories[0] || 'Networking & Security';
+                        if (catSelect) {
+                            populateCategorySelectOptions(catSelect, defaultCat);
+                            catSelect.addEventListener('change', () => {
+                                if (catBadge) catBadge.textContent = catSelect.value;
+                                hasUnsavedChanges = true;
+                                renderCategoryManager();
+                            });
+                        }
+                        if (catBadge) catBadge.textContent = defaultCat;
+                    }
 
                     container.appendChild(newItem);
                     initializeImagePreview(newItem); // Initialize preview for the new item
+                    if (templateId === 'project-template') {
+                        renderCategoryManager();
+                    }
                     hasUnsavedChanges = true;
                 }
             });
@@ -1982,5 +2996,6 @@
         */
 
     </script>
+    <div id="admin-toast-container"></div>
 </body>
 </html>

@@ -9,17 +9,23 @@ export const ProjectsModal: React.FC = () => {
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
+  const defaultCategories = ['Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
+  const configuredCategories = (data.project_categories && data.project_categories.length > 0)
+    ? data.project_categories
+    : defaultCategories;
+  const categories = ['All', ...configuredCategories];
 
   const projects = data.projects || [];
 
   const getProjectCategory = (p: ProjectItem): string => {
+    if (p.category && p.category.trim() !== '') return p.category.trim();
     const tech = (p.technology || '').toLowerCase();
     const title = (p.title || '').toLowerCase();
+    const desc = (p.shortDesc || '').toLowerCase();
     if (tech.includes('cisco') || tech.includes('ospf') || tech.includes('vlan') || tech.includes('network') || title.includes('network')) return 'Networking & Security';
-    if (tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware') || title.includes('robot') || title.includes('lfr')) return 'Robotics & Hardware';
-    if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile') || title.includes('mess') || title.includes('ramadan')) return 'Mobile & Realtime';
-    return 'Networking & Security';
+    if (tech.includes('robot') || tech.includes('arduino') || tech.includes('hardware') || title.includes('robot') || title.includes('lfr') || desc.includes('robot')) return 'Robotics & Hardware';
+    if (tech.includes('android') || tech.includes('kotlin') || tech.includes('mobile') || title.includes('mess') || title.includes('ramadan') || desc.includes('app')) return 'Mobile & Realtime';
+    return configuredCategories[0] || 'Networking & Security';
   };
 
   const getProjectColor = (category: string): string => {
@@ -27,7 +33,12 @@ export const ProjectsModal: React.FC = () => {
       case 'Networking & Security': return '#39ff14';
       case 'Mobile & Realtime': return '#00e5ff';
       case 'Robotics & Hardware': return '#ff007f';
-      default: return '#a855f7';
+      default: {
+        const vibrantPalette = ['#a855f7', '#f59e0b', '#ec4899', '#06b6d4', '#10b981', '#6366f1'];
+        let hash = 0;
+        for (let i = 0; i < category.length; i++) hash = category.charCodeAt(i) + ((hash << 5) - hash);
+        return vibrantPalette[Math.abs(hash) % vibrantPalette.length];
+      }
     }
   };
 

@@ -15,7 +15,7 @@ export const Classic2DView: React.FC = () => {
   }, [setMode]);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#ffffff' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#0b0f17' }}>
       <iframe
         src="/classic.html"
         title="Classic 2D Portfolio - MD. Kaium Hasan"

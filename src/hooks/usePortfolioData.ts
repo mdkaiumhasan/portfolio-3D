@@ -18,6 +18,7 @@ export interface ActivityItem {
 
 export interface ProjectItem {
   title: string;
+  category?: string;
   role?: string;
   technology?: string;
   imageUrl?: string;
@@ -66,6 +67,7 @@ export interface PortfolioData {
   skills?: SkillItem[];
   activities?: ActivityItem[];
   projects?: ProjectItem[];
+  project_categories?: string[];
   experiences?: ExperienceItem[];
   posts?: PostItem[];
   contact_info_heading?: string;
@@ -114,12 +116,18 @@ const FALLBACK_DATA: PortfolioData = {
       imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg"
     }
   ],
+  project_categories: [
+    "Networking & Security",
+    "Mobile & Realtime",
+    "Robotics & Hardware"
+  ],
   projects: [
     {
       title: "Mess Management APP (EasyMess)",
+      category: "Mobile & Realtime",
       role: "Android & Fullstack Developer",
       technology: "JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035637/portfolio/projects/l3h5n5p8k7s1j3x4m8r2.jpg",
+      imageUrl: "https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png",
       shortDesc: "Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.",
       fullDetails: "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>",
       live: "https://www.mdkaiumhasan.site",
@@ -127,9 +135,10 @@ const FALLBACK_DATA: PortfolioData = {
     },
     {
       title: "Enterprise Network",
+      category: "Networking & Security",
       role: "Network Architect & Administrator",
       technology: "Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035639/portfolio/projects/i1m0u1m6q1y3b4h8q1w2.png",
+      imageUrl: "https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png",
       shortDesc: "High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.",
       fullDetails: "<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p>",
       live: "https://www.mdkaiumhasan.site",
@@ -137,9 +146,10 @@ const FALLBACK_DATA: PortfolioData = {
     },
     {
       title: "Ramadan Journey",
+      category: "Mobile & Realtime",
       role: "Android Developer",
       technology: "React.js, Android Studio, Kotlin, Push Notifications",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035641/portfolio/projects/t9v5x2k4m7p1j3w6s8r4.png",
+      imageUrl: "https://files.catbox.moe/bcktxt.png",
       shortDesc: "Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.",
       fullDetails: "<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>",
       live: "https://files.catbox.moe/b5bgv1.apk",
@@ -147,9 +157,10 @@ const FALLBACK_DATA: PortfolioData = {
     },
     {
       title: "Autonomous Line Follower Robot (LFR)",
+      category: "Robotics & Hardware",
       role: "Hardware & Robotics Engineer",
       technology: "Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/b1c4e7k2m9p3j5w8s0r2.webp",
+      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp",
       shortDesc: "Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.",
       fullDetails: "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>",
       live: "https://www.mdkaiumhasan.site",
