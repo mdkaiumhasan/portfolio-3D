@@ -13,7 +13,7 @@ import {
   Tag,
   Bookmark
 } from 'lucide-react';
-import { usePortfolioData, PostItem } from '../../hooks/usePortfolioData';
+import { usePortfolioData, PostItem, extractAuthorName } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
@@ -212,8 +212,8 @@ export const BlogModal: React.FC = () => {
                 }}
               >
                 <img
-                  src="https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg"
-                  alt="MD. Kaium Hasan"
+                  src={data.home_profile_image || "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg"}
+                  alt="Author"
                   style={{
                     width: '38px',
                     height: '38px',
@@ -224,10 +224,10 @@ export const BlogModal: React.FC = () => {
                 />
                 <div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
-                    MD. Kaium Hasan
+                    {extractAuthorName(data.home_heading)}
                   </div>
                   <div style={{ fontSize: '11px', color: '#38bdf8', fontFamily: 'var(--font-hud)' }}>
-                    Network Engineer // CCNA Certified
+                    {data.home_subheading || 'Network Engineer // CCNA Certified'}
                   </div>
                 </div>
               </div>

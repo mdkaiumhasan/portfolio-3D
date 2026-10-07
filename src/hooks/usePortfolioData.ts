@@ -8,6 +8,7 @@ export interface StatItem {
 export interface SkillItem {
   name: string;
   percent: number;
+  category?: string;
 }
 
 export interface ActivityItem {
@@ -65,6 +66,7 @@ export interface PortfolioData {
   about_cv_link?: string;
   stats?: StatItem[];
   skills?: SkillItem[];
+  skill_categories?: string[];
   activities?: ActivityItem[];
   projects?: ProjectItem[];
   project_categories?: string[];
@@ -76,6 +78,50 @@ export interface PortfolioData {
   contactDetails?: ContactDetailItem[];
   socialLinks?: SocialLinkItem[];
   available_for_work?: boolean;
+}
+
+export function extractAuthorName(heading?: string): string {
+  if (!heading) return 'MD. Kaium Hasan';
+
+  // 1. If HTML span exists: <span class="text-accent">MD. Kaium Hasan</span>
+  const spanMatch = heading.match(/<span[^>]*>(.*?)<\/span>/i);
+  if (spanMatch && spanMatch[1]) {
+    return spanMatch[1].replace(/<[^>]+>/g, '').trim();
+  }
+
+  // 2. If {{ACCENT}}...{{/ACCENT}} exists
+  const accentMatch = heading.match(/\{\{ACCENT\}\}(.*?)\{\{\/ACCENT\}\}/i);
+  if (accentMatch && accentMatch[1]) {
+    return accentMatch[1].trim();
+  }
+
+  // 3. Fallback: strip HTML tags, accent tags, and introductory greeting
+  const clean = heading
+    .replace(/<[^>]+>/g, '')
+    .replace(/\{\{ACCENT\}\}|\{\{\/ACCENT\}\}/gi, '')
+    .replace(/^Hi,\s*I'm\.?\s*/i, '')
+    .trim();
+
+  // Strip trailing role suffix like ". A Network Engineer"
+  const withoutRole = clean.replace(/\s*(?:\.?\s*A\s+Network.*|\.?\s*A\s+Fullstack.*|\.?\s*A\s+Software.*)$/i, '').trim();
+  return withoutRole || 'MD. Kaium Hasan';
+}
+
+export function extractAuthorRole(subheading?: string, heading?: string): string {
+  const cleanHeading = (heading || '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\{\{ACCENT\}\}|\{\{\/ACCENT\}\}/gi, '');
+
+  const roleMatch = cleanHeading.match(/(?:A\s+Network\s+Engineer|Network\s+Engineer|Fullstack\s+Engineer|Systems\s+Engineer|Software\s+Engineer)/i);
+  if (roleMatch) {
+    return `${roleMatch[0].replace(/^A\s+/i, '').toUpperCase()} // CCNA & SYSTEMS`;
+  }
+
+  if (subheading && subheading.toLowerCase().includes('network engineer')) {
+    return 'NETWORK ENGINEER // CCNA & SYSTEMS';
+  }
+
+  return 'FULLSTACK & SYSTEMS // CCNA ENGINEER';
 }
 
 // Fallback baseline data if API is loading or offline
@@ -96,13 +142,18 @@ const FALLBACK_DATA: PortfolioData = {
     { heading: "MTCNA", description: "MIKROTIK CERTIFIED NETWORK ASSOCIATE" },
     { heading: "MTCRE", description: "MIKROTIK CERTIFIED ROUTING ENGINEER" }
   ],
+  skill_categories: [
+    "Network Engineering",
+    "Security & Systems",
+    "Programming & Software"
+  ],
   skills: [
-    { name: "ROUTING", percent: 95 },
-    { name: "SWITCHING", percent: 95 },
-    { name: "CONFIGURE", percent: 90 },
-    { name: "FIREWALL", percent: 80 },
-    { name: "C++", percent: 75 },
-    { name: "PYTHON", percent: 80 }
+    { name: "ROUTING", percent: 95, category: "Network Engineering" },
+    { name: "SWITCHING", percent: 95, category: "Network Engineering" },
+    { name: "CONFIGURE", percent: 90, category: "Network Engineering" },
+    { name: "FIREWALL", percent: 80, category: "Security & Systems" },
+    { name: "C++", percent: 75, category: "Programming & Software" },
+    { name: "PYTHON", percent: 80, category: "Programming & Software" }
   ],
   activities: [
     {
@@ -169,16 +220,28 @@ const FALLBACK_DATA: PortfolioData = {
   ],
   experiences: [
     {
-      title: "SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND",
-      date: "2019 - PRESENT",
-      description: "Covering Network, Parameter Security and Virtualisation.",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035644/portfolio/experiences/oviaxzqzuolf1c9hdbmd.jpg"
+      title: "Network Support Engineer – FNF Online (ISP)",
+      date: "Jan 2026 – Present",
+      description: "Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.",
+      imageUrl: "/data/fnf_isp_logo.svg"
     },
     {
-      title: "SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD",
-      date: "2018 – 2019",
-      description: "Worked closely with Platform team for new networks provisioning, routing and firewall policy management.",
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035646/portfolio/experiences/uaz8dts2s2mexbvbkkyb.svg"
+      title: "Independent Fullstack & Systems Developer",
+      date: "2025 – Present",
+      description: "Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.",
+      imageUrl: "/data/fullstack_dev_logo.svg"
+    },
+    {
+      title: "Cisco CCNA 200-301 & Enterprise Infrastructure Labs",
+      date: "2025 – 2026",
+      description: "Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.",
+      imageUrl: "https://files.catbox.moe/pasmm0.jpg"
+    },
+    {
+      title: "Diploma in Engineering (Computer Science & Technology)",
+      date: "Completed 2026",
+      description: "Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.",
+      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
     }
   ],
   contactDetails: [

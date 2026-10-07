@@ -2,6 +2,55 @@ import { connectToDatabase } from './_db.js';
 import fs from 'fs';
 import path from 'path';
 
+function normalizePortfolioData(data) {
+  if (!data || typeof data !== 'object') return data;
+  
+  if (!data.skill_categories || !Array.isArray(data.skill_categories) || data.skill_categories.length === 0) {
+    data.skill_categories = ['Network Engineering', 'Security & Systems', 'Programming & Software'];
+  }
+
+  if (Array.isArray(data.skills)) {
+    data.skills = data.skills.map((s) => {
+      if (!s.category || s.category.trim() === '') {
+        const name = (s.name || '').toUpperCase();
+        if (
+          name.includes('ROUTING') ||
+          name.includes('SWITCHING') ||
+          name.includes('CONFIGURE') ||
+          name.includes('CISCO') ||
+          name.includes('MIKROTIK') ||
+          name.includes('NETWORK') ||
+          name.includes('LAN') ||
+          name.includes('WAN')
+        ) {
+          s.category = 'Network Engineering';
+        } else if (
+          name.includes('FIREWALL') ||
+          name.includes('SECURITY') ||
+          name.includes('VPN') ||
+          name.includes('ACL')
+        ) {
+          s.category = 'Security & Systems';
+        } else if (
+          name.includes('C++') ||
+          name.includes('PYTHON') ||
+          name.includes('REACT') ||
+          name.includes('JS') ||
+          name.includes('NODE') ||
+          name.includes('JAVA')
+        ) {
+          s.category = 'Programming & Software';
+        } else {
+          s.category = data.skill_categories[0] || 'Network Engineering';
+        }
+      }
+      return s;
+    });
+  }
+
+  return data;
+}
+
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,7 +69,8 @@ export default async function handler(req, res) {
 
       if (content) {
         delete content._id;
-        return res.status(200).json(content);
+        const normalized = normalizePortfolioData(content);
+        return res.status(200).json(normalized);
       }
     } catch (err) {
       console.warn('MongoDB fetch error, falling back to local clean_data.json:', err.message);
@@ -31,7 +81,8 @@ export default async function handler(req, res) {
       const localDataPath = path.join(process.cwd(), 'legacy-2d-portfolio', 'clean_data.json');
       if (fs.existsSync(localDataPath)) {
         const localData = JSON.parse(fs.readFileSync(localDataPath, 'utf8'));
-        return res.status(200).json(localData);
+        const normalized = normalizePortfolioData(localData);
+        return res.status(200).json(normalized);
       }
     } catch (e) {
       console.error('Fallback read error:', e);
@@ -54,6 +105,7 @@ export default async function handler(req, res) {
 
     try {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      const normalizedPayload = normalizePortfolioData(body);
       const { db } = await connectToDatabase();
 
       // Upsert the main document
@@ -61,13 +113,24 @@ export default async function handler(req, res) {
         { _id: 'main' },
         {
           $set: {
-            ...body,
+            ...normalizedPayload,
             _id: 'main',
             updatedAt: new Date()
           }
         },
         { upsert: true }
       );
+
+      // Sync local files as backup
+      try {
+        const localCleanPath = path.join(process.cwd(), 'legacy-2d-portfolio', 'clean_data.json');
+        const publicLegacyPath = path.join(process.cwd(), 'public', 'data', 'legacy_data.json');
+        const syncJson = JSON.stringify({ ...normalizedPayload, updatedAt: new Date() }, null, 2);
+        if (fs.existsSync(path.dirname(localCleanPath))) fs.writeFileSync(localCleanPath, syncJson, 'utf8');
+        if (fs.existsSync(path.dirname(publicLegacyPath))) fs.writeFileSync(publicLegacyPath, syncJson, 'utf8');
+      } catch (fileSyncErr) {
+        console.warn('File sync warning:', fileSyncErr.message);
+      }
 
       return res.status(200).json({ success: true, message: 'Portfolio data updated in MongoDB successfully' });
     } catch (err) {

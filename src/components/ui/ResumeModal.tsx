@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Download, ExternalLink, FileText, CheckCircle2, Shield, Code } from 'lucide-react';
-import { usePortfolioData } from '../../hooks/usePortfolioData';
+import { usePortfolioData, extractAuthorName } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
@@ -16,34 +16,41 @@ export const ResumeModal: React.FC = () => {
 
   const cvLink = data.about_cv_link || data.home_cv_link || "https://files.catbox.moe/0juxap.pdf";
 
+  // Dynamic highlights directly from live projects & experiences in database
+  const softwareHighlights = (data.projects && data.projects.length > 0)
+    ? data.projects.slice(0, 4).map(p => `${p.title}: ${p.shortDesc || p.technology}`)
+    : [
+        'Production Software Engineering: Fullstack applications with real-time reactive sync and stateful architecture.',
+        'Network Topology & Automation: Automated configuration, testing, and modern application deployment.',
+      ];
+
+  const networkHighlights = (data.experiences && data.experiences.length > 0)
+    ? data.experiences.slice(0, 4).map(e => `${e.title} (${e.date}): ${e.description}`)
+    : [
+        'Network Infrastructure: Routing, switching, VLAN segmentation, and firewall bandwidth management.',
+        'Systems Administration: Linux and server configuration with access control and reliability monitoring.',
+      ];
+
+  const candidateName = extractAuthorName(data.home_heading).replace(/\s+/g, '_');
+
   const resumeTracks = {
     software: {
       title: 'Fullstack & Systems Engineer',
       badge: 'Software Track',
       color: '#a855f7',
       url: cvLink,
-      fileName: 'Md_Kaium_Hasan_Software_Engineer_Resume.pdf',
-      summary: data.about_info_text || "Fullstack and Android developer with hands-on experience building mobile apps, real-time reactive databases, and clean modern interfaces.",
-      highlights: [
-        'Mess Management APP (EasyMess): Bachelor mess accounting app in Android with real-time Firebase sync, live meal rates, and bilingual localization.',
-        'Enterprise Network: Resilient 600-staff trading floor topology with multi-area OSPF routing, 802.1Q VLAN trunking, and stateful ACL security.',
-        'Ramadan Journey: Islamic companion and prayer helper with background alarm scheduling and offline calculation.',
-        'Autonomous Line Follower Robot (LFR): Path tracking robot with ATmega328P and IR sensor array presented at District Science Fair 2024.'
-      ]
+      fileName: `${candidateName}_Software_Engineer_Resume.pdf`,
+      summary: data.about_info_text || "Fullstack and systems developer with hands-on experience building mobile apps, real-time reactive databases, and clean modern interfaces.",
+      highlights: softwareHighlights
     },
     network: {
       title: 'Network & Infrastructure Support Engineer',
       badge: 'CCNA & ISP Track',
       color: '#ffb703',
       url: cvLink,
-      fileName: 'Md_Kaium_Hasan_Network_Engineer_Resume.pdf',
-      summary: "Network Support Engineer with hands-on ISP field experience in MikroTik router, switch and OLT configuration, bandwidth management and network troubleshooting. Cisco CCNA (200-301) certified with additional training in Red Hat Linux server and Windows Server administration.",
-      highlights: [
-        'FNF Online (ISP): Managing MikroTik routers, switches, GPON OLTs, and bandwidth queue management for multi-tenant subscribers.',
-        'Cisco CCNA (200-301): Multi-area OSPF routing, VLAN trunking (802.1Q), STP, EtherChannel, and ACL traffic segmentation.',
-        'MikroTik RouterOS: MTCNA & MTCRE practices, PCQ dynamic queue trees, firewall mangle rules, and NAT/PAT.',
-        'Red Hat Linux & Windows Server: Linux server administration, user access management, DNS/DHCP infrastructure, and security policies.'
-      ]
+      fileName: `${candidateName}_Network_Engineer_Resume.pdf`,
+      summary: data.home_subheading || "Network Support Engineer with hands-on ISP field experience in MikroTik router, switch and OLT configuration, bandwidth management and network troubleshooting.",
+      highlights: networkHighlights
     }
   };
 

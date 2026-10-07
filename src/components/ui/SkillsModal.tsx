@@ -1,36 +1,127 @@
-import React, { useState } from 'react';
-import { X, Cpu, Server, Smartphone, Network, Cloud, Sparkles } from 'lucide-react';
-import { skillGroups } from '../../data/skills';
-import { usePortfolioData } from '../../hooks/usePortfolioData';
+import React, { useState, useMemo } from 'react';
+import {
+  X,
+  Cpu,
+  Server,
+  Network,
+  Shield,
+  Code,
+  Sparkles,
+  Database,
+  Layers
+} from 'lucide-react';
+import { usePortfolioData, SkillItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+
+// Shared category resolver identical to 2D portfolio
+export const getSkillCategory = (
+  skill: { name?: string; category?: string },
+  fallbackCategories?: string[]
+): string => {
+  if (skill && skill.category && skill.category.trim() !== '') {
+    return skill.category.trim();
+  }
+  const name = ((skill && skill.name) || '').toUpperCase();
+  if (
+    name.includes('ROUTING') ||
+    name.includes('SWITCHING') ||
+    name.includes('CONFIGURE') ||
+    name.includes('CISCO') ||
+    name.includes('MIKROTIK') ||
+    name.includes('NETWORK') ||
+    name.includes('LAN') ||
+    name.includes('WAN')
+  ) {
+    return 'Network Engineering';
+  }
+  if (
+    name.includes('FIREWALL') ||
+    name.includes('SECURITY') ||
+    name.includes('VPN') ||
+    name.includes('ACL')
+  ) {
+    return 'Security & Systems';
+  }
+  if (
+    name.includes('C++') ||
+    name.includes('PYTHON') ||
+    name.includes('REACT') ||
+    name.includes('JS') ||
+    name.includes('NODE') ||
+    name.includes('JAVA')
+  ) {
+    return 'Programming & Software';
+  }
+  return (fallbackCategories && fallbackCategories[0]) || 'Network Engineering';
+};
 
 export const SkillsModal: React.FC = () => {
   const { setActivePanel, audioEnabled } = useGameStore();
   const { data } = usePortfolioData();
-  const [activeTab, setActiveTab] = useState<string>('database');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const handleClose = () => {
     if (audioEnabled) sound.playClick();
     setActivePanel(null);
   };
 
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Layout': return <Cpu size={16} />;
-      case 'Server': return <Server size={16} />;
-      case 'Smartphone': return <Smartphone size={16} />;
-      case 'Network': return <Network size={16} />;
-      case 'Cloud': return <Cloud size={16} />;
-      default: return <Sparkles size={16} />;
+  const getCategoryIcon = (category: string) => {
+    const cat = category.toLowerCase();
+    if (cat === 'all') return <Layers size={16} />;
+    if (cat.includes('network') || cat.includes('cisco') || cat.includes('isp') || cat.includes('routing')) {
+      return <Network size={16} />;
     }
+    if (cat.includes('security') || cat.includes('firewall') || cat.includes('system')) {
+      return <Shield size={16} />;
+    }
+    if (cat.includes('program') || cat.includes('code') || cat.includes('software') || cat.includes('dev')) {
+      return <Code size={16} />;
+    }
+    if (cat.includes('data') || cat.includes('cloud') || cat.includes('db')) {
+      return <Database size={16} />;
+    }
+    if (cat.includes('server') || cat.includes('linux')) {
+      return <Server size={16} />;
+    }
+    if (cat.includes('hardware') || cat.includes('robot')) {
+      return <Cpu size={16} />;
+    }
+    return <Sparkles size={16} />;
   };
 
-  const dynamicSkills = data.skills || [];
+  const dynamicSkills: SkillItem[] = data.skills || [];
+
+  // Derive unique categories dynamically matching 2D behavior exactly
+  const categories = useMemo(() => {
+    const defaultCats = ['Network Engineering', 'Security & Systems', 'Programming & Software'];
+    const configuredCats =
+      data.skill_categories && Array.isArray(data.skill_categories) && data.skill_categories.length > 0
+        ? data.skill_categories
+        : defaultCats;
+
+    const set = new Set<string>();
+    configuredCats.forEach((cat) => {
+      if (cat && cat.trim() !== '') set.add(cat.trim());
+    });
+    dynamicSkills.forEach((s) => {
+      const resolved = getSkillCategory(s, configuredCats);
+      if (resolved && resolved.trim() !== '') set.add(resolved.trim());
+    });
+    return ['All', ...Array.from(set)];
+  }, [dynamicSkills, data.skill_categories]);
+
+  // Filter skills based on chosen category tab
+  const filteredSkills = useMemo(() => {
+    if (selectedCategory === 'All') return dynamicSkills;
+    return dynamicSkills.filter(
+      (skill) => getSkillCategory(skill, data.skill_categories) === selectedCategory
+    );
+  }, [dynamicSkills, selectedCategory, data.skill_categories]);
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" style={{ maxWidth: '920px' }} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" style={{ maxWidth: '940px' }} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -44,11 +135,11 @@ export const SkillsModal: React.FC = () => {
               }}
             />
             <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff' }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff', letterSpacing: '0.5px' }}>
                 TECHNICAL SKILLS MATRIX
               </h2>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Comprehensive Proficiency Breakdown Across Software & Network Infrastructure
+                Real-Time Verified Competencies Synchronized with Database & Admin Console
               </p>
             </div>
           </div>
@@ -57,211 +148,160 @@ export const SkillsModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Tab Selector */}
+        {/* Dynamic Category Tabs */}
         <div
           style={{
             padding: '12px 24px',
-            background: 'rgba(15, 23, 42, 0.4)',
+            background: 'rgba(15, 23, 42, 0.5)',
             borderBottom: '1px solid rgba(56, 189, 248, 0.15)',
             display: 'flex',
             gap: '8px',
-            overflowX: 'auto'
+            overflowX: 'auto',
+            alignItems: 'center'
           }}
         >
-          <button
-            onClick={() => {
-              if (audioEnabled) sound.playClick();
-              setActiveTab('database');
-            }}
-            style={{
-              background: activeTab === 'database' ? 'linear-gradient(135deg, rgba(57, 255, 20, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%)' : 'rgba(30, 41, 59, 0.5)',
-              border: `1px solid ${activeTab === 'database' ? '#39ff14' : 'rgba(148, 163, 184, 0.2)'}`,
-              color: activeTab === 'database' ? '#ffffff' : '#94a3b8',
-              padding: '8px 14px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontFamily: 'var(--font-hud)',
-              fontWeight: 700,
-              letterSpacing: '0.4px',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s ease',
-              boxShadow: activeTab === 'database' ? '0 0 12px rgba(57, 255, 20, 0.3)' : 'none'
-            }}
-          >
-            <Network size={16} />
-            Live Database ({dynamicSkills.length})
-          </button>
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat;
+            const count =
+              cat === 'All'
+                ? dynamicSkills.length
+                : dynamicSkills.filter(
+                    (s) => getSkillCategory(s, data.skill_categories) === cat
+                  ).length;
 
-          {skillGroups.map((group) => (
-            <button
-              key={group.id}
-              onClick={() => {
-                if (audioEnabled) sound.playClick();
-                setActiveTab(group.id);
-              }}
-              style={{
-                background: activeTab === group.id ? 'linear-gradient(135deg, rgba(57, 255, 20, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%)' : 'rgba(30, 41, 59, 0.5)',
-                border: `1px solid ${activeTab === group.id ? '#39ff14' : 'rgba(148, 163, 184, 0.2)'}`,
-                color: activeTab === group.id ? '#ffffff' : '#94a3b8',
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '13px',
-                fontFamily: 'var(--font-hud)',
-                fontWeight: 700,
-                letterSpacing: '0.4px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease',
-                boxShadow: activeTab === group.id ? '0 0 12px rgba(57, 255, 20, 0.3)' : 'none'
-              }}
-            >
-              {getIcon(group.icon)}
-              {group.category}
-            </button>
-          ))}
-        </div>
-
-        {/* Body */}
-        <div className="modal-body">
-          {activeTab === 'database' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div
-                className="glass-panel"
+            return (
+              <button
+                key={cat}
+                onClick={() => {
+                  if (audioEnabled) sound.playClick();
+                  setSelectedCategory(cat);
+                }}
                 style={{
-                  padding: '16px 20px',
-                  borderLeft: '4px solid #39ff14',
-                  background: 'rgba(15, 23, 42, 0.6)'
+                  background: isSelected
+                    ? 'linear-gradient(135deg, rgba(57, 255, 20, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%)'
+                    : 'rgba(30, 41, 59, 0.5)',
+                  border: `1.5px solid ${isSelected ? '#39ff14' : 'rgba(148, 163, 184, 0.2)'}`,
+                  color: isSelected ? '#ffffff' : '#94a3b8',
+                  padding: '8px 14px',
+                  borderRadius: '10px',
+                  fontSize: '13px',
+                  fontFamily: 'var(--font-hud)',
+                  fontWeight: 700,
+                  letterSpacing: '0.4px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.2s ease',
+                  boxShadow: isSelected ? '0 0 14px rgba(57, 255, 20, 0.35)' : 'none'
                 }}
               >
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>
-                  Centralized Competency Levels
-                </h3>
-                <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-                  Managed dynamically via the Admin Panel and stored in MongoDB.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-                {dynamicSkills.map((skill, idx) => (
-                  <div
-                    key={idx}
-                    className="glass-panel glass-panel-hover"
-                    style={{
-                      padding: '16px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px',
-                      background: 'rgba(15, 23, 42, 0.7)'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff' }}>
-                        {skill.name}
-                      </span>
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#4ade80' }}>
-                        {skill.percent}%
-                      </span>
-                    </div>
-                    <div style={{ height: '6px', backgroundColor: 'rgba(148, 163, 184, 0.2)', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          height: '100%',
-                          width: `${skill.percent}%`,
-                          backgroundColor: '#39ff14',
-                          boxShadow: '0 0 8px rgba(57, 255, 20, 0.5)'
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {skillGroups.map((group) => {
-            if (group.id !== activeTab) return null;
-            return (
-              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div
-                  className="glass-panel"
+                {getCategoryIcon(cat)}
+                <span>{cat}</span>
+                <span
                   style={{
-                    padding: '16px 20px',
-                    borderLeft: '4px solid #39ff14',
-                    background: 'rgba(15, 23, 42, 0.6)'
+                    fontSize: '11px',
+                    padding: '2px 7px',
+                    borderRadius: '10px',
+                    background: isSelected ? 'rgba(57, 255, 20, 0.2)' : 'rgba(255, 255, 255, 0.08)',
+                    color: isSelected ? '#39ff14' : '#cbd5e1'
                   }}
                 >
-                  <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>
-                    {group.category}
-                  </h3>
-                  <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-                    {group.description}
-                  </p>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
-                  {group.skills.map((skill, idx) => (
-                    <div
-                      key={idx}
-                      className="glass-panel glass-panel-hover"
-                      style={{
-                        padding: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        background: 'rgba(15, 23, 42, 0.7)'
-                      }}
-                    >
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff' }}>
-                          {skill.name}
-                        </span>
-                        {skill.tag && (
-                          <span style={{ fontSize: '11px', color: '#38bdf8', fontFamily: 'var(--font-mono)' }}>
-                            {skill.tag}
-                          </span>
-                        )}
-                      </div>
-
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          padding: '3px 10px',
-                          borderRadius: '12px',
-                          background: skill.level === 'Expert'
-                            ? 'rgba(57, 255, 20, 0.15)'
-                            : skill.level === 'Advanced'
-                            ? 'rgba(56, 189, 248, 0.15)'
-                            : 'rgba(251, 191, 36, 0.15)',
-                          color: skill.level === 'Expert'
-                            ? '#4ade80'
-                            : skill.level === 'Advanced'
-                            ? '#38bdf8'
-                            : '#fbbf24',
-                          border: `1px solid ${
-                            skill.level === 'Expert'
-                              ? 'rgba(74, 222, 128, 0.3)'
-                              : skill.level === 'Advanced'
-                              ? 'rgba(56, 189, 248, 0.3)'
-                              : 'rgba(251, 191, 36, 0.3)'
-                          }`
-                        }}
-                      >
-                        {skill.level}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                  {count}
+                </span>
+              </button>
             );
           })}
+        </div>
+
+        {/* Modal Body */}
+        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Grid of Dynamic Skill Cards */}
+          {filteredSkills.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+              {filteredSkills.map((skill, idx) => {
+                return (
+                  <div
+                    key={`${skill.name}-${idx}`}
+                    className="glass-panel glass-panel-hover"
+                    style={{
+                      padding: '18px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 25, 0.95) 100%)',
+                      border: '1px solid rgba(56, 189, 248, 0.15)',
+                      borderRadius: '12px',
+                      transition: 'all 0.25s ease'
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', letterSpacing: '0.4px' }}>
+                        {skill.name}
+                      </span>
+                    </div>
+
+                    {/* Progress Bar Container */}
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          Proficiency Rating
+                        </span>
+                        <span style={{ fontSize: '13px', fontWeight: 800, color: '#39ff14', textShadow: '0 0 8px rgba(57, 255, 20, 0.5)' }}>
+                          {skill.percent}%
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          height: '8px',
+                          backgroundColor: 'rgba(148, 163, 184, 0.15)',
+                          borderRadius: '999px',
+                          overflow: 'hidden',
+                          position: 'relative'
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${Math.max(0, Math.min(100, skill.percent))}%`,
+                            background: 'linear-gradient(90deg, #10b981 0%, #39ff14 100%)',
+                            boxShadow: '0 0 10px rgba(57, 255, 20, 0.65)',
+                            borderRadius: '999px',
+                            transition: 'width 1s ease-out'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '48px 24px',
+                background: 'rgba(15, 23, 42, 0.4)',
+                borderRadius: '12px',
+                border: '1px dashed rgba(148, 163, 184, 0.2)'
+              }}
+            >
+              <p style={{ fontSize: '15px', color: '#ffffff', fontWeight: 600 }}>
+                No skills configured in category "{selectedCategory}"
+              </p>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                You can assign skills to this category anytime from the Admin Panel.
+              </p>
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className="btn-cyber"
+                style={{ marginTop: '16px', padding: '6px 16px', fontSize: '12px' }}
+              >
+                View All Skills
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

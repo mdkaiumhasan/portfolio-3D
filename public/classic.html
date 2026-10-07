@@ -657,6 +657,117 @@
             animation: projectCardAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
+        /* --- Skills Category Filter & Tabs --- */
+        .skills-filter-wrapper {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.85rem;
+            padding: 0.75rem 1.25rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        html.dark .skills-filter-wrapper {
+            background-color: rgba(18, 24, 32, 0.75);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+        }
+
+        .skills-tabs-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            max-width: 100%;
+            padding-bottom: 2px;
+        }
+        .skills-tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .skills-tabs-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .skill-category-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 15px;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            outline: none;
+        }
+        html.dark .skill-category-tab-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+        .skill-category-tab-btn:hover {
+            color: var(--text-color);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+        .skill-category-tab-btn.active {
+            background: rgba(40, 167, 69, 0.15);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: 0 0 12px rgba(40, 167, 69, 0.25);
+            font-weight: 700;
+        }
+        html.dark .skill-category-tab-btn.active {
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.22) 0%, rgba(14, 165, 233, 0.18) 100%);
+            border-color: #39ff14;
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(57, 255, 20, 0.35);
+        }
+
+        .skill-tab-count {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: currentColor;
+        }
+
+        .skill-category-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            letter-spacing: 0.3px;
+            display: inline-block;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+
+        @keyframes skillItemAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .skill-item {
+            animation: skillItemAppear 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         /* Blog Section */
         .blog-item {
             background-color: var(--bg-color); border-radius: 0.5rem; overflow: hidden;
@@ -1144,7 +1255,7 @@
 
 <script>
     // Safely escaped portfolio data - 100% Local, zero Firebase dependency
-    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skills":[{"percent":95,"name":"ROUTING"},{"name":"SWITCHING","percent":95},{"name":"CONFIGURE","percent":90},{"name":"FIREWALL","percent":80},{"percent":75,"name":"C++"},{"percent":80,"name":"PYTHON"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"><\/script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"},{"fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>","category":"Web Design","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","category":"Mobile & Realtime","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","category":"Networking & Security","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","category":"Mobile & Realtime","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://files.catbox.moe/bcktxt.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","category":"Robotics & Hardware","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"description":"Covering Network, Parameter Security and Virtualisation.","date":"2019 - PRESENT","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035644/portfolio/experiences/oviaxzqzuolf1c9hdbmd.jpg","title":"SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"},{"description":"Worked closely with Platform team for new networks provisioning, routing and firewall policy management.","title":"SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035646/portfolio/experiences/uaz8dts2s2mexbvbkkyb.svg","date":"2018 – 2019"},{"date":"","description":"","imageUrl":"","title":""}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf","project_categories":["Networking & Security","Mobile & Realtime","Robotics & Hardware"]};
+    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skill_categories":["Network Engineering","Security & Systems","Programming & Software"],"skills":[{"percent":95,"name":"ROUTING","category":"Network Engineering"},{"name":"SWITCHING","percent":95,"category":"Network Engineering"},{"name":"CONFIGURE","percent":90,"category":"Network Engineering"},{"name":"FIREWALL","percent":80,"category":"Security & Systems"},{"percent":75,"name":"C++","category":"Programming & Software"},{"percent":80,"name":"PYTHON","category":"Programming & Software"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"><\/script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"},{"fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>","category":"Web Design","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","category":"Mobile & Realtime","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","category":"Networking & Security","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","category":"Mobile & Realtime","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://files.catbox.moe/bcktxt.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","category":"Robotics & Hardware","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"title":"Network Support Engineer – FNF Online (ISP)","date":"Jan 2026 – Present","description":"Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.","imageUrl":"/data/fnf_isp_logo.svg"},{"title":"Independent Fullstack & Systems Developer","date":"2025 – Present","description":"Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.","imageUrl":"/data/fullstack_dev_logo.svg"},{"title":"Cisco CCNA 200-301 & Enterprise Infrastructure Labs","date":"2025 – 2026","description":"Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.","imageUrl":"https://files.catbox.moe/pasmm0.jpg"},{"title":"Diploma in Engineering (Computer Science & Technology)","date":"Completed 2026","description":"Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf","project_categories":["Networking & Security","Mobile & Realtime","Robotics & Hardware"]};
 
     // Auto-initialize instantly with cached clean data
     document.addEventListener('DOMContentLoaded', () => {
@@ -1333,13 +1444,43 @@ function handleEnter3D() {
                 </div>
 
                 
-<div class="mt-24">
+                <div class="mt-24" id="skills-section-wrapper">
                     <h2 class="section-title">MY <span class="text-accent">SKILLS</span>
                         <span class="section-title-bg">SKILLS</span>
                     </h2>
+
+                    <!-- Skills Category Filter Bar -->
+                    <div class="skills-filter-wrapper mb-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="filter-lead-icon flex items-center justify-center w-9 h-9 rounded-full" style="background-color: var(--bg-color); border: 1.5px solid var(--border-color); color: var(--accent-color);">
+                                <i class="fas fa-sliders-h text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-bold tracking-wider uppercase" style="color: var(--text-secondary);">Browse By Category</h3>
+                                <p class="text-sm font-semibold" id="skills-showing-count-text" style="color: var(--text-color);">
+                                    Showing <span id="skills-showing-count" class="font-bold text-accent">6</span> Skills
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Category Tabs -->
+                        <div class="skills-tabs-container" id="skills-category-tabs">
+                            <!-- Populated dynamically via renderSkillCategories() -->
+                        </div>
+                    </div>
+
                     <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                         
-</div>
+                    </div>
+
+                    <!-- Empty State for Skills Category -->
+                    <div id="skills-empty-state" class="hidden text-center py-12">
+                        <i class="fas fa-layer-group text-4xl mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                        <p class="text-base font-semibold" style="color: var(--text-color);">No skills found in this category.</p>
+                        <button type="button" onclick="selectSkillCategory('All')" class="btn-custom mt-4 text-xs">
+                            View All Skills
+                        </button>
+                    </div>
                 </div>
 
                 
@@ -1591,8 +1732,12 @@ function handleEnter3D() {
             // Stats
             renderStats(get('stats', []));
 
-            // Skills
-            renderSkills(get('skills', []));
+            // Skills & Skill Categories
+            window.skillCategories = get('skill_categories', null);
+            allSkillsList = get('skills', []);
+            activeSkillCategory = 'All';
+            renderSkillCategories(allSkillsList);
+            filterAndRenderSkills();
 
             // Activities
             renderActivities(get('activities', []));
@@ -1640,6 +1785,80 @@ function handleEnter3D() {
             });
         }
 
+        // --- Skills Category & Filtering Logic ---
+        let allSkillsList = [];
+        let activeSkillCategory = 'All';
+
+        function getSkillCategory(skill) {
+            if (skill && skill.category && skill.category.trim() !== '') return skill.category.trim();
+            const name = ((skill && skill.name) || '').toUpperCase();
+            if (name.includes('ROUTING') || name.includes('SWITCHING') || name.includes('CONFIGURE') || name.includes('CISCO') || name.includes('MIKROTIK') || name.includes('NETWORK') || name.includes('LAN') || name.includes('WAN')) return 'Network Engineering';
+            if (name.includes('FIREWALL') || name.includes('SECURITY') || name.includes('VPN') || name.includes('ACL')) return 'Security & Systems';
+            if (name.includes('C++') || name.includes('PYTHON') || name.includes('REACT') || name.includes('JS') || name.includes('NODE') || name.includes('JAVA')) return 'Programming & Software';
+            return (window.skillCategories && window.skillCategories[0]) || 'General';
+        }
+
+        function renderSkillCategories(skills = []) {
+            const tabsContainer = document.getElementById('skills-category-tabs');
+            if (!tabsContainer) return;
+
+            const defaultCats = ['Network Engineering', 'Security & Systems', 'Programming & Software'];
+            const configuredCats = (window.skillCategories && Array.isArray(window.skillCategories) && window.skillCategories.length > 0)
+                ? window.skillCategories
+                : defaultCats;
+
+            const categoriesSet = new Set(configuredCats);
+            skills.forEach(s => categoriesSet.add(getSkillCategory(s)));
+            const categories = ['All', ...Array.from(categoriesSet)];
+
+            tabsContainer.innerHTML = categories.map(cat => {
+                const count = cat === 'All'
+                    ? skills.length
+                    : skills.filter(s => getSkillCategory(s) === cat).length;
+                const isActive = cat === activeSkillCategory;
+                return `
+                    <button type="button" class="skill-category-tab-btn ${isActive ? 'active' : ''}" data-category="${escapeHTML(cat)}" role="tab" aria-selected="${isActive}">
+                        <span>${escapeHTML(cat)}</span>
+                        <span class="skill-tab-count">${count}</span>
+                    </button>
+                `;
+            }).join('');
+
+            tabsContainer.querySelectorAll('.skill-category-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const cat = btn.getAttribute('data-category');
+                    selectSkillCategory(cat);
+                });
+            });
+        }
+
+        function selectSkillCategory(cat) {
+            activeSkillCategory = cat;
+            renderSkillCategories(allSkillsList);
+            filterAndRenderSkills();
+        }
+
+        window.selectSkillCategory = selectSkillCategory;
+
+        function filterAndRenderSkills() {
+            const filteredSkills = activeSkillCategory === 'All'
+                ? allSkillsList
+                : allSkillsList.filter(s => getSkillCategory(s) === activeSkillCategory);
+
+            const countTextContainer = document.getElementById('skills-showing-count-text');
+            if (countTextContainer) {
+                countTextContainer.innerHTML = `Showing <span id="skills-showing-count" class="font-bold text-accent">${filteredSkills.length}</span> ${filteredSkills.length === 1 ? 'Skill' : 'Skills'}`;
+            }
+
+            const emptyState = document.getElementById('skills-empty-state');
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', filteredSkills.length > 0);
+            }
+
+            renderSkills(filteredSkills);
+        }
+
         function renderSkills(skills = []) {
             if (!skillsContainer) return;
             skillsContainer.innerHTML = ''; // Clear previous
@@ -1647,25 +1866,21 @@ function handleEnter3D() {
                 const skillDiv = document.createElement('div');
                 skillDiv.className = 'skill-item';
                 const percentage = Math.max(0, Math.min(100, parseInt(skill.percent || 0, 10)));
+                const cat = getSkillCategory(skill);
                 // --- FIX: Use textContent for safety ---
                 skillDiv.innerHTML = `
-                    <div class="flex justify-between mb-1">
-                        <span class="font-semibold text-lg"></span>
-                        <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">%</span>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="font-semibold text-lg skill-name-label"></span>
+                        <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">${percentage}%</span>
                     </div>
                     <div class="skill-bar-bg">
-                        <div class="skill-bar-inner" data-percent="${percentage}%"></div>
+                        <div class="skill-bar-inner" data-percent="${percentage}%" style="width: ${percentage}%;"></div>
                     </div>
                 `;
-                skillDiv.querySelector('.font-semibold.text-lg').textContent = skill.name || 'Skill';
-                skillDiv.querySelector('.font-semibold.text-lg.text-secondary').textContent = `${percentage}%`;
+                skillDiv.querySelector('.skill-name-label').textContent = skill.name || 'Skill';
                 // --- END FIX ---
                 skillsContainer.appendChild(skillDiv);
             });
-            // Re-trigger animation if needed (or do it on scroll) - simple immediate trigger here
-            /* REMOVED: setTimeout block that triggered animation on load.
-               Animation is now handled by IntersectionObserver in the non-module script.
-            */
         }
 
         function renderActivities(activities = []) {
@@ -1967,15 +2182,16 @@ function handleEnter3D() {
              const column2 = document.createElement('div');
              column2.className = 'space-y-8 md:mt-16'; // Add stagger effect
 
-             experiences.forEach((exp, index) => {
+             const validExperiences = (experiences || []).filter(exp => exp && exp.title && exp.title.trim().length > 0);
+             validExperiences.forEach((exp, index) => {
                   const expDiv = document.createElement('div');
                   expDiv.className = 'timeline-item';
                   // --- FIX: Use textContent/setAttribute and DOMPurify ---
                   const safeDescription = sanitizeHTML(exp.description || '');
                   expDiv.innerHTML = `
                        <div class="timeline-icon"><i class="fas fa-briefcase"></i></div>
-                       <div class="timeline-img-container">
-                            <img src="" alt="" class="w-full h-64 object-cover transition-transform duration-300 ease-in-out hover:scale-110">
+                       <div class="timeline-img-container" style="background: rgba(11, 15, 25, 0.95); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; min-height: 170px;">
+                            <img src="" alt="" class="w-full h-48 md:h-52 object-contain p-3 transition-transform duration-300 ease-in-out hover:scale-105">
                        </div>
                        <div class="timeline-item-content">
                            <span class="timeline-date"></span>
@@ -1987,9 +2203,14 @@ function handleEnter3D() {
                        </div>
                   `;
                   
-                  const img = expDiv.querySelector('img');
-                  img.src = exp.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Experience';
-                  img.alt = exp.title || 'Experience Image';
+                  const imgContainer = expDiv.querySelector('.timeline-img-container');
+                  if (exp.imageUrl && exp.imageUrl.trim().length > 0) {
+                      const img = expDiv.querySelector('img');
+                      img.src = exp.imageUrl;
+                      img.alt = exp.title || 'Experience Image';
+                  } else if (imgContainer) {
+                      imgContainer.remove();
+                  }
                   
                   expDiv.querySelector('.timeline-date').textContent = exp.date || 'Date Range';
                   expDiv.querySelector('.timeline-title').textContent = exp.title || 'Job Title';
@@ -2197,13 +2418,47 @@ function handleEnter3D() {
             // setTimeout(() => errorDiv.remove(), 5000);
         }
 
-        // Standalone initialization with local portfolio data
-        if (typeof INITIAL_PORTFOLIO_DATA !== 'undefined') {
-            updatePortfolioContent(INITIAL_PORTFOLIO_DATA);
+        // Dynamic initialization from MongoDB live API
+        async function initPortfolio() {
+            try {
+                const res = await fetch('/api/portfolio');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data === 'object') {
+                        updatePortfolioContent(data);
+                        if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                        if (mainContent) mainContent.classList.remove('hidden');
+                        if (mainNav) mainNav.classList.remove('hidden');
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('API fetch failed, trying local fallback:', err);
+            }
+
+            try {
+                const fallbackRes = await fetch('/data/legacy_data.json');
+                if (fallbackRes.ok) {
+                    const fallbackData = await fallbackRes.json();
+                    updatePortfolioContent(fallbackData);
+                    if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                    if (mainContent) mainContent.classList.remove('hidden');
+                    if (mainNav) mainNav.classList.remove('hidden');
+                    return;
+                }
+            } catch (e) {
+                console.warn('Fallback static fetch failed:', e);
+            }
+
+            if (typeof INITIAL_PORTFOLIO_DATA !== 'undefined') {
+                updatePortfolioContent(INITIAL_PORTFOLIO_DATA);
+            }
             if (loadingIndicator) loadingIndicator.classList.add('hidden');
             if (mainContent) mainContent.classList.remove('hidden');
             if (mainNav) mainNav.classList.remove('hidden');
         }
+
+        initPortfolio();
     </script>
     <script>
         // Separate script for non-module JS (Theme, Navigation, Detail Views)

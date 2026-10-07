@@ -17,6 +17,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { useGameStore, STATIONS, ActivePanel } from '../../store/gameStore';
+import { usePortfolioData, extractAuthorName, extractAuthorRole } from '../../hooks/usePortfolioData';
 import { sound } from '../../systems/audio';
 
 const StreetRadar: React.FC = React.memo(() => {
@@ -122,6 +123,15 @@ export const HUD: React.FC = () => {
     setActiveEmote
   } = useGameStore();
 
+  const { data } = usePortfolioData();
+  const authorName = React.useMemo(() => {
+    return extractAuthorName(data.home_heading).toUpperCase();
+  }, [data.home_heading]);
+
+  const authorSubheading = React.useMemo(() => {
+    return extractAuthorRole(data.home_subheading, data.home_heading);
+  }, [data.home_subheading, data.home_heading]);
+
   const [fps, setFps] = React.useState(60);
   const [renderStats, setRenderStats] = React.useState('');
 
@@ -183,14 +193,16 @@ export const HUD: React.FC = () => {
         <div
           className="glass-panel"
           style={{
-            padding: '10px 18px',
+            padding: '8px 16px',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            background: 'rgba(10, 14, 25, 0.9)'
+            background: 'rgba(10, 14, 25, 0.9)',
+            height: '46px',
+            boxSizing: 'border-box'
           }}
         >
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flexShrink: 0 }}>
             <div
               style={{
                 width: '10px',
@@ -214,12 +226,37 @@ export const HUD: React.FC = () => {
             />
           </div>
 
-          <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 700, color: '#ffffff', letterSpacing: '0.5px' }}>
-              MD. KAIUM HASAN
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: '13px',
+                fontWeight: 700,
+                color: '#ffffff',
+                letterSpacing: '0.5px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                lineHeight: 1.2
+              }}
+            >
+              {authorName}
             </div>
-            <div style={{ fontFamily: 'var(--font-hud)', fontSize: '11px', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.8px' }}>
-              FULLSTACK & SYSTEMS // CCNA ENGINEER
+            <div
+              style={{
+                fontFamily: 'var(--font-hud)',
+                fontSize: '10px',
+                color: '#38bdf8',
+                fontWeight: 700,
+                letterSpacing: '0.8px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                lineHeight: 1.2,
+                marginTop: '2px'
+              }}
+            >
+              {authorSubheading}
             </div>
           </div>
         </div>

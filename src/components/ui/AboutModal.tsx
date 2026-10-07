@@ -21,9 +21,13 @@ export const AboutModal: React.FC = () => {
   // Helper to render accent tags identically to 2D
   const renderAccentText = (text: string) => {
     if (!text) return null;
-    const parts = text.split(/\{\{ACCENT\}\}|\{\{\/ACCENT\}\}/gi);
-    if (parts.length === 1) return text;
+    const normalized = text
+      .replace(/<span[^>]*class=["'](?:text-accent|accent)[^"']*["'][^>]*>(.*?)<\/span>/gi, '{{ACCENT}}$1{{/ACCENT}}')
+      .replace(/<span[^>]*>(.*?)<\/span>/gi, '{{ACCENT}}$1{{/ACCENT}}');
+    const parts = normalized.split(/\{\{ACCENT\}\}|\{\{\/ACCENT\}\}/gi);
+    if (parts.length === 1) return text.replace(/<[^>]+>/g, '');
     return parts.map((part, index) => {
+      const cleanPart = part.replace(/<[^>]+>/g, '');
       if (index % 2 === 1) {
         return (
           <span
@@ -34,11 +38,11 @@ export const AboutModal: React.FC = () => {
               fontWeight: 800
             }}
           >
-            {part}
+            {cleanPart}
           </span>
         );
       }
-      return part;
+      return cleanPart;
     });
   };
 

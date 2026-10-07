@@ -807,6 +807,20 @@
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
+        /* Skill Category Tag & Select */
+        .skill-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
         /* Toast notifications */
         #admin-toast-container {
             position: fixed;
@@ -1044,9 +1058,10 @@
                     <span class="btn-text">Projects & Categories</span>
                     <span id="sidebar-projects-count" class="sidebar-nav-badge">4</span>
                 </button>
-                <button class="sidebar-btn" data-target="timeline-edit" title="Experience Timeline">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span class="btn-text">Timeline</span>
+                <button class="sidebar-btn" data-target="timeline-edit" title="Experience Timeline & NOC">
+                    <i class="fas fa-network-wired"></i>
+                    <span class="btn-text">Timeline & NOC</span>
+                    <span id="sidebar-timeline-count" class="sidebar-nav-badge">4</span>
                 </button>
                 <button class="sidebar-btn" data-target="blogs-edit" title="Blog Posts">
                     <i class="fas fa-file-alt"></i>
@@ -1176,7 +1191,56 @@
                     <div id="about-stats-container" class="space-y-4"></div>
                     <button class="btn-add mt-4" data-container="about-stats-container" data-template="stat-box-template"><i class="fas fa-plus mr-1"></i>Add New Stat Box</button>
 
-                    <h4 class="text-xl font-semibold mt-10 mb-4">My Skills</h4>
+                    <!-- Executive Skill Category & Section Manager Card -->
+                    <div class="category-manager-card mt-8">
+                        <div class="category-manager-header">
+                            <div class="category-manager-title-wrap">
+                                <div class="category-icon-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <div>
+                                    <h4>Skill Sections & Categories</h4>
+                                    <p class="category-manager-subtitle">
+                                        Customize skill categories for the 3D skills matrix & 2D portfolio. Add new categories, rename existing ones (which automatically cascades to all assigned skills), and remove categories.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="category-summary-badge" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8;">
+                                <span id="skill-category-total-count">3</span> Categories Active
+                            </div>
+                        </div>
+
+                        <!-- Active Skill Categories List -->
+                        <div id="active-skill-categories-list" class="active-categories-grid">
+                            <!-- Populated dynamically via renderSkillCategoryManager() -->
+                        </div>
+
+                        <!-- Add Skill Category Form -->
+                        <div class="add-category-bar">
+                            <div class="add-category-input-wrap">
+                                <i class="fas fa-folder-plus input-icon"></i>
+                                <input type="text" id="new-skill-category-input" class="add-category-input" placeholder="Type new skill category name (e.g. Cloud & DevOps, Network Security, Programming)...">
+                            </div>
+                            <button type="button" id="add-skill-category-btn" class="btn-add-category" style="background: #0284c7; border-color: #0284c7; color: #fff;">
+                                <i class="fas fa-plus mr-1.5"></i> Add Skill Category
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-8 mb-3">
+                        <div>
+                            <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100 m-0">My Skills List</h4>
+                            <span class="text-sm text-secondary">Manage proficiency levels and category assignments</span>
+                        </div>
+                        <!-- Category Filter Bar in Admin -->
+                        <div class="flex items-center gap-2">
+                            <label for="admin-skill-category-filter" class="text-xs font-semibold text-secondary whitespace-nowrap mb-0">Category Filter:</label>
+                            <select id="admin-skill-category-filter" class="form-input text-xs py-1.5 px-3 mb-0 w-auto" style="min-width: 170px;">
+                                <option value="All">All Categories</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div id="skills-container" class="space-y-4"></div>
                     <button class="btn-add mt-4" data-container="skills-container" data-template="skill-template"><i class="fas fa-plus mr-1"></i>Add New Skill</button>
                  </div>
@@ -1262,7 +1326,7 @@
              <!-- My Timeline Section Editor -->
              <section id="timeline-edit" class="section-editor-container">
                  <div class="editor-section">
-                     <h3>My Timeline Section Editing</h3>
+                     <h3><i class="fas fa-network-wired text-accent"></i> Experience Timeline & Network Ops Center (NOC)</h3>
                      <!-- Updated Toggle Text -->
                       <div class="construction-message-toggle-container">
                           <span class="construction-message-toggle-label">Show "Under Construction" Message:</span>
@@ -1275,11 +1339,11 @@
                       <label for="timeline-cv-link">CV Download Link (Timeline Section):</label>
                       <input type="text" id="timeline-cv-link" value="#" class="form-input">
 
-                     <p>Manage your professional experience timeline.</p>
+                     <p class="text-secondary mb-3">Manage your professional experience, ISP field engineering roles, and NOC timeline. Any changes saved here automatically synchronize across both the <strong>2D Portfolio Timeline</strong> and <strong>3D Cyber NOC Station</strong>.</p>
                      <div id="timeline-items-container" class="space-y-6 mt-4"></div>
-                     <button class="btn-add mt-6" data-container="timeline-items-container" data-template="timeline-template"><i class="fas fa-plus mr-1"></i>Add New Experience</button>
+                     <button class="btn-add mt-6" data-container="timeline-items-container" data-template="timeline-template"><i class="fas fa-plus mr-1"></i>Add New Experience / Role</button>
                      <button class="btn-save mt-6 block">
-                         <i class="fas fa-save mr-2"></i>Save All Changes (Timeline)
+                         <i class="fas fa-save mr-2"></i>Save All Changes (Timeline & NOC)
                      </button>
                      <div class="save-status hidden"></div>
                  </div>
@@ -1460,11 +1524,31 @@
         </div>
     </template>
     <template id="skill-template">
-        <div class="dynamic-item-container">
-            <h4>New Skill</h4>
-            <label>Skill Name:</label> <input type="text" data-key="name" class="form-input">
-            <label>Percentage:</label> <input type="number" value="50" min="0" max="100" data-key="percent" class="form-input w-24">
-            <button class="btn-delete mt-2"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
+        <div class="dynamic-item-container skill-item-card">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border-color)]">
+                <div class="flex items-center gap-3">
+                    <h4 class="m-0 font-bold text-base text-[var(--text-color)]">Skill Card</h4>
+                    <span class="skill-category-badge">Network Engineering</span>
+                </div>
+                <button class="btn-delete text-xs py-1 px-2.5 m-0"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="font-semibold text-xs text-secondary">Assign Category:</label>
+                    <select data-key="category" class="form-input skill-category-select">
+                        <!-- Dynamically populated from activeSkillCategories -->
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-xs text-secondary">Skill Name:</label>
+                    <input type="text" data-key="name" class="form-input" placeholder="e.g. ROUTING, PYTHON, REACT">
+                </div>
+                <div>
+                    <label class="font-semibold text-xs text-secondary">Proficiency Percentage (%):</label>
+                    <input type="number" min="0" max="100" data-key="percent" class="form-input" placeholder="e.g. 95">
+                </div>
+            </div>
         </div>
     </template>
     <template id="activity-template">
@@ -1548,14 +1632,14 @@
     <template id="timeline-template">
         <div class="dynamic-item-container">
              <h4>New Experience</h4>
-             <label>Image URL:</label> <input type="text" data-key="imageUrl" class="form-input image-url-input">
+             <label>Job Title / Role (e.g. Network Support Engineer – FNF Online):</label> <input type="text" data-key="title" class="form-input" placeholder="e.g. Network Support Engineer – FNF Online (ISP)">
+             <label>Date Range (e.g. Jan 2026 – Present):</label> <input type="text" data-key="date" class="form-input" placeholder="e.g. Jan 2026 – Present">
+             <label>Description & Responsibilities (HTML Allowed):</label> <textarea rows="3" data-key="description" class="form-textarea" placeholder="Detail your network responsibilities, MikroTik/Cisco configs, etc."></textarea>
+             <label>Badge / Company Image URL (optional):</label> <input type="text" data-key="imageUrl" class="form-input image-url-input" placeholder="https://...">
              <div class="image-preview-container"><img class="image-preview" src="" alt="Timeline Preview"></div>
              <label>Image Upload:</label> <input type="file" accept="image/*" class="form-input mb-2 image-file-input">
              <button class="btn-upload mb-4" data-target-input="[data-key='imageUrl']" data-target-preview=".image-preview"><i class="fas fa-upload mr-1"></i>Upload Image</button>
              <div class="upload-progress"><i class="fas fa-spinner fa-spin"></i> Uploading... <span>0</span>%</div>
-             <label>Date Range:</label> <input type="text" data-key="date" class="form-input">
-             <label>Title:</label> <input type="text" data-key="title" class="form-input">
-             <label>Description:</label> <textarea rows="3" data-key="description" class="form-textarea"></textarea>
              <button class="btn-delete mt-2"><i class="fas fa-trash-alt mr-1"></i>Delete Experience</button>
          </div>
     </template>
@@ -1682,10 +1766,14 @@
                 { heading: "NCA", description: "NUTANIX CERTIFIED ASSOCIATE" }
             ],
             skills: [
-                { name: "ROUTING", percent: 90 }, { name: "SWITCHING", percent: 95 },
-                { name: "VMWARE", percent: 85 }, { name: "FIREWALL", percent: 80 },
-                { name: "ANSIBLE", percent: 65 }, { name: "PYTHON", percent: 50 }
+                { name: "ROUTING", percent: 90, category: "Network Engineering" },
+                { name: "SWITCHING", percent: 95, category: "Network Engineering" },
+                { name: "VMWARE", percent: 85, category: "Security & Systems" },
+                { name: "FIREWALL", percent: 80, category: "Security & Systems" },
+                { name: "ANSIBLE", percent: 65, category: "Programming & Software" },
+                { name: "PYTHON", percent: 50, category: "Programming & Software" }
             ],
+            skill_categories: ["Network Engineering", "Security & Systems", "Programming & Software"],
             activities: [], // Add default activities if desired
             portfolio_cv_link: "#", // Added
             projects: [ // Example default projects
@@ -1694,10 +1782,32 @@
             ],
             portfolio_showConstructionMessage: true,
             timeline_cv_link: "#", // Added
-            experiences: [ // Example default experiences
-                 { imageUrl: "https://placehold.co/600x400/8a2be2/ffffff?text=Registers+Scotland", date: "2019 - PRESENT", title: "SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND", description: "Covering Network, Parameter Security and Virtualisation." },
-                 { imageUrl: "https://placehold.co/600x400/b8860b/ffffff?text=FNZ+(UK)+LTD", date: "2018 – 2019", title: "SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD", description: "Worked closely with Platform team for new networks provisioning, routing and firewall policy management." }
-            ],
+            experiences: [
+          {
+                    "title": "Network Support Engineer – FNF Online (ISP)",
+                    "date": "Jan 2026 – Present",
+                    "description": "Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.",
+                    "imageUrl": "/data/fnf_isp_logo.svg"
+          },
+          {
+                    "title": "Independent Fullstack & Systems Developer",
+                    "date": "2025 – Present",
+                    "description": "Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.",
+                    "imageUrl": "/data/fullstack_dev_logo.svg"
+          },
+          {
+                    "title": "Cisco CCNA 200-301 & Enterprise Infrastructure Labs",
+                    "date": "2025 – 2026",
+                    "description": "Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.",
+                    "imageUrl": "https://files.catbox.moe/pasmm0.jpg"
+          },
+          {
+                    "title": "Diploma in Engineering (Computer Science & Technology)",
+                    "date": "Completed 2026",
+                    "description": "Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.",
+                    "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
+          }
+],
             timeline_showConstructionMessage: true,
             blogs_cv_link: "#", // Added
             posts: [ // Example default blog posts
@@ -2043,11 +2153,20 @@
                      // Just remove dynamic item from UI, changes saved later
                      const parentContainer = elementToRemove.parentElement;
                      const isProject = elementToRemove.closest('#portfolio-items-container') !== null;
+                    const isSkill = elementToRemove.closest('#skills-container') !== null;
+                    const isTimeline = elementToRemove.closest('#timeline-items-container') !== null;
                      elementToRemove.remove();
                      updateItemTitles(parentContainer); // Renumber items if needed
                      if (isProject) {
                          renderCategoryManager();
                      }
+                     if (isSkill) {
+                          renderSkillCategoryManager();
+                      }
+                      if (isTimeline) {
+                          const badge = document.getElementById('sidebar-timeline-count');
+                          if (badge) badge.textContent = document.querySelectorAll('#timeline-items-container .dynamic-item-container').length;
+                      }
                      hasUnsavedChanges = true; // Mark section as unsaved
                      console.log("Item removed from view. Save section to persist.");
                  } else {
@@ -2281,6 +2400,212 @@
             renderCategoryManager();
         }
 
+        // --- Skill Category Management State & Helpers ---
+        let activeSkillCategories = ['Network Engineering', 'Security & Systems', 'Programming & Software'];
+
+        function getAutoCategoryForSkill(s) {
+            if (s && s.category && s.category.trim() !== '') return s.category.trim();
+            const name = ((s && s.name) || '').toLowerCase();
+            if (name.includes('routing') || name.includes('switching') || name.includes('cisco') || name.includes('network') || name.includes('ospf') || name.includes('bgp') || name.includes('vlan')) {
+                return 'Network Engineering';
+            }
+            if (name.includes('firewall') || name.includes('security') || name.includes('linux') || name.includes('vpn') || name.includes('wireshark')) {
+                return 'Security & Systems';
+            }
+            if (name.includes('c++') || name.includes('python') || name.includes('javascript') || name.includes('react') || name.includes('html') || name.includes('css') || name.includes('git')) {
+                return 'Programming & Software';
+            }
+            return activeSkillCategories[0] || 'Network Engineering';
+        }
+
+        function populateSkillCategorySelectOptions(selectEl, selectedVal) {
+            if (!selectEl) return;
+            const current = selectedVal || selectEl.value || activeSkillCategories[0] || '';
+            selectEl.innerHTML = activeSkillCategories.map(cat => 
+                `<option value="${escapeHTML(cat)}" ${cat === current ? 'selected' : ''}>${escapeHTML(cat)}</option>`
+            ).join('');
+            if (activeSkillCategories.includes(current)) {
+                selectEl.value = current;
+            } else if (activeSkillCategories.length > 0) {
+                selectEl.value = activeSkillCategories[0];
+            }
+        }
+
+        function renderSkillCategoryManager() {
+            const container = document.getElementById('active-skill-categories-list');
+            const countBadge = document.getElementById('skill-category-total-count');
+            if (countBadge) countBadge.textContent = activeSkillCategories.length;
+
+            const skillCards = document.querySelectorAll('#skills-container .dynamic-item-container');
+            const counts = {};
+            activeSkillCategories.forEach(cat => counts[cat] = 0);
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                const val = sel ? sel.value : '';
+                if (counts[val] !== undefined) counts[val]++;
+            });
+
+            if (container) {
+                container.innerHTML = activeSkillCategories.map((cat, idx) => {
+                    const cnt = counts[cat] || 0;
+                    return `
+                        <div class="category-chip" data-skill-cat-index="${idx}" data-category="${escapeHTML(cat)}">
+                            <div class="category-chip-left">
+                                <span class="category-chip-dot"></span>
+                                <span class="category-chip-name">${escapeHTML(cat)}</span>
+                                <span class="category-chip-count">(${cnt} ${cnt === 1 ? 'skill' : 'skills'})</span>
+                            </div>
+                            <div class="category-chip-actions">
+                                <button type="button" class="btn-chip-action btn-skill-chip-rename" data-cat="${escapeHTML(cat)}" title="Rename skill category">
+                                    <i class="fas fa-edit"></i> Rename
+                                </button>
+                                <button type="button" class="btn-chip-action btn-skill-chip-delete" data-cat="${escapeHTML(cat)}" title="Delete skill category">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.querySelectorAll('.btn-skill-chip-rename').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        promptRenameSkillCategory(btn.dataset.cat);
+                    });
+                });
+                container.querySelectorAll('.btn-skill-chip-delete').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteSkillCategory(btn.dataset.cat);
+                    });
+                });
+            }
+
+            // Update admin category filter dropdown
+            const filterDropdown = document.getElementById('admin-skill-category-filter');
+            if (filterDropdown) {
+                const currentFilter = filterDropdown.value || 'all';
+                let filterHtml = `<option value="all">All Categories (${skillCards.length})</option>`;
+                activeSkillCategories.forEach(cat => {
+                    const cnt = counts[cat] || 0;
+                    filterHtml += `<option value="${escapeHTML(cat)}" ${cat === currentFilter ? 'selected' : ''}>${escapeHTML(cat)} (${cnt})</option>`;
+                });
+                filterDropdown.innerHTML = filterHtml;
+                if (currentFilter !== 'all' && !activeSkillCategories.includes(currentFilter)) {
+                    filterDropdown.value = 'all';
+                }
+            }
+        }
+
+        function addSkillCategory(name) {
+            const trimmed = (name || '').trim();
+            if (!trimmed) {
+                showAdminToast('Please enter a skill category name.', 'warning');
+                return false;
+            }
+            if (activeSkillCategories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+                showAdminToast(`Skill category "${trimmed}" already exists!`, 'warning');
+                return false;
+            }
+            activeSkillCategories.push(trimmed);
+            syncAllSkillCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Skill category "${trimmed}" added! Click "Save All Changes" to persist.`, 'success');
+            return true;
+        }
+
+        function promptRenameSkillCategory(oldName) {
+            const newName = prompt(`Enter new name for skill category "${oldName}":`, oldName);
+            if (!newName || newName.trim() === '' || newName.trim() === oldName) return;
+            const trimmed = newName.trim();
+            if (activeSkillCategories.some(c => c.toLowerCase() === trimmed.toLowerCase() && c !== oldName)) {
+                showAdminToast(`Skill category "${trimmed}" already exists!`, 'warning');
+                return;
+            }
+            const idx = activeSkillCategories.indexOf(oldName);
+            if (idx !== -1) {
+                activeSkillCategories[idx] = trimmed;
+            }
+            let updatedCount = 0;
+            const skillCards = document.querySelectorAll('#skills-container .dynamic-item-container');
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                if (sel && sel.value === oldName) {
+                    sel.value = trimmed;
+                    const badge = card.querySelector('.skill-category-badge');
+                    if (badge) badge.textContent = trimmed;
+                    updatedCount++;
+                }
+            });
+            syncAllSkillCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Renamed "${oldName}" to "${trimmed}". Updated ${updatedCount} skill(s).`, 'success');
+        }
+
+        function deleteSkillCategory(catToDelete) {
+            if (activeSkillCategories.length <= 1) {
+                showAdminToast('You must keep at least one skill category.', 'warning');
+                return;
+            }
+            const skillCards = document.querySelectorAll('#skills-container .dynamic-item-container');
+            let affected = 0;
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                if (sel && sel.value === catToDelete) affected++;
+            });
+
+            const fallback = activeSkillCategories.find(c => c !== catToDelete) || 'Uncategorized';
+            const confirmMsg = affected > 0
+                ? `Delete skill category "${catToDelete}"? ${affected} skill(s) will be moved to "${fallback}".`
+                : `Delete skill category "${catToDelete}"?`;
+
+            if (!confirm(confirmMsg)) return;
+
+            activeSkillCategories = activeSkillCategories.filter(c => c !== catToDelete);
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                if (sel && sel.value === catToDelete) {
+                    sel.value = fallback;
+                    const badge = card.querySelector('.skill-category-badge');
+                    if (badge) badge.textContent = fallback;
+                }
+            });
+
+            syncAllSkillCategorySelects();
+            hasUnsavedChanges = true;
+            showAdminToast(`Skill category "${catToDelete}" removed.`, 'info');
+        }
+
+        function syncAllSkillCategorySelects() {
+            const skillCards = document.querySelectorAll('#skills-container .dynamic-item-container');
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                if (sel) {
+                    const currentVal = sel.value;
+                    populateSkillCategorySelectOptions(sel, currentVal);
+                    const badge = card.querySelector('.skill-category-badge');
+                    if (badge) badge.textContent = sel.value;
+                }
+            });
+            renderSkillCategoryManager();
+            applyAdminSkillCategoryFilter();
+        }
+
+        function applyAdminSkillCategoryFilter() {
+            const filterDropdown = document.getElementById('admin-skill-category-filter');
+            const selected = filterDropdown ? filterDropdown.value : 'all';
+            const skillCards = document.querySelectorAll('#skills-container .dynamic-item-container');
+            skillCards.forEach(card => {
+                const sel = card.querySelector('.skill-category-select');
+                const catVal = sel ? sel.value : '';
+                if (selected === 'all' || catVal === selected) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
         function showAdminToast(message, type = 'success') {
             let container = document.getElementById('admin-toast-container');
             if (!container) {
@@ -2324,7 +2649,7 @@
             const sectionElement = document.getElementById(sectionId);
             if (!sectionElement) return;
 
-            const useDefaultsForSection = Object.keys(allData).length === 0 || !Object.keys(allData).some(key => key.startsWith(sectionId.replace('-edit', '_')));
+            const useDefaultsForSection = Object.keys(allData).length === 0 || (!Object.keys(allData).some(key => key.startsWith(sectionId.replace('-edit', '_'))) && !(sectionId === 'timeline-edit' && Array.isArray(allData.experiences)));
             console.log(`Loading data for ${sectionId}. Use Defaults: ${useDefaultsForSection}`);
             const dataToLoad = useDefaultsForSection ? defaultContent : allData;
 
@@ -2347,6 +2672,16 @@
                     activeCategories = [...defaultContent.project_categories];
                 }
                 renderCategoryManager();
+            }
+
+            // If about section, load skill categories
+            if (sectionId === 'about-edit') {
+                if (dataToLoad.skill_categories && Array.isArray(dataToLoad.skill_categories) && dataToLoad.skill_categories.length > 0) {
+                    activeSkillCategories = [...dataToLoad.skill_categories];
+                } else if (defaultContent.skill_categories && Array.isArray(defaultContent.skill_categories)) {
+                    activeSkillCategories = [...defaultContent.skill_categories];
+                }
+                renderSkillCategoryManager();
             }
 
             // Clear dynamic containers
@@ -2395,6 +2730,24 @@
                                  if (badge) badge.textContent = itemData.category;
                              }
 
+                             // Handle skill category
+                             if (config.key === 'skills') {
+                                 itemData.category = itemData.category || getAutoCategoryForSkill(itemData);
+                                 const catSelect = newItem.querySelector('.skill-category-select');
+                                 if (catSelect) {
+                                     populateSkillCategorySelectOptions(catSelect, itemData.category);
+                                     catSelect.addEventListener('change', () => {
+                                         const badge = newItem.querySelector('.skill-category-badge');
+                                         if (badge) badge.textContent = catSelect.value;
+                                         hasUnsavedChanges = true;
+                                         renderSkillCategoryManager();
+                                         applyAdminSkillCategoryFilter();
+                                     });
+                                 }
+                                 const badge = newItem.querySelector('.skill-category-badge');
+                                 if (badge) badge.textContent = itemData.category;
+                             }
+
                              Object.keys(itemData).forEach(itemKey => {
                                  const inputElement = newItem.querySelector(`[data-key="${itemKey}"]`);
                                  if (inputElement) inputElement.value = itemData[itemKey];
@@ -2405,6 +2758,14 @@
                      if (config.key === 'projects') {
                          renderCategoryManager();
                      }
+                     if (config.key === 'skills') {
+                          renderSkillCategoryManager();
+                          applyAdminSkillCategoryFilter();
+                      }
+                      if (config.key === 'experiences') {
+                          const badge = document.getElementById('sidebar-timeline-count');
+                          if (badge) badge.textContent = itemsToLoad.length;
+                      }
                 }
             });
 
@@ -2464,6 +2825,11 @@
              // Save project categories
              if (sectionId === 'portfolio-edit') {
                  sectionData.project_categories = [...activeCategories];
+             }
+
+             // Save skill categories
+             if (sectionId === 'about-edit') {
+                 sectionData.skill_categories = [...activeSkillCategories];
              }
 
              return sectionData;
@@ -2550,6 +2916,31 @@
                             newCatInput.value = '';
                         }
                     }
+                });
+            }
+
+            const addSkillCatBtn = document.getElementById('add-skill-category-btn');
+            const newSkillCatInput = document.getElementById('new-skill-category-input');
+            if (addSkillCatBtn && newSkillCatInput) {
+                addSkillCatBtn.addEventListener('click', () => {
+                    if (addSkillCategory(newSkillCatInput.value)) {
+                        newSkillCatInput.value = '';
+                    }
+                });
+                newSkillCatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (addSkillCategory(newSkillCatInput.value)) {
+                            newSkillCatInput.value = '';
+                        }
+                    }
+                });
+            }
+
+            const skillFilterSelect = document.getElementById('admin-skill-category-filter');
+            if (skillFilterSelect) {
+                skillFilterSelect.addEventListener('change', () => {
+                    applyAdminSkillCategoryFilter();
                 });
             }
         });
@@ -2739,12 +3130,38 @@
                         }
                         if (catBadge) catBadge.textContent = defaultCat;
                     }
+                    if (templateId === 'skill-template') {
+                        const catSelect = newItem.querySelector('.skill-category-select');
+                        const catBadge = newItem.querySelector('.skill-category-badge');
+                        const filterDropdown = document.getElementById('admin-skill-category-filter');
+                        const defaultCat = (filterDropdown && filterDropdown.value !== 'all') 
+                            ? filterDropdown.value 
+                            : (activeSkillCategories[0] || 'Network Engineering');
+                        if (catSelect) {
+                            populateSkillCategorySelectOptions(catSelect, defaultCat);
+                            catSelect.addEventListener('change', () => {
+                                if (catBadge) catBadge.textContent = catSelect.value;
+                                hasUnsavedChanges = true;
+                                renderSkillCategoryManager();
+                                applyAdminSkillCategoryFilter();
+                            });
+                        }
+                        if (catBadge) catBadge.textContent = defaultCat;
+                    }
 
                     container.appendChild(newItem);
                     initializeImagePreview(newItem); // Initialize preview for the new item
                     if (templateId === 'project-template') {
                         renderCategoryManager();
                     }
+                    if (templateId === 'skill-template') {
+                          renderSkillCategoryManager();
+                          applyAdminSkillCategoryFilter();
+                      }
+                      if (templateId === 'timeline-template') {
+                          const badge = document.getElementById('sidebar-timeline-count');
+                          if (badge) badge.textContent = container.querySelectorAll('.dynamic-item-container').length;
+                      }
                     hasUnsavedChanges = true;
                 }
             });

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { Project } from '../data/projects';
+import type { ProjectItem } from '../hooks/usePortfolioData';
+export type Project = ProjectItem;
 
 import type { Octree } from 'three/examples/jsm/math/Octree.js';
 
@@ -118,7 +119,7 @@ export const STATIONS: StationInfo[] = [
   {
     id: 'station-projects',
     title: 'Software Lab',
-    subtitle: 'EasyMess, Enterprise Network & More',
+    subtitle: 'Dynamic Projects & Systems',
     panel: 'projects',
     position: [5.6, 0, 13.0],
     color: '#ff007f',

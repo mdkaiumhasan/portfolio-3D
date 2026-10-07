@@ -1,80 +1,11 @@
 {
-  "showBlogsConstruction": true,
+  "home_heading": "Hi, I'm <span class=\"text-accent\">MD. Kaium Hasan</span>. A Network Engineer.",
   "home_subheading": "I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.",
-  "timeline_cv_link": "#",
-  "blogs_cv_link": "#",
-  "skills": [
-    {
-      "percent": 95,
-      "name": "ROUTING"
-    },
-    {
-      "name": "SWITCHING",
-      "percent": 95
-    },
-    {
-      "name": "CONFIGURE",
-      "percent": 90
-    },
-    {
-      "name": "FIREWALL",
-      "percent": 80
-    },
-    {
-      "percent": 75,
-      "name": "C++"
-    },
-    {
-      "percent": 80,
-      "name": "PYTHON"
-    }
-  ],
-  "about_cv_link": "https://files.catbox.moe/0juxap.pdf",
-  "portfolio_cv_link": "#",
-  "about_info_heading": "INFORMATION ABOUT ME",
-  "contact_info_heading": "CONTACT ME HERE",
-  "posts": [
-    {
-      "shortDesc": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...",
-      "category": "Tutorial",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg",
-      "date": "Oct 26, 2025",
-      "title": "How to Create Your Own Website.       read more...",
-      "fullContent": "<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"></script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"
-    },
-    {
-      "fullContent": "<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>",
-      "category": "Web Design",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg",
-      "title": "How to Become an Expert in Web Design",
-      "shortDesc": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...",
-      "date": "Oct 25, 2025 "
-    }
-  ],
-  "socialLinks": [
-    {
-      "url": "https://x.com/mdkaium2005?s=11",
-      "platform": "twitter"
-    },
-    {
-      "platform": "instagram",
-      "url": "https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"
-    },
-    {
-      "url": "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr",
-      "platform": "facebook"
-    },
-    {
-      "url": "https://www.linkedin.com/in/md-kaium-hasan-bb6009372/",
-      "platform": "Linkedin"
-    },
-    {
-      "platform": "github",
-      "url": "https://github.com/mdkaiumhasan"
-    }
-  ],
+  "home_cv_link": "#",
   "home_profile_image": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg",
-  "portfolio__showConstructionMessage": true,
+  "about_info_heading": "INFORMATION ABOUT ME",
+  "about_info_text": "I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.",
+  "about_cv_link": "https://files.catbox.moe/0juxap.pdf",
   "stats": [
     {
       "heading": "CCNA",
@@ -97,22 +28,47 @@
       "description": "MIKROTIK CERTIFIED NETWORK ASSOCIATE "
     },
     {
-      "description": "MIKROTIK CERTIFIED ROUTING ENGINEER ",
-      "heading": "MTCRE"
+      "heading": "MTCRE",
+      "description": "MIKROTIK CERTIFIED ROUTING ENGINEER "
     }
   ],
-  "available_for_work": true,
-  "showPortfolioConstruction": true,
-  "timeline__showConstructionMessage": false,
-  "showTimelineConstruction": true,
-  "timeline_showConstructionMessage": false,
-  "contact_info_text": "For Network consultancy services, please get in touch.",
-  "home_heading": "Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.",
+  "skills": [
+    {
+      "category": "Network Engineering",
+      "name": "ROUTING",
+      "percent": 95
+    },
+    {
+      "category": "Network Engineering",
+      "name": "SWITCHING",
+      "percent": 95
+    },
+    {
+      "category": "Network Engineering",
+      "name": "CONFIGURE",
+      "percent": 90
+    },
+    {
+      "category": "Security & Systems",
+      "name": "FIREWALL",
+      "percent": 80
+    },
+    {
+      "category": "Programming & Software",
+      "name": "C++",
+      "percent": 75
+    },
+    {
+      "category": "Programming & Software",
+      "name": "PYTHON",
+      "percent": 80
+    }
+  ],
   "activities": [
     {
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp",
       "title": "District Science Exhibition - 2024 Project - LFR",
-      "description": "My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
+      "description": "My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024."
     },
     {
       "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg",
@@ -120,65 +76,124 @@
       "description": "Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"
     }
   ],
-  "project_categories": [
-    "Networking & Security",
-    "Mobile & Realtime",
-    "Robotics & Hardware"
+  "skill_categories": [
+    "Network Engineering",
+    "Security & Systems",
+    "Programming & Software"
   ],
+  "portfolio_cv_link": "#",
   "projects": [
     {
+      "category": "AI & Machine Learning",
       "title": "Mess Management APP (EasyMess)",
-      "category": "Mobile & Realtime",
       "role": "Android & Fullstack Developer",
       "technology": "JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin",
       "imageUrl": "https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png",
-      "shortDesc": "Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.",
-      "fullDetails": "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>",
       "live": "https://www.mdkaiumhasan.site",
-      "github": "https://github.com/mdkaiumhasan"
+      "github": "https://github.com/mdkaiumhasan",
+      "shortDesc": "Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.",
+      "fullDetails": "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p><p><a href=\"https://files.catbox.moe/zrgptp.zip\" target=\"_blank\">Download App ZIP</a></p>"
     },
     {
-      "title": "Enterprise Network",
       "category": "Networking & Security",
+      "title": "Enterprise Network",
       "role": "Network Architect & Administrator",
       "technology": "Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping",
       "imageUrl": "https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png",
-      "shortDesc": "High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.",
-      "fullDetails": "<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>",
       "live": "https://www.mdkaiumhasan.site",
-      "github": "https://github.com/mdkaiumhasan"
+      "github": "https://github.com/mdkaiumhasan",
+      "shortDesc": "High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.",
+      "fullDetails": "<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>"
     },
     {
-      "title": "Ramadan Journey",
       "category": "Mobile & Realtime",
+      "title": "Ramadan Journey",
       "role": "Android Developer",
       "technology": "React.js, Android Studio, Kotlin, Push Notifications",
       "imageUrl": "https://files.catbox.moe/bcktxt.png",
-      "shortDesc": "Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.",
-      "fullDetails": "<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>",
       "live": "https://files.catbox.moe/b5bgv1.apk",
-      "github": "https://github.com/mdkaiumhasan"
+      "github": "https://github.com/mdkaiumhasan",
+      "shortDesc": "Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.",
+      "fullDetails": "<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p><p><a href=\"https://files.catbox.moe/b5bgv1.apk\" target=\"_blank\">Download Installable APK</a></p>"
     },
     {
-      "title": "Autonomous Line Follower Robot (LFR)",
       "category": "Robotics & Hardware",
+      "title": "Autonomous Line Follower Robot (LFR)",
       "role": "Hardware & Robotics Engineer",
       "technology": "Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver",
       "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp",
-      "shortDesc": "Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.",
-      "fullDetails": "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>",
       "live": "https://www.mdkaiumhasan.site",
-      "github": "https://github.com/mdkaiumhasan"
+      "github": "https://github.com/mdkaiumhasan",
+      "shortDesc": "Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.",
+      "fullDetails": "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>"
     }
   ],
-  "contactDetails": [
+  "portfolio__showConstructionMessage": true,
+  "project_categories": [
+    "Networking & Security",
+    "Mobile & Realtime",
+    "Robotics & Hardware",
+    "AI & Machine Learning"
+  ],
+  "timeline_cv_link": "#",
+  "experiences": [
     {
-      "value": "Dhanmondi 27, Dhaka",
-      "type": "Location"
+      "title": "Network Support Engineer – FNF Online (ISP)",
+      "date": "Jan 2026 – Present",
+      "description": "Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791393912/portfolio_uploads/jlx9jjp4kteugudgvonq.jpg"
     },
     {
-      "value": "mdkaiumhasan2005@gmail.com",
-      "type": "Email"
+      "title": "Independent Fullstack & Systems Developer",
+      "date": "2025 – Present",
+      "description": "Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.",
+      "imageUrl": "/data/fullstack_dev_logo.svg"
+    },
+    {
+      "title": "Cisco CCNA 200-301 & Enterprise Infrastructure Labs",
+      "date": "2025 – 2026",
+      "description": "Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.",
+      "imageUrl": "https://files.catbox.moe/pasmm0.jpg"
+    },
+    {
+      "title": "Diploma in Engineering (Computer Science & Technology)",
+      "date": "Completed 2026",
+      "description": "Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.",
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
+    }
+  ],
+  "timeline__showConstructionMessage": false,
+  "blogs_cv_link": "#",
+  "posts": [
+    {
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg",
+      "date": "Oct 26, 2025",
+      "category": "Tutorial",
+      "title": "How to Create Your Own Website.       read more...",
+      "shortDesc": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...",
+      "fullContent": "<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"></script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"
+    },
+    {
+      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg",
+      "date": "Oct 25, 2025 ",
+      "category": "Web Design",
+      "title": "How to Become an Expert in Web Design",
+      "shortDesc": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...",
+      "fullContent": "<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>"
+    }
+  ],
+  "blogs__showConstructionMessage": true,
+  "contact_info_heading": "CONTACT ME HERE",
+  "contact_info_text": "For Network consultancy services, please get in touch.",
+  "contact_cv_link": "https://files.catbox.moe/0juxap.pdf",
+  "contactDetails": [
+    {
+      "type": "Location",
+      "value": "Dhanmondi 27, Dhaka"
+    },
+    {
+      "type": "Email",
+      "value": "mdkaiumhasan2005@gmail.com"
     },
     {
       "type": "Contact Number",
@@ -189,28 +204,27 @@
       "value": "Bangla, English, Hindi"
     }
   ],
-  "home_cv_link": "#",
-  "about_info_text": "I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.",
-  "blogs__showConstructionMessage": true,
-  "experiences": [
+  "socialLinks": [
     {
-      "description": "Covering Network, Parameter Security and Virtualisation.",
-      "date": "2019 - PRESENT",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035644/portfolio/experiences/oviaxzqzuolf1c9hdbmd.jpg",
-      "title": "SENIOR NETWORK ENGINEER – REGISTERS OF SCOTLAND"
+      "platform": "twitter",
+      "url": "https://x.com/mdkaium2005?s=11"
     },
     {
-      "description": "Worked closely with Platform team for new networks provisioning, routing and firewall policy management.",
-      "title": "SENIOR NETWORK & SECURITY ENGINEER – FNZ (UK) LTD",
-      "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035646/portfolio/experiences/uaz8dts2s2mexbvbkkyb.svg",
-      "date": "2018 – 2019"
+      "platform": "instagram",
+      "url": "https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"
     },
     {
-      "date": "",
-      "description": "",
-      "imageUrl": "",
-      "title": ""
+      "platform": "facebook",
+      "url": "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr"
+    },
+    {
+      "platform": "Linkedin",
+      "url": "https://www.linkedin.com/in/md-kaium-hasan-bb6009372/"
+    },
+    {
+      "platform": "github",
+      "url": "https://github.com/mdkaiumhasan"
     }
   ],
-  "contact_cv_link": "https://files.catbox.moe/0juxap.pdf"
+  "updatedAt": "2026-10-07T17:25:19.344Z"
 }

@@ -314,6 +314,103 @@
             border-radius: 4px; transition: width 2s ease-out; /* Speed slowed from 1.5s to 2s */
         }
 
+        /* --- Skills Category Filter & Tabs --- */
+        .skills-filter-wrapper {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.85rem;
+            padding: 0.75rem 1.25rem;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        html.dark .skills-filter-wrapper {
+            background-color: rgba(18, 24, 32, 0.75);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+        }
+
+        .skills-tabs-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            max-width: 100%;
+            padding-bottom: 2px;
+        }
+        .skills-tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .skills-tabs-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .skill-category-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 15px;
+            border-radius: 9999px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            outline: none;
+        }
+        html.dark .skill-category-tab-btn {
+            background: rgba(30, 41, 59, 0.5);
+            border-color: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+        .skill-category-tab-btn:hover {
+            color: var(--text-color);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+        .skill-category-tab-btn.active {
+            background: rgba(40, 167, 69, 0.15);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: 0 0 12px rgba(40, 167, 69, 0.25);
+            font-weight: 700;
+        }
+        html.dark .skill-category-tab-btn.active {
+            background: linear-gradient(135deg, rgba(57, 255, 20, 0.22) 0%, rgba(14, 165, 233, 0.18) 100%);
+            border-color: #39ff14;
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(57, 255, 20, 0.35);
+        }
+
+        .skill-tab-count {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: currentColor;
+        }
+
+        .skill-category-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            letter-spacing: 0.3px;
+            display: inline-block;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+
         /* Timeline Section */
         .timeline-item {
             position: relative; background-color: transparent; border: 1.2px solid var(--border-color);
@@ -1120,9 +1217,39 @@
                     <h2 class="section-title">MY <span class="text-accent">SKILLS</span>
                         <span class="section-title-bg">SKILLS</span>
                     </h2>
+
+                    <!-- Skills Category Filter Bar & Tabs -->
+                    <div class="skills-filter-wrapper mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="filter-lead-icon flex items-center justify-center w-9 h-9 rounded-full" style="background-color: var(--bg-color); border: 1.5px solid var(--border-color); color: var(--accent-color);">
+                                <i class="fas fa-sliders-h text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-bold tracking-wider uppercase" style="color: var(--text-secondary);">Browse By Category</h3>
+                                <p class="text-sm font-semibold" id="skills-showing-count-text" style="color: var(--text-color);">
+                                    Showing <span id="skills-showing-count" class="font-bold text-accent">6</span> Skills
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Category Tabs -->
+                        <div class="skills-tabs-container" id="skills-category-tabs">
+                            <!-- Populated dynamically via renderSkillCategories() -->
+                        </div>
+                    </div>
+
                     <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                         
 </div>
+
+                    <!-- Empty State for Skills Category -->
+                    <div id="skills-empty-state" class="hidden text-center py-12">
+                        <i class="fas fa-layer-group text-4xl mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                        <p class="text-base font-semibold" style="color: var(--text-color);">No skills found in this category.</p>
+                        <button type="button" onclick="selectSkillCategory('All')" class="btn-custom mt-4 text-xs">
+                            View All Skills
+                        </button>
+                    </div>
                 </div>
 
                 
@@ -1414,56 +1541,45 @@
 
         // --- CHANGE: Removed Authentication Block ---
        
-        // --- CHANGE: Load Data Immediately ---
-        // We call setupRealtimeListener directly since auth is no longer needed.
-        if (db) { // Check if db was initialized successfully
-             console.log("Database initialized. Loading data...");
-             setupRealtimeListener();
-        } else {
-            console.error("Database not initialized. Cannot load data.");
-            if(loadingIndicator) loadingIndicator.classList.add('hidden');
-        }
-
-
-        // --- Realtime Data Listener ---
-        function setupRealtimeListener() {
-            // Assuming data is stored in a single document for simplicity
-            // Adjust the path if you use multiple documents or collections
-            // Public data path: /artifacts/{appId}/public/data/portfolioContent
-            const docRef = doc(db, `artifacts/${appId}/public/data/portfolioContent`, 'main');
-            console.log(`Listening for changes on: artifacts/${appId}/public/data/portfolioContent/main`);
-
-            const unsubscribe = onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    console.log("Data received from Firestore.");
-                    const data = docSnap.data();
-                    updatePortfolioContent(data);
-                    // Hide loading and show content after first successful load
-                    if (loadingIndicator && !loadingIndicator.classList.contains('hidden')) {
-                        loadingIndicator.classList.add('hidden');
-                        mainContent.classList.remove('hidden');
-                        mainNav.classList.remove('hidden');
+        // --- Load Data via Local Clean Data & Live MongoDB API ---
+        async function loadPortfolioData() {
+            try {
+                const localRes = await fetch('./clean_data.json');
+                if (localRes.ok) {
+                    const localData = await localRes.json();
+                    if (localData && typeof localData === 'object') {
+                        updatePortfolioContent(localData);
+                        if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                        if (mainContent) mainContent.classList.remove('hidden');
+                        if (mainNav) mainNav.classList.remove('hidden');
                     }
-                } else {
-                    console.warn("Portfolio data document does not exist!");
-                    displayError("Portfolio content not found. Please set it up in the admin panel.");
-                    loadingIndicator?.classList.add('hidden');
                 }
-            }, (error) => {
-                console.error("Error fetching portfolio data:", error);
-                // --- ADDED CHECK: Check for permission denied error ---
-                if (error.code === 'permission-denied') {
-                     console.error("Firestore Permission Denied. Make sure your security rules allow public read access to 'artifacts/{appId}/public/data/portfolioContent/main'.");
-                     displayError("Error: Could not access portfolio data. (Permission Denied)");
-                } else {
-                     displayError("Error loading portfolio content. Please try again later.");
-                }
-                loadingIndicator?.classList.add('hidden');
-            });
+            } catch (e) {
+                console.warn('Local clean data fetch error:', e);
+            }
 
-            // Consider unsubscribing when the page unloads (optional)
-            // window.addEventListener('beforeunload', () => unsubscribe());
+            try {
+                const res = await fetch('/api/portfolio');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data === 'object') {
+                        console.log("Data synchronized from /api/portfolio MongoDB API.");
+                        updatePortfolioContent(data);
+                        if (loadingIndicator) loadingIndicator.classList.add('hidden');
+                        if (mainContent) mainContent.classList.remove('hidden');
+                        if (mainNav) mainNav.classList.remove('hidden');
+                    }
+                }
+            } catch (err) {
+                console.warn('Live API fetch error:', err);
+            }
         }
+
+        loadPortfolioData();
+
+
+        // Realtime sync is handled via MongoDB API (/api/portfolio)
+        function setupRealtimeListener() {}
 
         // --- Update Portfolio Content ---
         function updatePortfolioContent(data) {
@@ -1487,8 +1603,12 @@
             // Stats
             renderStats(get('stats', []));
 
-            // Skills
-            renderSkills(get('skills', []));
+            // Skills & Skill Categories
+            window.skillCategories = get('skill_categories', null);
+            allSkillsList = get('skills', []);
+            activeSkillCategory = 'All';
+            renderSkillCategories(allSkillsList);
+            filterAndRenderSkills();
 
             // Activities
             renderActivities(get('activities', []));
@@ -1536,6 +1656,80 @@
             });
         }
 
+        // --- Skills Category & Filtering Logic ---
+        let allSkillsList = [];
+        let activeSkillCategory = 'All';
+
+        function getSkillCategory(skill) {
+            if (skill && skill.category && skill.category.trim() !== '') return skill.category.trim();
+            const name = ((skill && skill.name) || '').toUpperCase();
+            if (name.includes('ROUTING') || name.includes('SWITCHING') || name.includes('CONFIGURE') || name.includes('CISCO') || name.includes('MIKROTIK') || name.includes('NETWORK') || name.includes('LAN') || name.includes('WAN')) return 'Network Engineering';
+            if (name.includes('FIREWALL') || name.includes('SECURITY') || name.includes('VPN') || name.includes('ACL')) return 'Security & Systems';
+            if (name.includes('C++') || name.includes('PYTHON') || name.includes('REACT') || name.includes('JS') || name.includes('NODE') || name.includes('JAVA')) return 'Programming & Software';
+            return (window.skillCategories && window.skillCategories[0]) || 'General';
+        }
+
+        function renderSkillCategories(skills = []) {
+            const tabsContainer = document.getElementById('skills-category-tabs');
+            if (!tabsContainer) return;
+
+            const defaultCats = ['Network Engineering', 'Security & Systems', 'Programming & Software'];
+            const configuredCats = (window.skillCategories && Array.isArray(window.skillCategories) && window.skillCategories.length > 0)
+                ? window.skillCategories
+                : defaultCats;
+
+            const categoriesSet = new Set(configuredCats);
+            skills.forEach(s => categoriesSet.add(getSkillCategory(s)));
+            const categories = ['All', ...Array.from(categoriesSet)];
+
+            tabsContainer.innerHTML = categories.map(cat => {
+                const count = cat === 'All'
+                    ? skills.length
+                    : skills.filter(s => getSkillCategory(s) === cat).length;
+                const isActive = cat === activeSkillCategory;
+                return `
+                    <button type="button" class="skill-category-tab-btn ${isActive ? 'active' : ''}" data-category="${escapeHTML(cat)}" role="tab" aria-selected="${isActive}">
+                        <span>${escapeHTML(cat)}</span>
+                        <span class="skill-tab-count">${count}</span>
+                    </button>
+                `;
+            }).join('');
+
+            tabsContainer.querySelectorAll('.skill-category-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const cat = btn.getAttribute('data-category');
+                    selectSkillCategory(cat);
+                });
+            });
+        }
+
+        function selectSkillCategory(cat) {
+            activeSkillCategory = cat;
+            renderSkillCategories(allSkillsList);
+            filterAndRenderSkills();
+        }
+
+        window.selectSkillCategory = selectSkillCategory;
+
+        function filterAndRenderSkills() {
+            const filteredSkills = activeSkillCategory === 'All'
+                ? allSkillsList
+                : allSkillsList.filter(s => getSkillCategory(s) === activeSkillCategory);
+
+            const countTextContainer = document.getElementById('skills-showing-count-text');
+            if (countTextContainer) {
+                countTextContainer.innerHTML = `Showing <span id="skills-showing-count" class="font-bold text-accent">${filteredSkills.length}</span> ${filteredSkills.length === 1 ? 'Skill' : 'Skills'}`;
+            }
+
+            const emptyState = document.getElementById('skills-empty-state');
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', filteredSkills.length > 0);
+            }
+
+            renderSkills(filteredSkills);
+        }
+
         function renderSkills(skills = []) {
             if (!skillsContainer) return;
             skillsContainer.innerHTML = ''; // Clear previous
@@ -1543,25 +1737,19 @@
                 const skillDiv = document.createElement('div');
                 skillDiv.className = 'skill-item';
                 const percentage = Math.max(0, Math.min(100, parseInt(skill.percent || 0, 10)));
-                // --- FIX: Use textContent for safety ---
+                const cat = getSkillCategory(skill);
                 skillDiv.innerHTML = `
-                    <div class="flex justify-between mb-1">
-                        <span class="font-semibold text-lg"></span>
-                        <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">%</span>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <span class="font-semibold text-lg skill-name-label"></span>
+                        <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">${percentage}%</span>
                     </div>
                     <div class="skill-bar-bg">
-                        <div class="skill-bar-inner" data-percent="${percentage}%"></div>
+                        <div class="skill-bar-inner" data-percent="${percentage}%" style="width: ${percentage}%;"></div>
                     </div>
                 `;
-                skillDiv.querySelector('.font-semibold.text-lg').textContent = skill.name || 'Skill';
-                skillDiv.querySelector('.font-semibold.text-lg.text-secondary').textContent = `${percentage}%`;
-                // --- END FIX ---
+                skillDiv.querySelector('.skill-name-label').textContent = skill.name || 'Skill';
                 skillsContainer.appendChild(skillDiv);
             });
-            // Re-trigger animation if needed (or do it on scroll) - simple immediate trigger here
-            /* REMOVED: setTimeout block that triggered animation on load.
-               Animation is now handled by IntersectionObserver in the non-module script.
-            */
         }
 
         function renderActivities(activities = []) {
@@ -1863,15 +2051,16 @@
              const column2 = document.createElement('div');
              column2.className = 'space-y-8 md:mt-16'; // Add stagger effect
 
-             experiences.forEach((exp, index) => {
+             const validExperiences = (experiences || []).filter(exp => exp && exp.title && exp.title.trim().length > 0);
+             validExperiences.forEach((exp, index) => {
                   const expDiv = document.createElement('div');
                   expDiv.className = 'timeline-item';
                   // --- FIX: Use textContent/setAttribute and DOMPurify ---
                   const safeDescription = sanitizeHTML(exp.description || '');
                   expDiv.innerHTML = `
                        <div class="timeline-icon"><i class="fas fa-briefcase"></i></div>
-                       <div class="timeline-img-container">
-                            <img src="" alt="" class="w-full h-64 object-cover transition-transform duration-300 ease-in-out hover:scale-110">
+                       <div class="timeline-img-container" style="background: rgba(11, 15, 25, 0.95); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; min-height: 170px;">
+                            <img src="" alt="" class="w-full h-48 md:h-52 object-contain p-3 transition-transform duration-300 ease-in-out hover:scale-105">
                        </div>
                        <div class="timeline-item-content">
                            <span class="timeline-date"></span>
@@ -1883,9 +2072,14 @@
                        </div>
                   `;
                   
-                  const img = expDiv.querySelector('img');
-                  img.src = exp.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Experience';
-                  img.alt = exp.title || 'Experience Image';
+                  const imgContainer = expDiv.querySelector('.timeline-img-container');
+                  if (exp.imageUrl && exp.imageUrl.trim().length > 0) {
+                      const img = expDiv.querySelector('img');
+                      img.src = exp.imageUrl;
+                      img.alt = exp.title || 'Experience Image';
+                  } else if (imgContainer) {
+                      imgContainer.remove();
+                  }
                   
                   expDiv.querySelector('.timeline-date').textContent = exp.date || 'Date Range';
                   expDiv.querySelector('.timeline-title').textContent = exp.title || 'Job Title';

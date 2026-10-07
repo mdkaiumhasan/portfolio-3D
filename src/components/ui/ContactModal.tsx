@@ -108,10 +108,10 @@ export const ContactModal: React.FC = () => {
                 </div>
 
                 <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff' }}>
-                  Let's Build Resilient Systems
+                  {data.contact_info_heading || "Let's Build Resilient Systems"}
                 </h3>
                 <p style={{ fontSize: '13px', lineHeight: '1.6', color: '#cbd5e1' }}>
-                  Whether you have an enterprise software architecture challenge, high-concurrency mobile application, or ISP/campus network infrastructure project, I am ready to collaborate.
+                  {data.contact_info_text || "Whether you have an enterprise software architecture challenge, high-concurrency mobile application, or ISP/campus network infrastructure project, I am ready to collaborate."}
                 </p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>

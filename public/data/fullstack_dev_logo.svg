@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="devBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="greenGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#39ff14" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#39ff14" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="36" fill="url(#devBgGrad)" stroke="#10b981" stroke-width="3" stroke-opacity="0.4" />
+  
+  <!-- Subtle Glow Behind Icon -->
+  <circle cx="100" cy="85" r="55" fill="url(#greenGlow)" />
+
+  <!-- Terminal Window / Code Brackets -->
+  <rect x="42" y="44" width="116" height="78" rx="14" fill="#131c2e" stroke="#10b981" stroke-width="2.5" />
+  <!-- Terminal Dots -->
+  <circle cx="56" cy="56" r="3.5" fill="#ef4444" />
+  <circle cx="68" cy="56" r="3.5" fill="#f59e0b" />
+  <circle cx="80" cy="56" r="3.5" fill="#10b981" />
+
+  <!-- Code Symbol: < / > -->
+  <path d="M 72 84 L 60 93 L 72 102" fill="none" stroke="url(#emeraldGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+  <line x1="88" y1="104" x2="98" y2="82" stroke="#34d399" stroke-width="4" stroke-linecap="round" />
+  <path d="M 114 84 L 126 93 L 114 102" fill="none" stroke="url(#emeraldGrad)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Typography: FULLSTACK SYSTEMS -->
+  <text x="100" y="152" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">FULLSTACK</text>
+  <text x="100" y="170" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="700" fill="#34d399" text-anchor="middle" letter-spacing="2.5">SYSTEMS DEV</text>
+</svg>
