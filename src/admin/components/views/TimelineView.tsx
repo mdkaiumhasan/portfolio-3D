@@ -179,12 +179,12 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ data, onUpdate, onTo
                   Company Badge / Logo Image
                 </label>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden shrink-0 flex items-center justify-center p-1">
+                  <div className="w-12 h-12 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden shrink-0 flex items-center justify-center">
                     {item.imageUrl ? (
                       <img
                         src={item.imageUrl}
                         alt="Badge"
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-cover rounded-xl"
                         onError={(e) => {
                           (e.target as HTMLElement).style.display = 'none';
                         }}
