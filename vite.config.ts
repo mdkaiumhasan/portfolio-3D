@@ -1,11 +1,16 @@
 import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 function apiPlugin(): Plugin {
   return {
     name: 'api-server-middleware',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
+        if (req.url === '/admin' || req.url === '/admin/') {
+          req.url = '/admin.html';
+        }
+
         if (req.url?.startsWith('/api/auth')) {
           try {
             // @ts-ignore
@@ -124,6 +129,10 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 2500,
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        admin: path.resolve(__dirname, 'admin.html')
+      },
       output: {
         manualChunks: {
           three: ['three'],

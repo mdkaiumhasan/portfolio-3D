@@ -64,6 +64,11 @@
       "percent": 80
     }
   ],
+  "skill_categories": [
+    "Network Engineering",
+    "Security & Systems",
+    "Programming & Software"
+  ],
   "activities": [
     {
       "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp",
@@ -76,12 +81,14 @@
       "description": "Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"
     }
   ],
-  "skill_categories": [
-    "Network Engineering",
-    "Security & Systems",
-    "Programming & Software"
+  "project_categories": [
+    "Networking & Security",
+    "Mobile & Realtime",
+    "Robotics & Hardware",
+    "AI & Machine Learning"
   ],
   "portfolio_cv_link": "#",
+  "portfolio__showConstructionMessage": true,
   "projects": [
     {
       "category": "AI & Machine Learning",
@@ -128,14 +135,8 @@
       "fullDetails": "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>"
     }
   ],
-  "portfolio__showConstructionMessage": true,
-  "project_categories": [
-    "Networking & Security",
-    "Mobile & Realtime",
-    "Robotics & Hardware",
-    "AI & Machine Learning"
-  ],
   "timeline_cv_link": "#",
+  "timeline__showConstructionMessage": false,
   "experiences": [
     {
       "title": "Network Support Engineer – FNF Online (ISP)",
@@ -162,8 +163,8 @@
       "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
     }
   ],
-  "timeline__showConstructionMessage": false,
   "blogs_cv_link": "#",
+  "blogs__showConstructionMessage": true,
   "posts": [
     {
       "imageUrl": "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg",
@@ -182,7 +183,6 @@
       "fullContent": "<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>"
     }
   ],
-  "blogs__showConstructionMessage": true,
   "contact_info_heading": "CONTACT ME HERE",
   "contact_info_text": "For Network consultancy services, please get in touch.",
   "contact_cv_link": "https://files.catbox.moe/0juxap.pdf",
@@ -226,5 +226,10 @@
       "url": "https://github.com/mdkaiumhasan"
     }
   ],
-  "updatedAt": "2026-10-07T17:25:19.344Z"
+  "available_for_work": true,
+  "showBlogsConstruction": true,
+  "showPortfolioConstruction": true,
+  "showTimelineConstruction": true,
+  "timeline_showConstructionMessage": false,
+  "updatedAt": "2026-10-07T20:31:10.806Z"
 }

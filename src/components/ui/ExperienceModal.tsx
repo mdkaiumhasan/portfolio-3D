@@ -3,38 +3,15 @@ import {
   X, 
   Briefcase, 
   Calendar, 
-  Network, 
-  Terminal, 
-  GraduationCap, 
-  Server, 
-  Layers, 
-  CheckCircle2, 
-  ExternalLink,
-  Cpu,
-  Wifi,
-  ShieldCheck,
-  Maximize2,
-  LucideIcon
+  CheckCircle2
 } from 'lucide-react';
 import { usePortfolioData, ExperienceItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
-interface ExperienceMeta {
-  category: string;
-  categoryKey: 'all' | 'isp' | 'software' | 'cisco' | 'academic';
-  color: string;
-  icon: LucideIcon;
-  domain: string;
-  statusText: string;
-  statusType: 'active' | 'lab' | 'academic' | 'milestone';
-  tags: string[];
-}
-
 export const ExperienceModal: React.FC = () => {
   const { setActivePanel, audioEnabled } = useGameStore();
   const { data } = usePortfolioData();
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [enlargedImage, setEnlargedImage] = useState<{ url: string; title: string } | null>(null);
 
   const handleClose = () => {
@@ -42,105 +19,11 @@ export const ExperienceModal: React.FC = () => {
     setActivePanel(null);
   };
 
-  const handleFilterClick = (filterKey: string) => {
-    if (audioEnabled) sound.playClick();
-    setSelectedFilter(filterKey);
-  };
-
   const dynamicExperiences = useMemo(() => {
     return (data.experiences || []).filter(
       (e: ExperienceItem) => e && e.title && e.title.trim().length > 0
     );
   }, [data.experiences]);
-
-  // Helper to extract metadata, domain, color, tags, and category for each role
-  const getExperienceMeta = (exp: ExperienceItem): ExperienceMeta => {
-    const text = `${exp.title} ${exp.description || ''}`.toLowerCase();
-
-    // 1. Diploma & Academic Credentials
-    if (text.includes('diploma') || text.includes('polytechnic') || text.includes('cst') || text.includes('computer science')) {
-      return {
-        category: 'Academic Credentials',
-        categoryKey: 'academic',
-        color: '#a855f7',
-        icon: GraduationCap,
-        domain: 'Mymensingh Polytechnic Institute • CST',
-        statusText: 'DEGREE COMPLETED',
-        statusType: 'academic',
-        tags: ['Computer Science', 'Hardware & LFR', 'Operating Systems', 'Network Architectures']
-      };
-    }
-
-    // 2. Cisco Enterprise & CCNA Labs
-    if (text.includes('ccna') || text.includes('cisco') || text.includes('200-301')) {
-      return {
-        category: 'Cisco Labs & Infrastructure',
-        categoryKey: 'cisco',
-        color: '#ffb703',
-        icon: Server,
-        domain: 'Cisco Enterprise & Multi-Area Infrastructure',
-        statusText: 'LAB VERIFIED',
-        statusType: 'lab',
-        tags: ['Multi-Area OSPF', '802.1Q VLANs', 'STP Loop Guard', 'Stateful ACLs', 'Linux Servers']
-      };
-    }
-
-    // 3. Independent Fullstack & Systems Developer
-    if (text.includes('fullstack') || text.includes('software') || text.includes('easymess') || text.includes('android') || text.includes('developer')) {
-      return {
-        category: 'Software & Systems',
-        categoryKey: 'software',
-        color: '#39ff14',
-        icon: Terminal,
-        domain: 'Independent Fullstack & Android Systems',
-        statusText: 'ACTIVE ENGINEERING',
-        statusType: 'active',
-        tags: ['React.js', 'Node.js', 'Android / Kotlin', 'Firebase', 'Realtime Systems']
-      };
-    }
-
-    // 4. ISP & Network Operations
-    if (text.includes('fnf') || text.includes('isp') || text.includes('gpon') || text.includes('pppoe') || text.includes('mikrotik')) {
-      return {
-        category: 'ISP & Network Operations',
-        categoryKey: 'isp',
-        color: '#00e5ff',
-        icon: Wifi,
-        domain: 'FNF Online • ISP Operations & Field Engineering',
-        statusText: 'ACTIVE POSTING',
-        statusType: 'active',
-        tags: ['MikroTik RouterOS', 'GPON OLT', 'PPPoE Queues', 'Bandwidth QoS', 'Fiber Distribution']
-      };
-    }
-
-    return {
-      category: 'Professional Milestone',
-      categoryKey: 'isp',
-      color: '#38bdf8',
-      icon: Briefcase,
-      domain: 'Technical Engineering Milestone',
-      statusText: 'VERIFIED',
-      statusType: 'milestone',
-      tags: ['Engineering', 'Infrastructure', 'Systems']
-    };
-  };
-
-  // Filter items
-  const filteredExperiences = useMemo(() => {
-    if (selectedFilter === 'all') return dynamicExperiences;
-    return dynamicExperiences.filter(exp => {
-      const meta = getExperienceMeta(exp);
-      return meta.categoryKey === selectedFilter;
-    });
-  }, [dynamicExperiences, selectedFilter]);
-
-  const filterTabs = [
-    { key: 'all', label: 'All Operations', count: dynamicExperiences.length, icon: Layers },
-    { key: 'isp', label: 'ISP & Networking', count: dynamicExperiences.filter(e => getExperienceMeta(e).categoryKey === 'isp').length, icon: Wifi },
-    { key: 'software', label: 'Software & Systems', count: dynamicExperiences.filter(e => getExperienceMeta(e).categoryKey === 'software').length, icon: Terminal },
-    { key: 'cisco', label: 'Cisco Labs', count: dynamicExperiences.filter(e => getExperienceMeta(e).categoryKey === 'cisco').length, icon: Server },
-    { key: 'academic', label: 'Academic', count: dynamicExperiences.filter(e => getExperienceMeta(e).categoryKey === 'academic').length, icon: GraduationCap },
-  ];
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
@@ -193,7 +76,7 @@ export const ExperienceModal: React.FC = () => {
                 </span>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '3px 0 0 0' }}>
-                Operational Infrastructure Engagements, Field Engineering & Verified Technical Milestones
+                Operational Infrastructure Engagements, Field Engineering & Technical Milestones
               </p>
             </div>
           </div>
@@ -202,146 +85,7 @@ export const ExperienceModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Executive Metrics Overview Bar */}
-        <div
-          style={{
-            padding: '12px 24px',
-            background: 'rgba(15, 23, 42, 0.6)',
-            borderBottom: '1px solid rgba(56, 189, 248, 0.15)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '12px'
-          }}
-        >
-          {/* Quick Metrics Chips */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <span
-              style={{
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
-                color: '#34d399',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '12px',
-                fontWeight: 700,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontFamily: 'var(--font-hud)'
-              }}
-            >
-              <ShieldCheck size={14} />
-              STATUS: ACTIVE OPERATIONS
-            </span>
-            <span
-              style={{
-                background: 'rgba(56, 189, 248, 0.1)',
-                border: '1px solid rgba(56, 189, 248, 0.25)',
-                color: '#38bdf8',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '12px',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Network size={14} />
-              PRIMARY: FNF ONLINE (ISP)
-            </span>
-            <span
-              style={{
-                background: 'rgba(255, 183, 3, 0.1)',
-                border: '1px solid rgba(255, 183, 3, 0.25)',
-                color: '#fcd34d',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '12px',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Server size={14} />
-              CCNA 200-301 LAB ARCHITECTURE
-            </span>
-          </div>
-
-          {/* Total Badge */}
-          <span
-            style={{
-              fontSize: '12px',
-              color: 'var(--text-muted)',
-              fontFamily: 'var(--font-hud)',
-              fontWeight: 600
-            }}
-          >
-            TOTAL TRACKED: <strong style={{ color: '#ffffff' }}>{dynamicExperiences.length} MILESTONES</strong>
-          </span>
-        </div>
-
-        {/* Filter Navigation Tabs */}
-        <div
-          style={{
-            padding: '10px 24px',
-            background: 'rgba(10, 14, 25, 0.5)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            overflowX: 'auto',
-            scrollbarWidth: 'none'
-          }}
-        >
-          {filterTabs.map(tab => {
-            const isSelected = selectedFilter === tab.key;
-            const TabIcon = tab.icon;
-            return (
-              <button
-                key={tab.key}
-                onClick={() => handleFilterClick(tab.key)}
-                style={{
-                  background: isSelected 
-                    ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%)' 
-                    : 'rgba(255, 255, 255, 0.04)',
-                  border: isSelected ? '1px solid #00e5ff' : '1px solid rgba(255, 255, 255, 0.08)',
-                  color: isSelected ? '#ffffff' : '#94a3b8',
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '7px',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isSelected ? '0 0 10px rgba(0, 229, 255, 0.3)' : 'none'
-                }}
-              >
-                <TabIcon size={14} color={isSelected ? '#00e5ff' : '#94a3b8'} />
-                <span>{tab.label}</span>
-                <span
-                  style={{
-                    fontSize: '10px',
-                    padding: '1px 6px',
-                    borderRadius: '10px',
-                    background: isSelected ? 'rgba(0, 229, 255, 0.3)' : 'rgba(255, 255, 255, 0.08)',
-                    color: isSelected ? '#ffffff' : '#cbd5e1'
-                  }}
-                >
-                  {tab.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Modal Body: 2-Column Responsive Professional Grid */}
+        {/* Modal Body: Direct Professional Grid without category tabs */}
         <div 
           className="modal-body" 
           style={{ 
@@ -350,7 +94,7 @@ export const ExperienceModal: React.FC = () => {
             flex: 1
           }}
         >
-          {filteredExperiences.length > 0 ? (
+          {dynamicExperiences.length > 0 ? (
             <div
               style={{
                 display: 'grid',
@@ -358,9 +102,7 @@ export const ExperienceModal: React.FC = () => {
                 gap: '18px'
               }}
             >
-              {filteredExperiences.map((exp: ExperienceItem, idx: number) => {
-                const meta = getExperienceMeta(exp);
-                const IconComponent = meta.icon;
+              {dynamicExperiences.map((exp: ExperienceItem, idx: number) => {
                 const hasValidImage = exp.imageUrl && exp.imageUrl.trim().length > 0;
 
                 return (
@@ -380,10 +122,10 @@ export const ExperienceModal: React.FC = () => {
                       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
                     }}
                   >
-                    {/* Top Row: Image Avatar, Title, Organization & Date */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', flex: 1 }}>
-                        {/* Role Logo / Image Avatar (User Request: Show image instead of icon) */}
+                    {/* Top Row: Image Avatar, Title & Date */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                        {/* Role Logo / Image Avatar */}
                         <div
                           style={{
                             width: '48px',
@@ -419,11 +161,11 @@ export const ExperienceModal: React.FC = () => {
                               }}
                             />
                           ) : (
-                            <IconComponent size={22} color={meta.color} />
+                            <Briefcase size={22} color="#00e5ff" />
                           )}
                         </div>
 
-                        {/* Title and Domain */}
+                        {/* Title */}
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <h3
                             style={{
@@ -437,85 +179,33 @@ export const ExperienceModal: React.FC = () => {
                           >
                             {exp.title}
                           </h3>
-                          <div
-                            style={{
-                              fontSize: '12px',
-                              color: meta.color,
-                              fontWeight: 600,
-                              marginTop: '3px',
-                              letterSpacing: '0.2px'
-                            }}
-                          >
-                            {meta.domain}
-                          </div>
                         </div>
                       </div>
 
-                      {/* Date & Status Badges */}
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px', flexShrink: 0 }}>
-                        {exp.date && (
-                          <span
-                            style={{
-                              fontSize: '11px',
-                              padding: '3px 9px',
-                              borderRadius: '12px',
-                              background: 'rgba(255, 255, 255, 0.06)',
-                              border: '1px solid rgba(255, 255, 255, 0.15)',
-                              color: '#e2e8f0',
-                              fontWeight: 700,
-                              fontFamily: 'var(--font-hud)',
-                              letterSpacing: '0.3px',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '5px',
-                              whiteSpace: 'nowrap'
-                            }}
-                          >
-                            <Calendar size={12} color="#94a3b8" />
-                            {exp.date}
-                          </span>
-                        )}
-
-                        {/* Live Status Pill */}
+                      {/* Date Badge */}
+                      {exp.date && (
                         <span
                           style={{
-                            fontSize: '9.5px',
-                            padding: '2px 7px',
-                            borderRadius: '10px',
-                            background: meta.statusType === 'active' 
-                              ? 'rgba(16, 185, 129, 0.2)' 
-                              : (meta.statusType === 'lab' ? 'rgba(255, 183, 3, 0.2)' : 'rgba(168, 85, 247, 0.2)'),
-                            border: `1px solid ${meta.color}66`,
-                            color: meta.color,
-                            fontWeight: 800,
-                            letterSpacing: '0.4px',
+                            fontSize: '11px',
+                            padding: '4px 10px',
+                            borderRadius: '12px',
+                            background: 'rgba(56, 189, 248, 0.1)',
+                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                            color: '#38bdf8',
+                            fontWeight: 700,
                             fontFamily: 'var(--font-hud)',
-                            textTransform: 'uppercase'
+                            letterSpacing: '0.3px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          ● {meta.statusText}
+                          <Calendar size={12} color="#38bdf8" />
+                          {exp.date}
                         </span>
-                      </div>
-                    </div>
-
-                    {/* Infrastructure & Tech Tags Row */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {meta.tags.map((tag, tIdx) => (
-                        <span
-                          key={`tag-${idx}-${tIdx}`}
-                          style={{
-                            fontSize: '10.5px',
-                            fontWeight: 600,
-                            padding: '2px 7px',
-                            borderRadius: '4px',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            border: '1px solid rgba(255, 255, 255, 0.09)',
-                            color: '#94a3b8'
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                      )}
                     </div>
 
                     {/* Description Text */}
@@ -548,10 +238,7 @@ export const ExperienceModal: React.FC = () => {
               }}
             >
               <p style={{ fontSize: '15px', color: '#ffffff', fontWeight: 600 }}>
-                No operations found for this category
-              </p>
-              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-                Select "All Operations" or update records in the Admin Panel.
+                No experience records found
               </p>
             </div>
           )}
