@@ -48,6 +48,13 @@ function normalizePortfolioData(data) {
     });
   }
 
+  if (!data.blog_categories || !Array.isArray(data.blog_categories) || data.blog_categories.length === 0) {
+    const existingCats = Array.isArray(data.posts)
+      ? Array.from(new Set(data.posts.map((p) => p.category).filter(Boolean)))
+      : [];
+    data.blog_categories = existingCats.length > 0 ? existingCats : ['Tutorial', 'Networking Guide', 'Network Architecture', 'Career & Certification'];
+  }
+
   return data;
 }
 

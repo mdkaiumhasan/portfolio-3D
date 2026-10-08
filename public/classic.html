@@ -643,6 +643,48 @@
             color: #c084fc;
         }
 
+        /* --- Blogs Category Filter Pills --- */
+        .blog-category-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 16px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: 1.5px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .blog-category-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--text-color);
+            transform: translateY(-1px);
+        }
+        .blog-category-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(40, 167, 69, 0.35);
+        }
+        html.dark .blog-category-btn {
+            background-color: rgba(30, 41, 59, 0.6);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        html.dark .blog-category-btn:hover {
+            border-color: var(--accent-color);
+            color: #ffffff;
+        }
+        html.dark .blog-category-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(40, 167, 69, 0.45);
+        }
+
         @keyframes projectCardAppear {
             from {
                 opacity: 0;
@@ -1583,14 +1625,28 @@ function handleEnter3D() {
                     <span class="section-title-bg">POSTS</span>
                 </h2>
 
-                
-<p id="blogs-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
+                <p id="blogs-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
                     This Page Is Under Constuction!
                 </p>
 
+                <!-- Blogs Category Filter Bar -->
+                <div class="blogs-filter-bar mb-10 flex flex-wrap items-center justify-center sm:justify-start gap-2.5" id="blogs-categories-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
                 <div id="blogs-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     
-</div>
+                </div>
+
+                <!-- Blogs Empty State -->
+                <div id="blogs-empty-state" class="hidden text-center py-16">
+                    <i class="fas fa-newspaper text-4xl mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                    <p class="text-base font-semibold" style="color: var(--text-color);">No blog posts found in this category.</p>
+                    <p class="text-xs mt-1" style="color: var(--text-secondary);">Try selecting "All Articles" to view all available publications.</p>
+                    <button type="button" onclick="selectBlogCategory('All')" class="btn-custom mt-4 text-xs">
+                        View All Articles
+                    </button>
+                </div>
             </div>
           </section>
 
@@ -1755,7 +1811,10 @@ function handleEnter3D() {
 
             // 5. Blogs Section
             blogsConstructionMsg.classList.toggle('hidden', !get('blogs__showConstructionMessage', false));
-            renderBlogs(get('posts', []));
+            window.blogCategories = get('blog_categories', null);
+            allBlogPostsList = get('posts', []);
+            activeBlogCategory = 'All';
+            updateBlogCategoryFilter();
 
             // 6. Contact Section
             document.getElementById('contact-info-heading').textContent = get('contact_info_heading', 'Loading...');
@@ -2227,33 +2286,109 @@ function handleEnter3D() {
              timelineGrid.appendChild(column2);
         }
 
+        // --- Blogs Category & Filter Logic ---
+        let allBlogPostsList = [];
+        let activeBlogCategory = 'All';
+
+        function updateBlogCategoryFilter() {
+            const container = document.getElementById('blogs-categories-container');
+            const emptyState = document.getElementById('blogs-empty-state');
+            
+            const configuredCats = (window.blogCategories && Array.isArray(window.blogCategories) && window.blogCategories.length > 0)
+                ? window.blogCategories
+                : Array.from(new Set(allBlogPostsList.map(p => p.category).filter(Boolean)));
+            
+            const categories = ['All', ...Array.from(new Set(configuredCats))];
+
+            if (container) {
+                container.innerHTML = categories.map(cat => {
+                    const isSelected = cat === activeBlogCategory;
+                    const catCount = cat === 'All'
+                        ? allBlogPostsList.length
+                        : allBlogPostsList.filter(p => (p.category || '').toLowerCase().trim() === cat.toLowerCase().trim()).length;
+                    
+                    return `
+                        <button type="button" class="blog-category-btn ${isSelected ? 'active' : ''}" data-category="${escapeHTML(cat)}">
+                            <span>${cat === 'All' ? 'All Articles' : escapeHTML(cat)}</span>
+                            <span class="text-[11px] opacity-80 px-2 py-0.5 rounded-full ${isSelected ? 'bg-white/20' : 'bg-black/10 dark:bg-white/10'}">${catCount}</span>
+                        </button>
+                    `;
+                }).join('');
+
+                container.querySelectorAll('.blog-category-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const cat = btn.getAttribute('data-category');
+                        selectBlogCategory(cat);
+                    });
+                });
+            }
+
+            const filteredPosts = activeBlogCategory === 'All'
+                ? allBlogPostsList
+                : allBlogPostsList.filter(p => {
+                    const c = (p.category || '').toLowerCase().trim();
+                    const target = activeBlogCategory.toLowerCase().trim();
+                    return c === target || c.includes(target) || target.includes(c);
+                });
+
+            renderBlogs(filteredPosts);
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', filteredPosts.length > 0);
+            }
+        }
+
+        function selectBlogCategory(cat) {
+            activeBlogCategory = cat;
+            updateBlogCategoryFilter();
+        }
+
+        window.selectBlogCategory = selectBlogCategory;
+
         function renderBlogs(posts = []) {
             if (!blogsGrid) return;
             blogsGrid.innerHTML = ''; // Clear previous
             posts.forEach(post => {
                 const postDiv = document.createElement('div');
-                postDiv.className = 'blog-item';
-                // --- FIX: Sanitize HTML content with DOMPurify ---
-                const safeFullContent = sanitizeHTML(post.fullContent || '<p>No content available.</p>');
-                // --- END FIX ---
+                postDiv.className = 'blog-item group flex flex-col justify-between';
+                const postLink = post.link && post.link.trim().length > 0 ? post.link.trim() : 'https://www.linkedin.com/in/mdkaiumhasan';
+                const isLinkedIn = postLink.toLowerCase().includes('linkedin');
                 
-                // --- SHOTHIK FIX: Standardized setAttribute ---
+                postDiv.setAttribute('data-post-url', postLink);
                 postDiv.innerHTML = `
-                    <div class="relative overflow-hidden rounded-t-lg">
-                        <img src="" alt="" class="w-full h-65 object-cover" loading="lazy" onerror="this.src='https://placehold.co/600x400/eee/ccc?text=Error'">
-                    </div>
-                    <div class="blog-content">
-                        <div class="blog-meta">
-                            <span></span> | <span></span>
-                        </div>
-                        <h3 class="blog-title">
-                            <a href="#" class="open-blog-btn"> 
-                                <!-- Title here -->
+                    <div>
+                        <div class="relative overflow-hidden rounded-t-lg bg-black/40">
+                            <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="block">
+                                <img src="" alt="" class="w-full h-56 sm:h-60 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                             </a>
-                        </h3>
-                        <p class="blog-description" style="color: var(--text-secondary);"></p>
-                        <a href="#" class="blog-read-more open-blog-btn">
-                           Read More <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                            <div class="absolute top-2.5 left-2.5 z-10 pointer-events-none">
+                                <span class="px-2.5 py-1 rounded text-[11px] font-bold bg-black/75 backdrop-blur-md text-accent border border-accent/30">
+                                    ${escapeHTML(post.category || 'Tutorial')}
+                                </span>
+                            </div>
+                            <div class="absolute top-2.5 right-2.5 z-10">
+                                <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded text-[10.5px] font-bold bg-[#0a66c2] text-white flex items-center gap-1 shadow-md hover:bg-[#004182] transition-colors">
+                                    <i class="fab fa-linkedin-in text-xs"></i> LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta flex items-center gap-2 text-xs text-secondary mb-2" style="color: var(--text-secondary);">
+                                <span><i class="far fa-calendar-alt mr-1"></i> ${escapeHTML(post.date || '')}</span>
+                            </div>
+                            <h3 class="blog-title mb-2">
+                                <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors"> 
+                                    ${escapeHTML(post.title || 'Blog Post Title')}
+                                </a>
+                            </h3>
+                            <p class="blog-description line-clamp-3 mb-4" style="color: var(--text-secondary);">
+                                ${escapeHTML(post.shortDesc || '')}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-5">
+                        <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="blog-read-more inline-flex items-center gap-1.5 font-bold text-accent hover:underline text-sm">
+                           ${isLinkedIn ? '<i class="fab fa-linkedin-in text-xs"></i> Read on LinkedIn' : 'Read Article'} <i class="fas fa-external-link-alt ml-1 text-xs"></i>
                         </a>
                     </div>
                 `;
@@ -2261,26 +2396,10 @@ function handleEnter3D() {
                 const img = postDiv.querySelector('img');
                 img.src = post.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Blog';
                 img.alt = post.title || 'Blog Post';
-
-                const metaSpans = postDiv.querySelectorAll('.blog-meta span');
-                metaSpans[0].textContent = post.date || '';
-                metaSpans[1].textContent = post.category || 'General';
-                
-                const titleLink = postDiv.querySelector('.blog-title a');
-                titleLink.textContent = post.title || 'Blog Post Title';
-
-                postDiv.querySelector('.blog-description').textContent = post.shortDesc || '';
-                
-                // Set data attributes using setAttribute (safer)
-                const safeImageData = post.imageUrl || 'https://placehold.co/800x500/eee/ccc?text=Blog';
-                const safeTitleData = post.title || 'Blog Post Details';
-
-                postDiv.querySelectorAll('.open-blog-btn').forEach(link => {
-                    link.setAttribute('data-blog-image', safeImageData);
-                    link.setAttribute('data-blog-title', safeTitleData);
-                    link.setAttribute('data-blog-content', safeFullContent); // Use raw sanitized string
-                });
-                // --- END FIX ---
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'https://placehold.co/600x400/eee/ccc?text=Blog';
+                };
 
                 blogsGrid.appendChild(postDiv);
             });
@@ -2662,17 +2781,14 @@ function handleEnter3D() {
             const blogDetailTitle = document.getElementById('blog-detail-title');
             const blogDetailContent = document.getElementById('blog-detail-content');
 
+            // Blog Direct Link Delegation (Opens LinkedIn / external link directly without modal view)
             blogsGridDelegation?.addEventListener('click', (e) => {
-                 const link = e.target.closest('.open-blog-btn'); // Use closest to target the link itself or its children
-                 if (link && blogDetailView && blogDetailImage && blogDetailTitle && blogDetailContent) {
-                       e.preventDefault(); // Prevent default link behavior
-                       const populateBlog = () => {
-                            blogDetailImage.src = link.getAttribute('data-blog-image') || '';
-                            blogDetailTitle.textContent = link.getAttribute('data-blog-title') || '';
-                            // Set innerHTML for blog content as it's pre-sanitized
-                            blogDetailContent.innerHTML = typeof sanitizeHTML === 'function' ? sanitizeHTML(link.getAttribute('data-blog-content') || '') : escapeHTML(link.getAttribute('data-blog-content') || '');
-                       };
-                       openDetailView(blogDetailView, '#blogs', populateBlog);
+                 const directA = e.target.closest('a');
+                 if (directA) return; // Native <a> tag opens link in new tab directly
+                 const card = e.target.closest('.blog-item');
+                 if (card) {
+                     const postUrl = card.getAttribute('data-post-url') || 'https://www.linkedin.com/in/mdkaiumhasan';
+                     window.open(postUrl, '_blank', 'noopener,noreferrer');
                  }
             });
 

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Premium Intro Loader - MD. Kaium Hasan</title>
+<style>
+:root{box-sizing:border-box}*{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:#ece7da;color:#0c1330;font-family:'Instrument Serif',Georgia,serif}
+#site{min-height:100%;display:grid;place-items:center;text-align:center;padding:24px}
+#site h1{font-weight:400;font-size:clamp(40px,8vw,112px);margin:0;letter-spacing:-.02em;line-height:1}
+#site p{font:13px 'IBM Plex Mono',ui-monospace,monospace;color:#5a6286;margin:14px 0 32px}
+#replay{font:13px 'IBM Plex Mono',ui-monospace,monospace;color:#0c1330;background:none;border:1px solid #0c1330;padding:11px 22px;border-radius:999px;cursor:pointer}
+#replay:hover{background:#0c1330;color:#ece7da}
+#replay:focus-visible{outline:2px solid #0c1330;outline-offset:3px}
+</style></head><body>
+<main id="site"><div><h1>Portfolio is live</h1><p>your 3D scene renders here</p><button id="replay" type="button">Replay intro</button></div></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+
+const CSS = `
+.ki{position:fixed;inset:0;z-index:9999;background:#070b19;color:#ece7da;font-family:'Instrument Serif',Georgia,serif}
+.ki::after{content:"";position:absolute;left:0;right:0;top:100%;height:14vh;background:#070b19;border-radius:0 0 50% 50%/0 0 100% 100%}
+.ki canvas{position:absolute;inset:0;width:100%;height:100%}
+.ki .gr{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.ki .hops{position:absolute;left:32px;top:calc(30px + env(safe-area-inset-top,0px));font:12px/1.9 'IBM Plex Mono',ui-monospace,Menlo,monospace;color:#6f7aa6}
+.ki .h{display:grid;grid-template-columns:28px 104px auto;opacity:0}
+.ki .h b{font-weight:400;opacity:.6}
+.ki .h.cur{color:#f2c879}
+.ki .id{position:absolute;left:32px;bottom:calc(32px + env(safe-area-inset-bottom,0px))}
+.ki .nm{margin:0;font-weight:400;font-size:clamp(40px,9.5vw,148px);line-height:.95;letter-spacing:-.02em}
+.ki .c{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .1em}
+.ki .c i{display:inline-block;font-style:normal}
+.ki .s{display:inline-block;width:.26em}
+.ki .rl{margin:14px 0 0;font:13px 'IBM Plex Mono',ui-monospace,Menlo,monospace;color:#97a2cb;letter-spacing:.02em}
+.ki .ct{position:absolute;right:32px;bottom:calc(30px + env(safe-area-inset-bottom,0px));font-size:clamp(40px,6vw,88px);line-height:.9;font-variant-numeric:tabular-nums}
+.ki .ct small{font-size:.38em;color:#f2c879;margin-left:.12em}
+.ki .ln{position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(236,231,218,.08)}
+.ki .ln i{display:block;height:100%;background:#f2c879;transform-origin:left;transform:scaleX(0)}
+@media (max-width:640px){.ki .hops,.ki .id{left:22px}.ki .ct{right:22px;bottom:auto;top:calc(24px + env(safe-area-inset-top,0px))}}
+`;
+
+function createIntro(o = {}) {
+  const cfg = {
+    name: "MD. Kaium Hasan",
+    role: "Network Engineer & Software Developer",
+    route: [["Dhaka", 23.8, 90.4, 0], ["Singapore", 1.35, 103.8, 58], ["Frankfurt", 50.1, 8.7, 142], ["New York", 40.7, -74, 238]],
+    ready: Promise.resolve(), // resolve this when your 3D models finish loading
+    reveal: null,             // optional selector of your main page for a soft settle-in
+    onDone() {},
+    ...o,
+  };
+  const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const D2R = Math.PI / 180, N = 56;
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "https://fonts.googleapis.com/css2?family=Instrument+Serif&family=IBM+Plex+Mono&display=swap";
+  const style = document.createElement("style");
+  style.textContent = CSS;
+  document.head.append(link, style);
+
+  const root = document.createElement("div");
+  root.className = "ki";
+  root.setAttribute("role", "status");
+  root.setAttribute("aria-label", "Loading portfolio");
+  root.innerHTML = `<canvas></canvas><div class="gr"></div>
+    <div class="hops">${cfg.route.map((r, i) => `<div class="h"><b>${String(i + 1).padStart(2, "0")}</b><span>${r[0]}</span><em style="font-style:normal">${r[3]} ms</em></div>`).join("")}</div>
+    <div class="id"><h1 class="nm" aria-label="${cfg.name}">${[...cfg.name].map(c => c === " " ? '<span class="s"></span>' : `<span class="c"><i>${c}</i></span>`).join("")}</h1><p class="rl">${cfg.role}</p></div>
+    <div class="ct"><span>0</span><small>%</small></div><div class="ln"><i></i></div>`;
+  document.body.appendChild(root);
+  const prevOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+
+  const $ = s => root.querySelector(s);
+  const cv = $("canvas"), cx = cv.getContext("2d");
+  const rows = [...root.querySelectorAll(".h")];
+  const S = { T: 0, scale: 0.88, alpha: 0, zoom: 1 };
+  let W, H, DPR, R, cxp, cyp, raf = 0, dead = false, tl;
+
+  /* ---- geometry ---- */
+  const ll = (lat, lon) => [Math.cos(lat * D2R) * Math.sin(lon * D2R), Math.sin(lat * D2R), Math.cos(lat * D2R) * Math.cos(lon * D2R)];
+  const V = cfg.route.map(r => ll(r[1], r[2]));
+  const pts = Array.from({ length: 700 }, (_, i) => {
+    const y = 1 - 2 * (i + 0.5) / 700, r = Math.sqrt(1 - y * y), t = i * 2.399963;
+    return [Math.cos(t) * r, y, Math.sin(t) * r];
+  });
+  const GRAT = [];
+  for (let lon = 0; lon < 360; lon += 30) GRAT.push(Array.from({ length: 41 }, (_, i) => ll(-90 + i * 4.5, lon)));
+  for (let lat = -60; lat <= 60; lat += 30) GRAT.push(Array.from({ length: 73 }, (_, i) => ll(lat, i * 5)));
+  const ARCS = V.slice(0, -1).map((a, k) => {
+    const b = V[k + 1], om = Math.acos(Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), h = 0.12 + om * 0.14;
+    return Array.from({ length: N + 1 }, (_, i) => {
+      const t = i / N, s0 = Math.sin((1 - t) * om) / Math.sin(om), s1 = Math.sin(t * om) / Math.sin(om);
+      return [a[0] * s0 + b[0] * s1, a[1] * s0 + b[1] * s1, a[2] * s0 + b[2] * s1, 1 + h * Math.sin(Math.PI * t)];
+    });
+  });
+
+  const mid = k => {
+    const a = V[k], b = V[k + 1], x = a[0] + b[0], y = a[1] + b[1], z = a[2] + b[2], l = Math.hypot(x, y, z) || 1;
+    return { lat: Math.asin(y / l) / D2R, lon: Math.atan2(x, z) / D2R };
+  };
+  const m0 = mid(0), cur = { lat: m0.lat, lon: m0.lon - (rm ? 0 : 85) };
+
+  function size() {
+    DPR = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR; cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    R = Math.min(W * 0.46, H * 0.34); cxp = W / 2; cyp = H * 0.43;
+  }
+  size();
+  addEventListener("resize", size);
+
+  /* ---- render ---- */
+  function frame() {
+    raf = requestAnimationFrame(frame);
+    const t = performance.now() / 1000, leg = Math.min(2, Math.floor(S.T * 3)), tg = mid(leg), f = rm ? 1 : 0.045;
+    cur.lat += (tg.lat - cur.lat) * f;
+    cur.lon += (((tg.lon - cur.lon + 540) % 360) - 180) * f;
+    const l0 = cur.lon * D2R, p0 = cur.lat * D2R, cl = Math.cos(l0), sl = Math.sin(l0), cp = Math.cos(p0), sp = Math.sin(p0);
+    const sc = S.scale * S.zoom;
+    const P = (x, y, z, k = 1) => {
+      const x1 = x * cl - z * sl, z1 = x * sl + z * cl;
+      return [cxp + x1 * R * sc * k, cyp - (y * cp - z1 * sp) * R * sc * k, y * sp + z1 * cp];
+    };
+    cx.clearRect(0, 0, W, H);
+    cx.globalAlpha = 1;
+    const g = cx.createRadialGradient(cxp, cyp, R * sc * 0.2, cxp, cyp, R * sc * 1.6);
+    g.addColorStop(0, `rgba(70,90,190,${0.24 * S.alpha})`); g.addColorStop(1, "rgba(70,90,190,0)");
+    cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+    cx.globalAlpha = S.alpha;
+
+    for (const p of pts) {
+      const q = P(p[0], p[1], p[2]);
+      cx.fillStyle = q[2] > 0 ? `rgba(160,175,235,${0.16 + 0.5 * q[2]})` : "rgba(160,175,235,.05)";
+      cx.fillRect(q[0], q[1], 1.4, 1.4);
+    }
+    cx.strokeStyle = "rgba(150,165,230,.11)"; cx.lineWidth = 1; cx.beginPath();
+    for (const ln of GRAT) {
+      let pen = false;
+      for (const v of ln) {
+        const q = P(v[0], v[1], v[2]);
+        if (q[2] > 0) { pen ? cx.lineTo(q[0], q[1]) : cx.moveTo(q[0], q[1]); pen = true; } else pen = false;
+      }
+    }
+    cx.stroke();
+    cx.strokeStyle = "rgba(160,175,235,.22)"; cx.beginPath(); cx.arc(cxp, cyp, R * sc, 0, 6.283); cx.stroke();
+
+    for (let k = 0; k < 3; k++) {
+      const lp = Math.max(0, Math.min(1, S.T * 3 - k));
+      if (lp <= 0) continue;
+      const n = Math.floor(lp * N);
+      let prev = null;
+      for (let i = 0; i <= n; i++) {
+        const a = ARCS[k][i], q = P(a[0], a[1], a[2], a[3]);
+        if (prev && q[2] > -0.05 && prev[2] > -0.05) {
+          const fr = i / (n || 1);
+          cx.strokeStyle = `rgba(242,200,121,${lp < 1 ? 0.1 + 0.9 * fr : 0.5})`;
+          cx.lineWidth = lp < 1 ? 1 + 1.5 * fr : 1.2;
+          cx.beginPath(); cx.moveTo(prev[0], prev[1]); cx.lineTo(q[0], q[1]); cx.stroke();
+        }
+        prev = q;
+      }
+      if (lp < 1 && prev && prev[2] > 0) {
+        const hg = cx.createRadialGradient(prev[0], prev[1], 0, prev[0], prev[1], 14);
+        hg.addColorStop(0, "rgba(255,226,160,.95)"); hg.addColorStop(1, "rgba(242,200,121,0)");
+        cx.fillStyle = hg; cx.beginPath(); cx.arc(prev[0], prev[1], 14, 0, 6.283); cx.fill();
+      }
+    }
+    const now = Math.min(3, Math.floor(S.T * 3 + 1e-6));
+    V.forEach((v, i) => {
+      const q = P(v[0], v[1], v[2]);
+      if (q[2] <= 0) return;
+      const on = S.T * 3 >= i - 1e-6;
+      cx.fillStyle = on ? "#f2c879" : "rgba(160,175,235,.5)";
+      cx.beginPath(); cx.arc(q[0], q[1], 2.6, 0, 6.283); cx.fill();
+      if (on && i === now && !rm) {
+        const ph = (t % 1.4) / 1.4;
+        cx.strokeStyle = `rgba(242,200,121,${(1 - ph) * 0.6})`; cx.lineWidth = 1;
+        cx.beginPath(); cx.arc(q[0], q[1], 3 + ph * 16, 0, 6.283); cx.stroke();
+      }
+    });
+  }
+
+  /* ---- choreography: ~5.0s total ---- */
+  function tick() {
+    $(".ct span").textContent = Math.round(S.T * 100);
+    gsap.set($(".ln i"), { scaleX: S.T });
+    rows.forEach((el, i) => {
+      if (S.T * 3 >= i - 1e-6 && !el.dataset.on) {
+        el.dataset.on = 1;
+        rows.forEach(r => r.classList.remove("cur")); el.classList.add("cur");
+        gsap.fromTo(el, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" });
+      }
+    });
+  }
+  function exit() {
+    if (dead) return;
+    const e = gsap.timeline({ onComplete() { destroy(); cfg.onDone(); } });
+    e.to([".id", ".ct", ".hops", ".ln"].map($), { opacity: 0, duration: 0.4, ease: "power1.in" }, 0);
+    if (rm) { e.to(root, { opacity: 0, duration: 0.6 }, 0.2); return; }
+    e.to(S, { zoom: 2.4, alpha: 0, duration: 0.55, ease: "power2.in" }, 0)
+     .to(root, { yPercent: -100, duration: 0.7, ease: "expo.inOut" }, 0.3);
+    if (cfg.reveal) e.fromTo(cfg.reveal, { scale: 1.06 }, { scale: 1, duration: 1, ease: "power3.out", clearProps: "transform" }, 0.3);
+  }
+  function destroy() {
+    dead = true; cancelAnimationFrame(raf); tl && tl.kill();
+    removeEventListener("resize", size);
+    root.remove(); style.remove(); link.remove();
+    document.body.style.overflow = prevOverflow;
+  }
+
+  Promise.race([
+    document.fonts ? document.fonts.load('400 64px "Instrument Serif"') : 0,
+    new Promise(r => setTimeout(r, 500)),
+  ]).then(() => {
+    if (dead) return;
+    frame();
+    tl = gsap.timeline();
+    tl.to(S, { alpha: 1, scale: 1, duration: 1.2, ease: "power3.out" }, 0)
+      .from(root.querySelectorAll(".c i"), { yPercent: 115, duration: 0.9, stagger: 0.035, ease: "expo.out" }, 0.25)
+      .from($(".rl"), { opacity: 0, y: 10, duration: 0.7, ease: "power2.out" }, 0.8)
+      .to(S, { T: 1, duration: 3.2, ease: "power1.inOut", onUpdate: tick }, 0.6)
+      .call(() => Promise.resolve(cfg.ready).then(exit), null, 4.0);
+  });
+
+  return { destroy };
+}
+let run=createIntro({reveal:"#site"});
+document.getElementById("replay").onclick=()=>{run.destroy();run=createIntro({reveal:"#site"});};
+</script></body></html>

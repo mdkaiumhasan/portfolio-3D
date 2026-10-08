@@ -41,6 +41,7 @@ export interface BlogPostItem {
   shortDesc?: string;
   fullContent?: string;
   imageUrl?: string;
+  link?: string;
 }
 
 export interface ContactDetailItem {
@@ -82,6 +83,7 @@ export interface PortfolioData {
   timeline_cv_link: string;
   timeline__showConstructionMessage?: boolean;
   posts: BlogPostItem[];
+  blog_categories?: string[];
   blogs_cv_link: string;
   blogs__showConstructionMessage?: boolean;
   contact_info_heading: string;

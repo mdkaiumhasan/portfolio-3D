@@ -44,6 +44,7 @@ export interface PostItem {
   imageUrl: string;
   shortDesc: string;
   fullContent?: string;
+  link?: string;
 }
 
 export interface ContactDetailItem {
@@ -72,6 +73,7 @@ export interface PortfolioData {
   project_categories?: string[];
   experiences?: ExperienceItem[];
   posts?: PostItem[];
+  blog_categories?: string[];
   contact_info_heading?: string;
   contact_info_text?: string;
   contact_cv_link?: string;
