@@ -220,14 +220,15 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     let packets: Packet[] = [];
 
     const size = () => {
-      D = Math.min(window.devicePixelRatio || 1, 2);
+      const isMob = window.innerWidth <= 768 || window.innerHeight <= 600 || 'ontouchstart' in window;
+      D = isMob ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       W = window.innerWidth;
       H = window.innerHeight;
       cv.width = W * D;
       cv.height = H * D;
       cx.setTransform(D, 0, 0, D, 0, 0);
 
-      const n = Math.round(Math.min(26, Math.max(16, (W * H) / 36000)));
+      const n = Math.round(Math.min(20, Math.max(12, (W * H) / 45000)));
       const speed = reduce ? 0 : 0.2;
       nodes = Array.from({ length: n }, () => ({
         x: Math.random() * W,
@@ -240,7 +241,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     };
 
     size();
-    window.addEventListener('resize', size);
+    window.addEventListener('resize', size, { passive: true });
 
     const near = (a: Node, L: number, skip?: Node) =>
       nodes.filter((b) => b !== a && b !== skip && Math.hypot(a.x - b.x, a.y - b.y) < L);

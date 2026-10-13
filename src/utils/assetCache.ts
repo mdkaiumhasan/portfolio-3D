@@ -68,37 +68,47 @@ export async function preloadAndCacheModel(
         return true;
       }
 
-      const reader = response.body.getReader();
-      const chunks: Uint8Array[] = [];
+      // Stream download with live byte tracking WITHOUT buffering 300MB in JavaScript arrays
       let loadedBytes = 0;
+      let streamToCache: ReadableStream;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        chunks.push(value);
-        loadedBytes += value.length;
-
-        if (onProgress) {
-          const loadedMB = loadedBytes / (1024 * 1024);
-          const percent = Math.min(99.9, (loadedBytes / totalBytes) * 100);
-          onProgress(percent, loadedMB, totalMB);
-        }
+      if (typeof TransformStream !== 'undefined') {
+        const ts = new TransformStream({
+          transform(chunk, controller) {
+            loadedBytes += chunk.length;
+            if (onProgress) {
+              const loadedMB = loadedBytes / (1024 * 1024);
+              const percent = Math.min(99.9, (loadedBytes / totalBytes) * 100);
+              onProgress(percent, loadedMB, totalMB);
+            }
+            controller.enqueue(chunk);
+          },
+        });
+        streamToCache = response.body.pipeThrough(ts);
+      } else {
+        const reader = response.body.getReader();
+        streamToCache = new ReadableStream({
+          async pull(controller) {
+            const { done, value } = await reader.read();
+            if (done) {
+              controller.close();
+              return;
+            }
+            loadedBytes += value.length;
+            if (onProgress) {
+              const loadedMB = loadedBytes / (1024 * 1024);
+              const percent = Math.min(99.9, (loadedBytes / totalBytes) * 100);
+              onProgress(percent, loadedMB, totalMB);
+            }
+            controller.enqueue(value);
+          },
+        });
       }
 
-      // Combine chunks and store in Cache API
-      const combined = new Uint8Array(loadedBytes);
-      let offset = 0;
-      for (const chunk of chunks) {
-        combined.set(chunk, offset);
-        offset += chunk.length;
-      }
-
-      const blob = new Blob([combined], { type: 'model/gltf-binary' });
-      const cacheResponse = new Response(blob, {
+      const cacheResponse = new Response(streamToCache, {
         headers: {
           'Content-Type': 'model/gltf-binary',
-          'Content-Length': blob.size.toString(),
+          'Content-Length': totalBytes.toString(),
           'Cache-Control': 'public, max-age=31536000, immutable',
         },
       });

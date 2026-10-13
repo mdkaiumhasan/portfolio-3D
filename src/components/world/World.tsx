@@ -19,8 +19,34 @@ const PerformanceProfiler: React.FC = () => {
   return null;
 };
 
+// WebGL Context Lost & Restored Safeguard - prevents mobile browser from crashing the tab
+const WebGLContextGuard: React.FC = () => {
+  const { gl } = useThree();
+
+  React.useEffect(() => {
+    const canvas = gl.domElement;
+    const handleContextLost = (e: Event) => {
+      e.preventDefault(); // Prevents Chrome/Safari from killing the tab
+      console.warn('WebGL context lost during resize/orientation - protected from crash');
+    };
+    const handleContextRestored = () => {
+      console.log('WebGL context successfully restored');
+    };
+
+    canvas.addEventListener('webglcontextlost', handleContextLost, false);
+    canvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+
+    return () => {
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+    };
+  }, [gl]);
+
+  return null;
+};
+
 export const World: React.FC = () => {
-  const { qualityTier } = useGameStore();
+  const { isMobile } = useGameStore();
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
@@ -28,21 +54,28 @@ export const World: React.FC = () => {
         shadows={false}
         camera={{ position: [0, 4, 46], fov: 50, near: 0.25, far: 180 }}
         gl={{
-          antialias: true,
-          powerPreference: 'high-performance',
+          antialias: !isMobile, // Disable expensive MSAA on mobile to prevent GPU OOM crash on resize
+          powerPreference: isMobile ? 'default' : 'high-performance',
           stencil: false,
           depth: true,
-          precision: 'highp',
+          precision: isMobile ? 'mediump' : 'highp',
           toneMapping: THREE.NeutralToneMapping,
           toneMappingExposure: 1.28,
         }}
-        dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 1.75) : 1}
+        dpr={
+          typeof window !== 'undefined'
+            ? isMobile
+              ? Math.min(window.devicePixelRatio, 1.25)
+              : Math.min(window.devicePixelRatio, 1.75)
+            : 1
+        }
         style={{
           width: '100%',
           height: '100%',
         }}
       >
         <PerformanceProfiler />
+        <WebGLContextGuard />
         {/* Luminous Atmospheric Post-Rain Horizon Mist & Soft Distance Fog */}
         <color attach="background" args={['#d4e1ec']} />
         <fog attach="fog" args={['#d4e1ec', 65, 150]} />

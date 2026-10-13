@@ -31,19 +31,25 @@ export const App: React.FC = () => {
     setIsIntroLoading
   } = useGameStore();
 
-  // Detect mobile viewport & orientation
+  // Detect mobile viewport & orientation with debounce to prevent resize cascades on mobile
   useEffect(() => {
+    let resizeTimer: any = null;
     const checkViewport = () => {
-      const mob = isMobileDevice();
-      const port = isPortraitOrientation();
-      setIsMobile(mob);
-      setIsPortrait(port);
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const mob = isMobileDevice();
+        const port = isPortraitOrientation();
+        const state = useGameStore.getState();
+        if (state.isMobile !== mob) setIsMobile(mob);
+        if (state.isPortrait !== port) setIsPortrait(port);
+      }, 60);
     };
 
     checkViewport();
-    window.addEventListener('resize', checkViewport);
-    window.addEventListener('orientationchange', checkViewport);
+    window.addEventListener('resize', checkViewport, { passive: true });
+    window.addEventListener('orientationchange', checkViewport, { passive: true });
     return () => {
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', checkViewport);
       window.removeEventListener('orientationchange', checkViewport);
     };
