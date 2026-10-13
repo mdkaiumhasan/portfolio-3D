@@ -7,11 +7,19 @@ import { SouthPerimeterGate, NorthStreetTerminus, CorridorClosureGate, EastPerim
 import { IronThrone } from './IronThrone';
 import { STATIONS, useGameStore } from '../../store/gameStore';
 
-export const RAIN_STREET_MODEL_URL =
-  import.meta.env.VITE_RAIN_STREET_MODEL_URL || '/models/after_the_rain_2k.glb';
+export const getRainStreetModelUrl = (): string => {
+  if (typeof window === 'undefined') return '/models/after_the_rain_mobile.glb';
+  const isMobile =
+    window.innerWidth <= 768 ||
+    (window.innerWidth <= 1024 && window.innerHeight <= 600) ||
+    'ontouchstart' in window;
+  return isMobile ? '/models/after_the_rain_mobile.glb' : '/models/after_the_rain_2k.glb';
+};
+
+export const RAIN_STREET_MODEL_URL = getRainStreetModelUrl();
 
 const MapModel: React.FC = () => {
-  const { scene } = useGLTF(RAIN_STREET_MODEL_URL);
+  const { scene } = useGLTF(RAIN_STREET_MODEL_URL, '/draco/');
   const { setWorldOctree } = useGameStore();
 
   useEffect(() => {
@@ -288,5 +296,5 @@ export const RainStreet: React.FC = () => {
   );
 };
 
-useGLTF.preload(RAIN_STREET_MODEL_URL);
+useGLTF.preload(RAIN_STREET_MODEL_URL, '/draco/');
 

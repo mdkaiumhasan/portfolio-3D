@@ -5,10 +5,19 @@ import * as THREE from 'three';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
-const THRONE_URL = '/models/throne_of_iron__stone.glb';
+export const getThroneModelUrl = (): string => {
+  if (typeof window === 'undefined') return '/models/throne_mobile.glb';
+  const isMobile =
+    window.innerWidth <= 768 ||
+    (window.innerWidth <= 1024 && window.innerHeight <= 600) ||
+    'ontouchstart' in window;
+  return isMobile ? '/models/throne_mobile.glb' : '/models/throne_of_iron__stone.glb';
+};
+
+const THRONE_URL = getThroneModelUrl();
 
 export const IronThrone: React.FC = () => {
-  const { scene } = useGLTF(THRONE_URL);
+  const { scene } = useGLTF(THRONE_URL, '/draco/');
   const isSeatedOnThrone = useGameStore((state) => state.isSeatedOnThrone);
   const audioEnabled = useGameStore((state) => state.audioEnabled);
 
@@ -184,4 +193,4 @@ export const IronThrone: React.FC = () => {
   );
 };
 
-useGLTF.preload(THRONE_URL);
+useGLTF.preload(THRONE_URL, '/draco/');

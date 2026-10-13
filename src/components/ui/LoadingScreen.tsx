@@ -52,7 +52,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     isModelInCache(RAIN_STREET_MODEL_URL).then((cached) => {
       if (!isMounted) return;
       if (cached) {
-        downloadStatsRef.current = { loadedMB: 89.5, totalMB: 89.5 };
+        const estMB = RAIN_STREET_MODEL_URL.includes('mobile') ? 8.0 : 89.5;
+        downloadStatsRef.current = { loadedMB: estMB, totalMB: estMB };
         targetPercentRef.current = 100;
         modelReadyRef.current = true;
       } else {
