@@ -5,7 +5,6 @@ import { ThirdPersonCamera } from '../camera/ThirdPersonCamera';
 import { Player } from '../player/Player';
 import { RainStreet } from './RainStreet';
 import { AnimatedSky } from './AnimatedSky';
-import { useGameStore } from '../../store/gameStore';
 
 const PerformanceProfiler: React.FC = () => {
   const { gl } = useThree();
@@ -45,30 +44,26 @@ const WebGLContextGuard: React.FC = () => {
   return null;
 };
 
-export const World: React.FC = () => {
-  const { isMobile } = useGameStore();
+const GL_CONFIG = {
+  antialias: false, // Prevents GPU VRAM exhaustion on mobile during resize
+  powerPreference: 'default' as const,
+  stencil: false,
+  depth: true,
+  precision: 'mediump' as const,
+  toneMapping: THREE.NeutralToneMapping,
+  toneMappingExposure: 1.28,
+};
 
+const DPR_RANGE: [number, number] = [1, 1.25];
+
+export const World: React.FC = React.memo(() => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
       <Canvas
         shadows={false}
         camera={{ position: [0, 4, 46], fov: 50, near: 0.25, far: 180 }}
-        gl={{
-          antialias: !isMobile, // Disable expensive MSAA on mobile to prevent GPU OOM crash on resize
-          powerPreference: isMobile ? 'default' : 'high-performance',
-          stencil: false,
-          depth: true,
-          precision: isMobile ? 'mediump' : 'highp',
-          toneMapping: THREE.NeutralToneMapping,
-          toneMappingExposure: 1.28,
-        }}
-        dpr={
-          typeof window !== 'undefined'
-            ? isMobile
-              ? Math.min(window.devicePixelRatio, 1.25)
-              : Math.min(window.devicePixelRatio, 1.75)
-            : 1
-        }
+        gl={GL_CONFIG}
+        dpr={DPR_RANGE}
         style={{
           width: '100%',
           height: '100%',
@@ -106,4 +101,4 @@ export const World: React.FC = () => {
       </Canvas>
     </div>
   );
-};
+});

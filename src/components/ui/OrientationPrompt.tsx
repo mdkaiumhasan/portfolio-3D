@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Smartphone, Maximize2, Layout, X } from 'lucide-react';
+import React from 'react';
+import { Smartphone, Layout, X } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
-import { requestLandscapeLock } from '../../utils/orientation';
 import { sound } from '../../systems/audio';
 
 export const OrientationPrompt: React.FC = () => {
@@ -14,9 +13,6 @@ export const OrientationPrompt: React.FC = () => {
     isIntroLoading
   } = useGameStore();
 
-  const [isRotating, setIsRotating] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-
   // Strictly block 3D world on mobile portrait - user MUST rotate to landscape or switch to 2D
   if (
     mode !== '3d' ||
@@ -26,16 +22,6 @@ export const OrientationPrompt: React.FC = () => {
   ) {
     return null;
   }
-
-  const handleAutoRotate = async () => {
-    if (audioEnabled) sound.playClick();
-    setIsRotating(true);
-    const success = await requestLandscapeLock();
-    setIsRotating(false);
-    if (!success) {
-      setShowHint(true);
-    }
-  };
 
   const handleSwitch2D = () => {
     if (audioEnabled) sound.playClick();
@@ -178,69 +164,59 @@ export const OrientationPrompt: React.FC = () => {
           3D Cyberpunk শহরটি সম্পূর্ণ Landscape ওয়াইডস্ক্রিনের জন্য অপ্টিমাইজড। গেমপ্যাড কন্ট্রোল ও ৩ডি এক্সপেরিয়েন্সের জন্য ফোনটি ঘুরিয়ে নিন।
         </p>
 
-        {/* Action Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-          {/* 1. Auto Rotate / Fullscreen */}
-          <button
-            onClick={handleAutoRotate}
-            disabled={isRotating}
-            className="btn-cyber btn-cyber-primary"
-            style={{
-              justifyContent: 'center',
-              padding: '12px 16px',
-              fontSize: '13px',
-              width: '100%',
-              borderRadius: '10px'
-            }}
-          >
-            <Maximize2 size={16} />
-            <span>{isRotating ? 'Rotating...' : 'Auto Rotate (Fullscreen)'}</span>
-          </button>
+        {/* Visual Rotation Instruction Badge */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '12px 18px',
+            width: '100%',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(37, 99, 235, 0.12) 100%)',
+            border: '1.5px solid rgba(56, 189, 248, 0.5)',
+            boxShadow: '0 0 20px rgba(56, 189, 248, 0.2)',
+            color: '#38bdf8',
+            fontFamily: 'var(--font-hud)',
+            fontSize: '13px',
+            fontWeight: 700,
+            letterSpacing: '0.5px',
+            marginBottom: '12px',
+            animation: 'pulseGlow 2.5s ease-in-out infinite'
+          }}
+        >
+          <span style={{ fontSize: '16px' }}>🔄</span>
+          <span>ফোনটি আড়াআড়ি ঘুরিয়ে ধরুন</span>
+        </div>
 
-          {/* 2. Switch to 2D Mode */}
+        {/* Action Button: Switch to 2D Mode */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
           <button
             onClick={handleSwitch2D}
             style={{
-              background: 'rgba(15, 23, 42, 0.65)',
-              border: '1px solid rgba(148, 163, 184, 0.25)',
+              background: 'rgba(15, 23, 42, 0.75)',
+              border: '1px solid rgba(148, 163, 184, 0.3)',
               color: '#e2e8f0',
-              padding: '11px 16px',
+              padding: '12px 16px',
               borderRadius: '10px',
-              fontSize: '12.5px',
+              fontSize: '13px',
               fontFamily: 'var(--font-hud)',
               fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '8px',
               transition: 'all 0.2s ease',
               width: '100%'
             }}
           >
-            <Layout size={14} color="#00e5ff" />
+            <Layout size={15} color="#00e5ff" />
             <span>Switch to 2D Mode (Vertical)</span>
           </button>
         </div>
 
-        {/* Rotation Hint if Auto-Rotate needs manual tilt */}
-        {showHint && (
-          <div
-            style={{
-              marginTop: '12px',
-              padding: '8px 12px',
-              background: 'rgba(56, 189, 248, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
-              borderRadius: '8px',
-              color: '#38bdf8',
-              fontSize: '11.5px',
-              fontFamily: 'var(--font-hud)',
-              animation: 'modalFadeIn 0.2s ease-out'
-            }}
-          >
-            📱 অনুগ্রহ করে আপনার ফোনটি আড়াআড়ি (Landscape) ঘুরিয়ে নিন
-          </div>
-        )}
       </div>
 
       {/* Animation Styles */}

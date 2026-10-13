@@ -5,7 +5,6 @@ import { useProgress } from '@react-three/drei';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 import { preloadAndCacheModel, isModelInCache } from '../../utils/assetCache';
-import { requestLandscapeLock } from '../../utils/orientation';
 import { RAIN_STREET_MODEL_URL } from '../world/RainStreet';
 import '../../styles/introLoader.css';
 
@@ -137,7 +136,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
 
   // Handle entering 3D Experience (with rain and ambient audio)
   const handleEnter3D = useCallback(() => {
-    requestLandscapeLock();
     setAudioEnabled(true);
     sound.startRain();
     sound.playChime();

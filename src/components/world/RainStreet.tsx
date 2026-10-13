@@ -40,10 +40,9 @@ const MapModel: React.FC = () => {
               const oldMat = m as THREE.MeshStandardMaterial;
               const matName = (oldMat.name || '').toLowerCase();
 
-              // High-quality texture anisotropy ensures razor-sharp textures even at acute road viewing angles
+              // Balanced texture anisotropy prevents mobile GPU VRAM overflow
               if (oldMat.map) {
-                oldMat.map.anisotropy = 8;
-                oldMat.map.needsUpdate = true;
+                oldMat.map.anisotropy = 1;
               }
 
               // 1. Alpha foliage: grass tufts, dry weeds, fallen autumn leaves, tree foliage
