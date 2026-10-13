@@ -220,3 +220,105 @@ h1, h2, h3, h4, h5, h6 {
 .pulse-indicator {
   animation: pulseGlow 2s infinite ease-in-out;
 }
+
+/* ==========================================================================
+   Mobile Responsiveness & Viewport Rotation Styles
+   ========================================================================== */
+
+/* Nav Pills Scrollable Container */
+.hud-nav-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.hud-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Desktop Only Elements */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Mobile Portrait & Compact Screens */
+@media (max-width: 768px) {
+  .hud-header {
+    top: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    gap: 8px !important;
+  }
+
+  .hud-brand {
+    padding: 6px 10px !important;
+    height: 38px !important;
+    gap: 8px !important;
+  }
+
+  .hud-brand-title {
+    font-size: 11.5px !important;
+  }
+
+  .hud-brand-subtitle {
+    font-size: 9px !important;
+  }
+
+  .hud-radar-mobile {
+    top: 60px !important;
+    right: 10px !important;
+    width: 82px !important;
+    height: 82px !important;
+    padding: 6px !important;
+  }
+
+  .hud-quests-mobile {
+    top: 60px !important;
+    left: 10px !important;
+    padding: 6px 10px !important;
+    font-size: 10px !important;
+  }
+
+  .btn-cyber {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
+/* Mobile Landscape (Short height devices like phones held sideways) */
+@media (max-height: 520px) {
+  .modal-overlay {
+    padding: 8px !important;
+  }
+
+  .modal-content {
+    max-height: 96vh !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-header {
+    padding: 10px 16px !important;
+  }
+
+  .modal-body {
+    padding: 12px 16px !important;
+  }
+
+  .hud-radar-mobile {
+    top: 50px !important;
+    right: 12px !important;
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .hud-quests-mobile {
+    top: 50px !important;
+    left: 12px !important;
+  }
+}

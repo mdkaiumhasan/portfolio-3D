@@ -44,6 +44,8 @@ interface GameState {
   // Mode
   mode: '3d' | '2d';
   setMode: (mode: '3d' | '2d') => void;
+  isIntroLoading: boolean;
+  setIsIntroLoading: (loading: boolean) => void;
 
   // Active UI Panel
   activePanel: ActivePanel;
@@ -86,9 +88,11 @@ interface GameState {
   isSeatedOnThrone: boolean;
   setIsSeatedOnThrone: (isSeated: boolean) => void;
 
-  // Mobile Controls
+  // Mobile Controls & Orientation
   isMobile: boolean;
   setIsMobile: (isMobile: boolean) => void;
+  isPortrait: boolean;
+  setIsPortrait: (isPortrait: boolean) => void;
   joystickVector: { x: number; y: number };
   setJoystickVector: (vec: { x: number; y: number }) => void;
   mobileActionSprint: boolean;
@@ -206,6 +210,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
     set({ mode });
   },
+  isIntroLoading: true,
+  setIsIntroLoading: (isIntroLoading) => set({ isIntroLoading }),
 
   activePanel: null,
   setActivePanel: (panel) => {
@@ -269,6 +275,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   isMobile: false,
   setIsMobile: (isMobile) => set({ isMobile }),
+  isPortrait: false,
+  setIsPortrait: (isPortrait) => set({ isPortrait }),
   joystickVector: { x: 0, y: 0 },
   setJoystickVector: (joystickVector) => set({ joystickVector }),
   mobileActionSprint: false,

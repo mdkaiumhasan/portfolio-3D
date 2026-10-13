@@ -164,6 +164,40 @@ export const SettingsModal: React.FC = () => {
               {mode === '3d' ? 'Switch to 2D' : 'Switch to 3D'}
             </button>
           </div>
+
+          {/* Intro Sequence Replay */}
+          <div
+            className="glass-panel"
+            style={{
+              padding: '16px 20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'rgba(15, 23, 42, 0.6)'
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>
+                Intro Sequence
+              </div>
+              <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                Replay global network routing & 3D world boot sequence
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                if (audioEnabled) sound.playClick();
+                setActivePanel(null);
+                setMode('3d');
+                useGameStore.getState().setIsIntroLoading(true);
+              }}
+              className="btn-cyber"
+            >
+              <Sparkles size={15} />
+              Replay Intro
+            </button>
+          </div>
         </div>
       </div>
     </div>

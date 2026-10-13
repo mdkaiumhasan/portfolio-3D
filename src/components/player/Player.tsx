@@ -77,11 +77,13 @@ export const Player: React.FC<PlayerProps> = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
 
+      const store = useGameStore.getState();
+      if (store.isIntroLoading || store.activePanel) return;
+
       keys.current[e.code] = true;
       keys.current[e.key.toLowerCase()] = true;
 
       // Dismount throne immediately on any action/movement key
-      const store = useGameStore.getState();
       if (store.isSeatedOnThrone) {
         store.setIsSeatedOnThrone(false);
       }
@@ -103,6 +105,9 @@ export const Player: React.FC<PlayerProps> = () => {
     const handleKeyUp = (e: KeyboardEvent) => {
       keys.current[e.code] = false;
       keys.current[e.key.toLowerCase()] = false;
+      if (useGameStore.getState().isIntroLoading) {
+        keys.current = {};
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -213,6 +218,14 @@ export const Player: React.FC<PlayerProps> = () => {
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
+
+    // Completely freeze player physics, movement, and audio while intro loading
+    if (useGameStore.getState().isIntroLoading) {
+      vel.current.set(0, 0, 0);
+      keys.current = {};
+      return;
+    }
+
     const clampedDelta = Math.min(delta, 0.1);
 
     // Calculate movement vector from keyboard & joystick

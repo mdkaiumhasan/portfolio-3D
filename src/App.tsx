@@ -13,25 +13,48 @@ import { ContactModal } from './components/ui/ContactModal';
 import { BlogModal } from './components/ui/BlogModal';
 import { SettingsModal } from './components/ui/SettingsModal';
 import { TutorialModal } from './components/ui/TutorialModal';
+import { OrientationPrompt } from './components/ui/OrientationPrompt';
 import { useGameStore } from './store/gameStore';
 import { sound } from './systems/audio';
+import { isMobileDevice, isPortraitOrientation, unlockOrientationLock } from './utils/orientation';
 import './styles/hud.css';
 
 export const App: React.FC = () => {
-  const { mode, activePanel, setActivePanel, setIsMobile, audioEnabled } = useGameStore();
-  const [isLoading, setIsLoading] = useState(mode === '3d');
+  const {
+    mode,
+    activePanel,
+    setActivePanel,
+    setIsMobile,
+    setIsPortrait,
+    audioEnabled,
+    isIntroLoading,
+    setIsIntroLoading
+  } = useGameStore();
 
-  // Detect mobile viewport
+  // Detect mobile viewport & orientation
   useEffect(() => {
-    const checkMobile = () => {
-      const isMob = window.innerWidth <= 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-      setIsMobile(isMob);
+    const checkViewport = () => {
+      const mob = isMobileDevice();
+      const port = isPortraitOrientation();
+      setIsMobile(mob);
+      setIsPortrait(port);
     };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [setIsMobile]);
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    window.addEventListener('orientationchange', checkViewport);
+    return () => {
+      window.removeEventListener('resize', checkViewport);
+      window.removeEventListener('orientationchange', checkViewport);
+    };
+  }, [setIsMobile, setIsPortrait]);
+
+  // Clean up orientation when leaving 3D mode
+  useEffect(() => {
+    if (mode === '2d') {
+      unlockOrientationLock();
+    }
+  }, [mode]);
 
   // Global escape key to close active modal
   useEffect(() => {
@@ -48,26 +71,31 @@ export const App: React.FC = () => {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      {/* Initial Loading Screen */}
-      {isLoading && (
-        <LoadingScreen onLoaded={() => setIsLoading(false)} />
-      )}
-
       {/* Primary Experience Mode */}
       {mode === '3d' ? (
-        <>
+        <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
           {/* 3D World Canvas */}
           <World />
 
-          {/* Heads Up Display & Overlays */}
-          <HUD />
-
-          {/* Mobile Touch Joystick & Action Buttons */}
-          <MobileControls />
-        </>
+          {/* Heads Up Display & Overlays - only active after loading is complete */}
+          {!isIntroLoading && (
+            <>
+              <HUD />
+              <MobileControls />
+            </>
+          )}
+        </div>
       ) : (
         /* 2D Modern Glassmorphic View */
         <Classic2DView />
+      )}
+
+      {/* Cyberpunk Mobile Orientation Prompt */}
+      <OrientationPrompt />
+
+      {/* Initial Loading Screen (Premium Intro Loader) - rendered on top of 3D scene */}
+      {isIntroLoading && mode === '3d' && (
+        <LoadingScreen onLoaded={() => setIsIntroLoading(false)} />
       )}
 
       {/* Active Interactive Modals */}

@@ -19,20 +19,21 @@ import {
 import { useGameStore, STATIONS, ActivePanel } from '../../store/gameStore';
 import { usePortfolioData, extractAuthorName, extractAuthorRole } from '../../hooks/usePortfolioData';
 import { sound } from '../../systems/audio';
+import { unlockOrientationLock } from '../../utils/orientation';
 
 const StreetRadar: React.FC = React.memo(() => {
   const playerPosition = useGameStore((state) => state.playerPosition);
 
   return (
     <div
-      className="glass-panel"
+      className="glass-panel hud-radar-mobile"
       style={{
         position: 'absolute',
-        top: '80px',
+        top: '76px',
         right: '16px',
-        width: '130px',
-        height: '130px',
-        padding: '10px',
+        width: '120px',
+        height: '120px',
+        padding: '8px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -120,7 +121,8 @@ export const HUD: React.FC = () => {
     setMode,
     discoveredStations,
     activeNotification,
-    setActiveEmote
+    setActiveEmote,
+    isMobile
   } = useGameStore();
 
   const { data } = usePortfolioData();
@@ -177,6 +179,7 @@ export const HUD: React.FC = () => {
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100, overflow: 'hidden' }}>
       {/* Top Header Navigation Bar */}
       <div
+        className="hud-header"
         style={{
           position: 'absolute',
           top: '16px',
@@ -191,7 +194,7 @@ export const HUD: React.FC = () => {
       >
         {/* Left: Brand / Name Badge */}
         <div
-          className="glass-panel"
+          className="glass-panel hud-brand"
           style={{
             padding: '8px 16px',
             display: 'flex',
@@ -199,7 +202,8 @@ export const HUD: React.FC = () => {
             gap: '12px',
             background: 'rgba(10, 14, 25, 0.9)',
             height: '46px',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            flexShrink: 0
           }}
         >
           <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -228,6 +232,7 @@ export const HUD: React.FC = () => {
 
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
             <div
+              className="hud-brand-title"
               style={{
                 fontFamily: 'var(--font-heading)',
                 fontSize: '13px',
@@ -243,6 +248,7 @@ export const HUD: React.FC = () => {
               {authorName}
             </div>
             <div
+              className="hud-brand-subtitle"
               style={{
                 fontFamily: 'var(--font-hud)',
                 fontSize: '10px',
@@ -261,15 +267,17 @@ export const HUD: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Fast Nav Bar (Hidden on small mobile, visible on desktop/tablet) */}
+        {/* Center: Fast Nav Bar (Horizontally scrollable on mobile) */}
         <div
-          className="glass-panel"
+          className="glass-panel hud-nav-scroll"
           style={{
             padding: '6px 10px',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'rgba(10, 14, 25, 0.85)'
+            background: 'rgba(10, 14, 25, 0.85)',
+            flexShrink: 1,
+            minWidth: 0
           }}
         >
           <button
@@ -338,7 +346,8 @@ export const HUD: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(10, 14, 25, 0.9)'
+            background: 'rgba(10, 14, 25, 0.9)',
+            flexShrink: 0
           }}
         >
           {/* Real-time FPS Monitor */}
@@ -368,7 +377,7 @@ export const HUD: React.FC = () => {
                 display: 'inline-block'
               }}
             />
-            {fps} FPS {renderStats ? `[${renderStats}]` : ''}
+            {fps} FPS {!isMobile && renderStats ? `[${renderStats}]` : ''}
           </div>
 
           {/* Audio */}
@@ -385,6 +394,9 @@ export const HUD: React.FC = () => {
           <button
             onClick={() => {
               if (audioEnabled) sound.playClick();
+              if (mode === '3d') {
+                unlockOrientationLock();
+              }
               setMode(mode === '3d' ? '2d' : '3d');
             }}
             className="btn-cyber"
@@ -422,10 +434,10 @@ export const HUD: React.FC = () => {
 
       {/* Top-Left: Station Discovery Progress */}
       <div
-        className="glass-panel"
+        className="glass-panel hud-quests-mobile"
         style={{
           position: 'absolute',
-          top: '80px',
+          top: '76px',
           left: '16px',
           padding: '8px 14px',
           display: 'flex',
@@ -529,44 +541,46 @@ export const HUD: React.FC = () => {
         </div>
       )}
 
-      {/* Bottom Left: Emotes Desktop Toolbar */}
-      <div
-        className="glass-panel"
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-          padding: '6px 10px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: 'rgba(10, 14, 25, 0.8)',
-          pointerEvents: 'auto'
-        }}
-      >
-        <span style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', marginRight: '4px', fontWeight: 700, letterSpacing: '0.6px' }}>Emotes:</span>
-        <button
-          onClick={() => setActiveEmote('salute')}
-          className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '11px' }}
+      {/* Bottom Left: Emotes Desktop Toolbar (Hidden on mobile touch devices) */}
+      {!isMobile && (
+        <div
+          className="glass-panel desktop-only"
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '20px',
+            padding: '6px 10px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(10, 14, 25, 0.8)',
+            pointerEvents: 'auto'
+          }}
         >
-          [1] Salute
-        </button>
-        <button
-          onClick={() => setActiveEmote('shakehand')}
-          className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '11px' }}
-        >
-          [2] Handshake
-        </button>
-        <button
-          onClick={() => setActiveEmote('cough')}
-          className="btn-cyber"
-          style={{ padding: '4px 8px', fontSize: '11px' }}
-        >
-          [3] Cough
-        </button>
-      </div>
+          <span style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', marginRight: '4px', fontWeight: 700, letterSpacing: '0.6px' }}>Emotes:</span>
+          <button
+            onClick={() => setActiveEmote('salute')}
+            className="btn-cyber"
+            style={{ padding: '4px 8px', fontSize: '11px' }}
+          >
+            [1] Salute
+          </button>
+          <button
+            onClick={() => setActiveEmote('shakehand')}
+            className="btn-cyber"
+            style={{ padding: '4px 8px', fontSize: '11px' }}
+          >
+            [2] Handshake
+          </button>
+          <button
+            onClick={() => setActiveEmote('cough')}
+            className="btn-cyber"
+            style={{ padding: '4px 8px', fontSize: '11px' }}
+          >
+            [3] Cough
+          </button>
+        </div>
+      )}
     </div>
   );
 };

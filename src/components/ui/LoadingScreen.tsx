@@ -1,53 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Volume2, VolumeX, Layout } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import gsap from 'gsap';
+import { Sparkles, Layout } from 'lucide-react';
 import { useProgress } from '@react-three/drei';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 import { preloadAndCacheModel, isModelInCache } from '../../utils/assetCache';
+import { requestLandscapeLock } from '../../utils/orientation';
 import { RAIN_STREET_MODEL_URL } from '../world/RainStreet';
+import '../../styles/introLoader.css';
 
 interface LoadingScreenProps {
   onLoaded: () => void;
 }
 
+const LOG_MILESTONES = [
+  { at: 0, msg: 'resolving host [mdkaiumhasan.dev] ... <b>ok</b>' },
+  { at: 20, msg: 'tcp handshake [tls 1.3 / quic] ... <b>established</b>' },
+  { at: 45, msg: 'streaming 3D cyberpunk scene ...' },
+  { at: 75, msg: 'compiling webgl2 shaders ... <b>done</b>' },
+  { at: 92, msg: 'calibrating rain & audio engine ... <b>ready</b>' },
+  { at: 100, msg: 'all systems operational // scene <b>ready</b>' },
+];
+
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
-  const { progress, active } = useProgress();
-  const [minTimerDone, setMinTimerDone] = useState(false);
-  const [modelReady, setModelReady] = useState(false);
-  const [downloadStats, setDownloadStats] = useState<{ percent: number; loadedMB: number; totalMB: number }>({
-    percent: 0,
-    loadedMB: 0,
-    totalMB: 89.5,
-  });
+  const { progress: threeProgress, active: threeActive } = useProgress();
   const { setMode, setAudioEnabled } = useGameStore();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMinTimerDone(true);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, []);
+  const [isReadyToEnter, setIsReadyToEnter] = useState(false);
 
-  // Preload and verify that the 90MB map model is 100% downloaded and stored in persistent cache
+  // References to DOM elements for direct zero-re-render progress updates
+  const rootRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const countRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const logRef = useRef<HTMLDivElement>(null);
+  const downloadStatusRef = useRef<HTMLDivElement>(null);
+  const enterWrapRef = useRef<HTMLDivElement>(null);
+
+  // Download & Animation tracking refs
+  const targetPercentRef = useRef(0);
+  const displayedPercentRef = useRef(0);
+  const downloadStatsRef = useRef({ loadedMB: 0, totalMB: 89.5 });
+  const modelReadyRef = useRef(false);
+  const isReadyRef = useRef(false);
+  const shownLogIndexRef = useRef(-1);
+  const animStateRef = useRef({ dead: false, exiting: false, raf: 0 });
+
+  // 1. Download tracking directly connected to CacheStorage & network stream
   useEffect(() => {
     let isMounted = true;
 
-    // Check if already in persistent local disk cache
     isModelInCache(RAIN_STREET_MODEL_URL).then((cached) => {
       if (!isMounted) return;
       if (cached) {
-        setDownloadStats({ percent: 100, loadedMB: 89.5, totalMB: 89.5 });
-        setModelReady(true);
+        downloadStatsRef.current = { loadedMB: 89.5, totalMB: 89.5 };
+        targetPercentRef.current = 100;
+        modelReadyRef.current = true;
       } else {
-        // Stream download with live byte tracker and save to cache
         preloadAndCacheModel(RAIN_STREET_MODEL_URL, (percent, loadedMB, totalMB) => {
           if (!isMounted) return;
-          setDownloadStats({ percent, loadedMB, totalMB });
+          downloadStatsRef.current = { loadedMB, totalMB };
+          targetPercentRef.current = Math.min(99.5, Math.max(targetPercentRef.current, percent));
           if (percent >= 100) {
-            setModelReady(true);
+            modelReadyRef.current = true;
           }
         }).then(() => {
-          if (isMounted) setModelReady(true);
+          if (isMounted) {
+            modelReadyRef.current = true;
+            targetPercentRef.current = 100;
+          }
+        }).catch((err) => {
+          console.warn('Preload fallback:', err);
+          if (isMounted) {
+            modelReadyRef.current = true;
+            targetPercentRef.current = 100;
+          }
         });
       }
     });
@@ -57,197 +84,415 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     };
   }, []);
 
-  const isReady = modelReady && (progress >= 90 || !active) && minTimerDone;
-
-  const displayProgress = isReady
-    ? 100
-    : modelReady
-    ? Math.max(90, Math.min(99, Math.round(progress)))
-    : Math.max(10, Math.min(99, Math.round(downloadStats.percent)));
-
-  const statusText = !isReady
-    ? downloadStats.loadedMB > 0 && !modelReady
-      ? `DOWNLOADING 3D WORLD: ${downloadStats.loadedMB.toFixed(1)} MB / ${downloadStats.totalMB.toFixed(1)} MB (${Math.round(downloadStats.percent)}%)...`
-      : `INITIALIZING 3D WORLD ASSETS (${displayProgress}%)...`
-    : 'SYSTEM READY // WORLD GENERATED';
-
-
-  const handleEnterWorld = (enableAudio: boolean) => {
-    if (enableAudio) {
-      setAudioEnabled(true);
-      sound.startRain();
-      sound.playChime();
+  // Sync Three.js asset compilation into progress
+  useEffect(() => {
+    if (modelReadyRef.current) {
+      if (!threeActive || threeProgress >= 90) {
+        targetPercentRef.current = 100;
+      } else {
+        targetPercentRef.current = Math.max(targetPercentRef.current, Math.min(99, threeProgress));
+      }
     }
-    onLoaded();
-  };
+  }, [threeProgress, threeActive]);
 
-  const handleSkipTo2D = () => {
+  // 2. Cinematic Shutter Exit Animation
+  const triggerExit = useCallback(() => {
+    const s = animStateRef.current;
+    if (s.dead || s.exiting) return;
+    s.exiting = true;
+
+    const root = rootRef.current;
+    if (!root) {
+      s.dead = true;
+      onLoaded();
+      return;
+    }
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stage = root.querySelector('.stage');
+    const seam = root.querySelector('#seam');
+    const panelTop = root.querySelector('.panel.pt');
+    const panelBottom = root.querySelector('.panel.pb');
+
+    const exitTl = gsap.timeline({
+      onComplete: () => {
+        s.dead = true;
+        cancelAnimationFrame(s.raf);
+        onLoaded();
+      },
+    });
+
+    exitTl.to(stage, { opacity: 0, duration: 0.28, ease: 'power1.in' }, 0);
+
+    if (reduce) {
+      exitTl.to([panelTop, panelBottom], { opacity: 0, duration: 0.4 }, 0.2);
+    } else {
+      exitTl
+        .fromTo(seam, { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.24, ease: 'power2.out' }, 0.08)
+        .to(seam, { opacity: 0, duration: 0.14 }, 0.42)
+        .to(panelTop, { yPercent: -100, duration: 0.55, ease: 'power3.inOut' }, 0.28)
+        .to(panelBottom, { yPercent: 100, duration: 0.55, ease: 'power3.inOut' }, 0.28);
+    }
+  }, [onLoaded]);
+
+  // Handle entering 3D Experience (with rain and ambient audio)
+  const handleEnter3D = useCallback(() => {
+    requestLandscapeLock();
+    setAudioEnabled(true);
+    sound.startRain();
+    sound.playChime();
+    triggerExit();
+  }, [setAudioEnabled, triggerExit]);
+
+  // Handle entering 2D Portfolio View
+  const handleEnter2D = useCallback(() => {
+    animStateRef.current.dead = true;
+    cancelAnimationFrame(animStateRef.current.raf);
     setMode('2d');
     onLoaded();
-  };
+  }, [setMode, onLoaded]);
+
+  // Stop all game movement and action keys from leaking to background while loading
+  useEffect(() => {
+    const blockKeyLeak = (e: KeyboardEvent) => {
+      if (['Space', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyE'].includes(e.code)) {
+        e.stopPropagation();
+      }
+    };
+    window.addEventListener('keydown', blockKeyLeak, true);
+    window.addEventListener('keyup', blockKeyLeak, true);
+    return () => {
+      window.removeEventListener('keydown', blockKeyLeak, true);
+      window.removeEventListener('keyup', blockKeyLeak, true);
+    };
+  }, []);
+
+  // Keyboard shortcut listener: Enter for 3D, '2' for 2D
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!isReadyToEnter) return;
+      if (e.code === 'Enter') {
+        e.preventDefault();
+        handleEnter3D();
+      } else if (e.key === '2') {
+        e.preventDefault();
+        handleEnter2D();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isReadyToEnter, handleEnter3D, handleEnter2D]);
+
+  // 3. Autonomous 60/120 FPS Network Mesh Canvas & Decoupled Progress Engine
+  useEffect(() => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const cx = cv.getContext('2d');
+    if (!cx) return;
+
+    const s = animStateRef.current;
+    s.dead = false;
+    s.exiting = false;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    let D = Math.min(window.devicePixelRatio || 1, 2);
+
+    interface Node {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+    }
+
+    interface Packet {
+      a: Node;
+      b: Node;
+      p: number;
+      hops: number;
+      sp: number;
+    }
+
+    let nodes: Node[] = [];
+    let packets: Packet[] = [];
+
+    const size = () => {
+      D = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      cv.width = W * D;
+      cv.height = H * D;
+      cx.setTransform(D, 0, 0, D, 0, 0);
+
+      const n = Math.round(Math.min(26, Math.max(16, (W * H) / 36000)));
+      const speed = reduce ? 0 : 0.2;
+      nodes = Array.from({ length: n }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed,
+        r: 1.2 + Math.random() * 1.5,
+      }));
+      packets = [];
+    };
+
+    size();
+    window.addEventListener('resize', size);
+
+    const near = (a: Node, L: number, skip?: Node) =>
+      nodes.filter((b) => b !== a && b !== skip && Math.hypot(a.x - b.x, a.y - b.y) < L);
+
+    // High-performance render loop: Mesh moves autonomously even if download is at 0%
+    const frame = () => {
+      if (s.dead || s.exiting) return;
+
+      // ---- 1. Progress Bar & Counter strictly bound to download ----
+      const target = targetPercentRef.current;
+      const current = displayedPercentRef.current;
+
+      // Smooth approach towards target download
+      let nextProgress = current + (target - current) * 0.085;
+      if (target >= 100 && nextProgress >= 99) {
+        nextProgress = 100;
+      }
+      displayedPercentRef.current = nextProgress;
+
+      const rounded = Math.min(100, Math.round(nextProgress));
+      const progFraction = Math.min(1, Math.max(0, nextProgress / 100));
+
+      // Direct DOM mutation for 60/120 FPS counter & bar
+      if (countRef.current) {
+        countRef.current.innerHTML = `${rounded}<small>%</small>`;
+      }
+      if (fillRef.current) {
+        fillRef.current.style.transform = `scaleX(${progFraction})`;
+      }
+
+      // Download status message
+      if (downloadStatusRef.current) {
+        const stats = downloadStatsRef.current;
+        if (rounded >= 100 && modelReadyRef.current) {
+          downloadStatusRef.current.innerHTML = `ALL 3D ASSETS SYNCHRONIZED // <b>READY</b>`;
+        } else if (stats.loadedMB > 0) {
+          downloadStatusRef.current.innerHTML = `STREAMING 3D ASSETS: <b>${stats.loadedMB.toFixed(1)}</b> / ${stats.totalMB.toFixed(1)} MB (${rounded}%)`;
+        } else {
+          downloadStatusRef.current.innerHTML = `CONNECTING TO ASSET CDN // INITIALIZING`;
+        }
+      }
+
+      // Terminal logs milestone updates
+      LOG_MILESTONES.forEach((m, idx) => {
+        if (nextProgress >= m.at && idx > shownLogIndexRef.current) {
+          shownLogIndexRef.current = idx;
+          if (logRef.current) {
+            const line = document.createElement('div');
+            line.innerHTML = `&gt; ${m.msg}`;
+            logRef.current.appendChild(line);
+            while (logRef.current.children.length > 4) {
+              logRef.current.firstChild?.remove();
+            }
+          }
+        }
+      });
+
+      // Ready state trigger once resource download reaches 100%
+      if (rounded >= 100 && target >= 100 && modelReadyRef.current && !isReadyRef.current) {
+        isReadyRef.current = true;
+        setIsReadyToEnter(true);
+      }
+
+      // ---- 2. Autonomous Network Canvas Rendering (Continuous 60FPS) ----
+      const L = Math.min(W, H) * 0.22 + 55;
+      const L2 = L * L;
+      cx.clearRect(0, 0, W, H);
+
+      // Node physics: Always drifting continuously
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      }
+
+      // Batched interconnecting lines (single GPU stroke)
+      cx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          if (Math.abs(dx) > L || Math.abs(dy) > L) continue;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < L2) {
+            cx.moveTo(a.x, a.y);
+            cx.lineTo(b.x, b.y);
+          }
+        }
+      }
+      cx.strokeStyle = 'rgba(74, 92, 168, 0.32)';
+      cx.lineWidth = 1;
+      cx.stroke();
+
+      // Batched node points (single GPU fill)
+      cx.fillStyle = '#4a5ca8';
+      cx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        cx.moveTo(n.x + n.r, n.y);
+        cx.arc(n.x, n.y, n.r, 0, 6.283);
+      }
+      cx.fill();
+
+      // Packets hopping: Continuously active regardless of download progress!
+      if (!reduce && packets.length < 18 && Math.random() < 0.055) {
+        const a = nodes[(Math.random() * nodes.length) | 0];
+        const nb = near(a, L);
+        if (nb.length) {
+          packets.push({
+            a,
+            b: nb[(Math.random() * nb.length) | 0],
+            p: 0,
+            hops: 0,
+            sp: 0.022 + Math.random() * 0.018,
+          });
+        }
+      }
+
+      cx.fillStyle = 'rgba(124, 243, 255, 0.95)';
+      packets = packets.filter((k) => {
+        k.p += k.sp;
+        if (k.p >= 1) {
+          const nb = near(k.b, L, k.a);
+          if (++k.hops > 3 || !nb.length) return false;
+          k.a = k.b;
+          k.b = nb[(Math.random() * nb.length) | 0];
+          k.p = 0;
+        }
+        const x = k.a.x + (k.b.x - k.a.x) * k.p;
+        const y = k.a.y + (k.b.y - k.a.y) * k.p;
+        cx.beginPath();
+        cx.arc(x, y, 2.5, 0, 6.283);
+        cx.fill();
+        return true;
+      });
+
+      s.raf = requestAnimationFrame(frame);
+    };
+
+    s.raf = requestAnimationFrame(frame);
+
+    return () => {
+      s.dead = true;
+      cancelAnimationFrame(s.raf);
+      window.removeEventListener('resize', size);
+    };
+  }, []);
+
+  const authorName = 'MD. Kaium Hasan';
+  const authorRole = 'Network Engineer & Software Developer';
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: '#07090e',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px',
-        overflow: 'hidden'
-      }}
+      ref={rootRef}
+      id="loader"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading portfolio"
     >
-      {/* Background Ambient Glow */}
-      <div
-        style={{
-          position: 'absolute',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(7, 9, 14, 0) 70%)',
-          pointerEvents: 'none'
-        }}
-      />
+      {/* Split Shutter Panels */}
+      <div className="panel pt" />
+      <div className="panel pb" />
+      <div id="seam" />
 
-      <div
-        className="glass-panel"
-        style={{
-          maxWidth: '520px',
-          width: '100%',
-          padding: '36px 30px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '20px',
-          textAlign: 'center',
-          background: 'rgba(13, 17, 27, 0.95)',
-          border: '1.5px solid rgba(56, 189, 248, 0.35)',
-          boxShadow: '0 0 40px rgba(14, 165, 233, 0.25)'
-        }}
-      >
-        {/* Pulsing Core Icon */}
-        <div
-          style={{
-            position: 'relative',
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(37, 99, 235, 0.35) 100%)',
-            border: '2px solid #38bdf8',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)'
-          }}
-        >
-          <Sparkles size={28} color="#38bdf8" />
+      {/* Main Interactive Stage */}
+      <div className="stage">
+        {/* Continuous Dynamic Network Mesh Canvas */}
+        <canvas ref={canvasRef} id="mesh" aria-hidden="true" />
+
+        {/* Tactical Corner Brackets */}
+        <div className="loader-bracket tl" />
+        <div className="loader-bracket tr" />
+        <div className="loader-bracket bl" />
+        <div className="loader-bracket br" />
+
+        {/* Top Telemetry HUD (Clean header without top-right buttons) */}
+        <div className="top-hud">
+          <div className="top-badge">
+            <span className="top-dot" />
+            <span>[KH-NET v2.4] // PING: 12MS // TLS 1.3</span>
+          </div>
         </div>
 
-        {/* Title */}
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: 900, color: '#ffffff', letterSpacing: '1px', margin: 0 }}>
-            MD. KAIUM HASAN
+        {/* Center Identity */}
+        <div className="stage-center">
+          {/* Hardware-accelerated CSS staggered reveal: cannot freeze */}
+          <h1 id="name" aria-label={authorName}>
+            {[...authorName].map((c, i) =>
+              c === ' ' ? (
+                <span key={`sp-${i}`} className="sp" />
+              ) : (
+                <span key={`ch-${i}`} className="ch">
+                  <i style={{ '--char-idx': i } as React.CSSProperties}>{c}</i>
+                </span>
+              )
+            )}
           </h1>
-          <p style={{ fontFamily: 'var(--font-hud)', fontSize: '13px', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.8px', marginTop: '4px', margin: 0 }}>
-            3D INTERACTIVE DEVELOPER PORTFOLIO
+
+          <p id="role">
+            {authorRole}
           </p>
-        </div>
 
-        {/* Progress Bar Container */}
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Connected Resource Progress Bar */}
+          <div id="bar">
+            <div ref={fillRef} id="fill" />
+          </div>
+
+          {/* Live Download Telemetry */}
+          <div ref={downloadStatusRef} id="download-status">
+            CONNECTING TO ASSET CDN // INITIALIZING
+          </div>
+
+          {/* Interactive Enter Controls: Enter 3D or Enter 2D */}
           <div
-            style={{
-              width: '100%',
-              height: '8px',
-              borderRadius: '4px',
-              background: 'rgba(30, 41, 59, 0.8)',
-              overflow: 'hidden',
-              position: 'relative'
-            }}
+            ref={enterWrapRef}
+            className={`enter-wrap ${isReadyToEnter ? 'visible' : ''}`}
           >
-            <div
-              style={{
-                width: `${displayProgress}%`,
-                height: '100%',
-                background: 'linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #00e5ff 100%)',
-                boxShadow: '0 0 12px #00e5ff',
-                transition: 'width 0.3s ease-out'
-              }}
-            />
-          </div>
+            <div className="enter-btns">
+              <button
+                type="button"
+                onClick={handleEnter3D}
+                className="btn-enter enter-3d"
+                autoFocus
+              >
+                <Sparkles size={16} />
+                <span>Enter 3D</span>
+              </button>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', fontFamily: 'var(--font-mono)' }}>
-            <span>{statusText}</span>
-            <span style={{ color: '#38bdf8', fontWeight: 700 }}>{displayProgress}%</span>
+              <button
+                type="button"
+                onClick={handleEnter2D}
+                className="btn-enter enter-2d"
+              >
+                <Layout size={15} />
+                <span>Enter 2D</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Ready Actions */}
-        {isReady ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', marginTop: '6px' }}>
-            <button
-              onClick={() => handleEnterWorld(true)}
-              className="btn-cyber btn-cyber-primary"
-              style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '14px' }}
-            >
-              <Volume2 size={18} />
-              Enter 3D World (With Sound)
-            </button>
-
-            <button
-              onClick={() => handleEnterWorld(false)}
-              className="btn-cyber"
-              style={{ width: '100%', justifyContent: 'center', padding: '10px', fontSize: '13px' }}
-            >
-              <VolumeX size={16} />
-              Enter Silently
-            </button>
-
-            <button
-              onClick={handleSkipTo2D}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#94a3b8',
-                fontSize: '12px',
-                cursor: 'pointer',
-                marginTop: '4px',
-                textDecoration: 'underline'
-              }}
-            >
-              Skip to 2D Classic Portfolio View
-            </button>
+        {/* Bottom HUD: Tabular Counter & Terminal Logs */}
+        <div className="hud">
+          <div ref={countRef} id="count">
+            0<small>%</small>
           </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%', marginTop: '4px' }}>
-            <p style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', margin: 0 }}>
-              Exploring real-time architectures, enterprise microservices & CCNA networking
-            </p>
-            <button
-              onClick={handleSkipTo2D}
-              style={{
-                background: 'rgba(14, 165, 233, 0.1)',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: '#38bdf8',
-                fontSize: '12px',
-                cursor: 'pointer',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Layout size={14} />
-              Instant Fast Load: Go Directly to 2D Portfolio
-            </button>
-          </div>
-        )}
+
+          <div ref={logRef} id="log" aria-live="polite" />
+        </div>
       </div>
     </div>
   );

@@ -8,33 +8,13 @@ import { AnimatedSky } from './AnimatedSky';
 import { useGameStore } from '../../store/gameStore';
 
 const PerformanceProfiler: React.FC = () => {
-  const { gl, scene } = useThree();
-  const logged = React.useRef(false);
+  const { gl } = useThree();
 
   useFrame(() => {
     (window as any).__THREE_STATS__ = {
       calls: gl.info.render.calls,
       triangles: gl.info.render.triangles,
     };
-
-    if (!logged.current && gl.info.render.calls > 0) {
-      logged.current = true;
-      const meshes: { name: string; tris: number }[] = [];
-      scene.traverse((obj) => {
-        if ((obj as THREE.Mesh).isMesh) {
-          const m = obj as THREE.Mesh;
-          const tris = m.geometry
-            ? m.geometry.index
-              ? m.geometry.index.count / 3
-              : (m.geometry.attributes.position?.count || 0) / 3
-            : 0;
-          meshes.push({ name: m.name || m.parent?.name || 'unnamed', tris: Math.round(tris) });
-        }
-      });
-      meshes.sort((a, b) => b.tris - a.tris);
-      (window as any).__TOP_MESHES__ = meshes.slice(0, 15);
-      console.log('TOP 15 MESHES BY TRIS:', meshes.slice(0, 15));
-    }
   });
   return null;
 };

@@ -28,13 +28,14 @@ export const ThirdPersonCamera: React.FC = () => {
     const canvas = gl.domElement;
 
     const onPointerDown = (e: PointerEvent) => {
+      if (useGameStore.getState().isIntroLoading) return;
       if ((e.target as HTMLElement).tagName !== 'CANVAS') return;
       isDragging.current = true;
       previousPointer.current = { x: e.clientX, y: e.clientY };
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging.current) return;
+      if (useGameStore.getState().isIntroLoading || !isDragging.current) return;
       userHasDragged.current = true;
       const deltaX = e.clientX - previousPointer.current.x;
       const deltaY = e.clientY - previousPointer.current.y;
@@ -49,6 +50,7 @@ export const ThirdPersonCamera: React.FC = () => {
     };
 
     const onWheel = (e: WheelEvent) => {
+      if (useGameStore.getState().isIntroLoading) return;
       // Step zoom that is immune to trackpad/free-spin wheel spikes
       const step = Math.sign(e.deltaY) * 0.4;
       targetDistance.current = THREE.MathUtils.clamp(
@@ -77,8 +79,10 @@ export const ThirdPersonCamera: React.FC = () => {
     // Smooth base distance zoom
     distance.current = THREE.MathUtils.lerp(distance.current, targetDistance.current, 10 * clampedDelta);
 
-    // If modal panel is open, zoom in slightly
-    const effDistance = activePanel ? distance.current * 0.75 : distance.current;
+    // Adjust distance on mobile portrait screens for natural character framing
+    const aspect = state.size.width / state.size.height;
+    const aspectMult = aspect < 1 ? Math.min(1.35, 1 / Math.max(0.72, aspect)) : 1.0;
+    const effDistance = (activePanel ? distance.current * 0.75 : distance.current) * aspectMult;
 
     // Follow target is around player chest / head height
     // Zero-latency 60fps direct read from playerRealtimePos

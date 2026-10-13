@@ -315,12 +315,21 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
   const [inRange, setInRange] = useState(false);
   const inRangeRef = useRef(false);
 
-  const { nearbyStation, setActivePanel, audioEnabled, activePanel } = useGameStore();
+  const { nearbyStation, setActivePanel, audioEnabled, activePanel, isIntroLoading } = useGameStore();
   const isNearby = nearbyStation?.id === station.id;
 
   const lightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
+    // When intro loading screen is active, completely skip range check and hide badge
+    if (isIntroLoading) {
+      if (inRangeRef.current) {
+        inRangeRef.current = false;
+        setInRange(false);
+      }
+      return;
+    }
+
     // Dynamic distance check: Only mount DOM badge within 16m to save CPU/GPU overhead
     const dist = Math.hypot(
       playerRealtimePos.x - station.position[0],
@@ -373,7 +382,7 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
       />
 
       {/* 5. Floating HTML Badge & Prompt - Attached right above tower head */}
-      {!activePanel && inRange && (
+      {!activePanel && !isIntroLoading && inRange && (
         <Html
           position={[0, 2.7, 0]}
           center
