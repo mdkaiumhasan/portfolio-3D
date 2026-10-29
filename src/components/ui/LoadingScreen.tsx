@@ -413,7 +413,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         <div className="top-hud">
           <div className="top-badge">
             <span className="top-dot" />
-            <span>[KH-NET v2.4] // PING: 12MS // TLS 1.3</span>
+            <span>[KH-ENGINE v2.0] // CRAFTED BY MD. KAIUM HASAN // TLS 1.3</span>
           </div>
         </div>
 

@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AdminApp from './AdminApp';
+import { printCreatorSignature } from '../utils/creatorSignature';
+
+printCreatorSignature('Admin Console');
 
 const container = document.getElementById('admin-root');
 if (container) {

@@ -1,4 +1,4 @@
-# 🌧️ MD. Kaium Hasan — 3D Interactive Cyberpunk Portfolio
+# 🌧️ MD. Kaium Hasan — Open-Source 3D + 2D Hybrid Portfolio Engine
 
 <div align="center">
 
@@ -6,138 +6,91 @@
 ![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.dot.js&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite_5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-443E38?style=for-the-badge&logo=redux&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-10b981.svg?style=for-the-badge)
 
-**An immersive, AAA-inspired 3D web experience built with React Three Fiber, WebGL, and TypeScript.**  
-Explore interactive stations, examine enterprise projects, inspect technical credentials, and discover the journey of a Fullstack Systems & Cisco Certified Network Support Engineer.
+**An AAA-inspired 3D Cyberpunk Interactive World + Ultra-Fast 2D Classic Portfolio — managed simultaneously from a single Unified Executive Admin Console (`/admin`).**
 
-[🌐 Live Portfolio Demo](#) • [💼 LinkedIn](https://linkedin.com/in/md-kaium-hasan) • [📧 Contact Me](mailto:mdkaiumhasan2005@gmail.com)
+[🌐 Live Portfolio](https://www.mdkaiumhasan.site) • [📘 **Complete Setup & Deploy Guide (`GUIDELINE.md`)**](GUIDELINE.md) • [📦 3D `.glb` Releases](https://github.com/mdkaiumhasan/portfolio-3D/releases/tag/1.0.0) • [💼 LinkedIn](https://www.linkedin.com/in/md-kaium-hasan-bb6009372/)
 
 </div>
 
 ---
 
-## 🌟 Overview
+## 🚀 Want to Use This Portfolio for Yourself?
 
-This portfolio is not just another flat website—it's a playable, photorealistic 3D world set in an atmospheric rainy street. Visitors take control of an animated 3D avatar in third-person view, interacting with futuristic holograms and physical pedestals to learn about my background, projects, enterprise architecture experience, and network engineering credentials.
-
----
-
-## ✨ Key Features
-
-### 🎮 AAA Third-Person Character Controller
-- **Dynamic Physics & Locomotion:** Smooth walking animations, sprint mode, responsive rotation, and camera following using dampening algorithms.
-- **Octree Collision Physics:** Real-time 3D spatial partitioning (`three/examples/jsm/math/Octree`) ensures the avatar collides accurately with buildings, curbs, and boundaries without clipping.
-- **Mobile Touch Joystick:** Custom on-screen virtual joystick and touch controls for seamless mobile and tablet navigation.
-
-### 🌧️ Immersive Cyberpunk / Rainy Environment
-- **Atmospheric Visuals:** GPU-accelerated rain particle system, volumetric fog, dynamic lighting, and Parisian PBR street shaders.
-- **3D Interactive Pedestals:** Glowing crystal pedestals and floating holographic interaction markers (`[E]` / Tap to Interact) that trigger modals when approached.
-- **Iron Throne of Mastery:** A sculpted throne pedestal highlighting core certifications and career achievements.
-
-### 🏛️ Interactive Stations
-1. **Projects Exhibition:** Enterprise platforms including food delivery networks, real-time tracking, IoT and microservices architectures.
-2. **Skills & Tech Vault:** Filterable breakdown across Frontend, Backend, Cloud/DevOps, and Cisco Networking.
-3. **Experience Matrix:** Timeline of production engineering roles, ISP operations, and scalable application deliveries.
-4. **Resume Vault:** Dual-track downloadable resumes (Fullstack Software Developer & Cisco CCNA Network Support Engineer).
-5. **Contact Center:** Instant contact modal with direct links and copyable communication channels.
-
-### ⚡ Accessibility & Performance (Hybrid Architecture)
-- **Classic 2D Mode:** Users on low-power devices can toggle into a sleek, glassmorphic 2D portfolio at any time with a single click.
-- **Graphics Settings:** Built-in settings modal with customizable graphics tiers (Low, Medium, High, Ultra), audio volume toggles, and performance monitors.
-- **Web Audio Engine:** Spatial footsteps, ambient rain atmosphere, and synthesized futuristic UI sound effects using the Web Audio API.
+👉 **Read the full step-by-step [GUIDELINE.md](GUIDELINE.md)**!  
+It walks you from cloning the repo, downloading all 6 `.glb` 3D models (`npm run download-models`), connecting free MongoDB Atlas + Cloudinary accounts, customizing **100% of your content from `/admin` without touching code**, and deploying live to **Vercel**.
 
 ---
 
-## 🛠️ Technology Stack
+## ✨ Key Highlights
 
-| Domain | Technologies |
-| :--- | :--- |
-| **Frontend Core** | React 18, TypeScript, Vite 5, HTML5 Semantic Markup |
-| **3D & Graphics** | Three.js, `@react-three/fiber`, `@react-three/drei`, GLTF/GLB PBR Pipelines |
-| **Physics & Math** | Three.js Octree Collision Engine, Vector3 spherical dampening |
-| **State Management** | Zustand (lightweight reactive global game & UI store) |
-| **Audio & SFX** | Web Audio API (Synthesized procedural SFX + Spatial Audio) |
-| **Icons & Styling** | Lucide React, Glassmorphism CSS, Canvas Confetti |
+### 🎮 1. Playable 3D Interactive Cyberpunk Street (`/`)
+- **Third-Person Character & Octree Physics:** Smooth locomotion (`WASD` / Arrows + `Shift` Sprint + `Space` Jump), real-time `Octree` collision detection, and character emotes.
+- **Desktop, Touchscreen Laptop & Mobile Optimized:** Dedicated lightweight mobile `.glb` models, multi-touch virtual joystick + independent right-thumb camera orbit, Sprint toggle, and WebGL auto-fallback.
+- **Single-Stream Asset Caching:** Streams `.glb` assets once with live MB progress, caches permanently in CacheStorage + Service Worker (`0 bytes` re-download on revisit), and hands off a zero-copy `blob:` URL to Three.js.
+- **Instant `Enter 2D` Switch:** Visitors on slow connections can switch to the 2D portfolio at `0%` without waiting for 3D assets.
 
----
+### ⚡ 2. Synchronized 2D Classic Portfolio (`/?view=2d` & `/classic.html`)
+- Sleek, responsive light/dark portfolio with category-filtered Projects, animated Skills bars, Experience Timeline, built-in Blog Article Reader, and Direct Contact Form.
+- Uses static compiled Tailwind CSS (`14.4 kB` minified) with zero render-blocking CDN scripts.
 
-## 🚀 Getting Started Locally
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) (version 18.0.0 or higher recommended)
-- [npm](https://www.npmjs.com/) or `pnpm` / `yarn`
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/mdkaiumhasan/3D-PORTFOLIO.git
-   cd 3D-PORTFOLIO
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment (Optional):**
-   ```bash
-   cp .env.example .env
-   ```
-   *(If `VITE_RAIN_STREET_MODEL_URL` is empty, the application automatically loads the local model in development).*
-
-4. **Start the local development server:**
-   ```bash
-   npm run dev
-   ```
-   Open your browser at `http://localhost:5173`.
-
-5. **Build for Production:**
-   ```bash
-   npm run build
-   ```
+### 🛡️ 3. Unified Executive Admin Console (`/admin`)
+- **Write Once, Sync Everywhere:** Every change to Hero/Bio, Availability status, Dual-Track Resumes, Certifications, Skills, Projects, Experience, Blogs, Activities, and Contact channels updates **both 2D and 3D views** in real time (`MongoDB` + `BroadcastChannel`).
+- **Direct Messages Inbox:** Visitor messages from both 2D and 3D contact forms save directly to MongoDB with read/unread filtering and 1-click email reply.
+- **Cloudinary Upload & Server-Side Gemini AI Blog Studio:** Upload auto-optimized images and generate technical articles securely via HMAC-SHA256 authenticated serverless endpoints (`/api/*`).
 
 ---
 
-## 🕹️ Controls Guide
+## ⚡ Quick Start (3 Minutes)
 
-| Input | Action |
-| :--- | :--- |
-| <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or Arrow Keys | Move Avatar |
-| <kbd>Shift</kbd> | Sprint / Run Faster |
-| <kbd>E</kbd> or <kbd>Enter</kbd> | Interact with Station / Open Panel |
-| <kbd>Esc</kbd> | Close Active Panel / Exit Modal |
-| 📱 **Virtual Joystick** | Move avatar on touch screens |
-| 🎛️ **HUD Buttons** | Quick-access to sound, settings, 2D mode, and camera reset |
+```bash
+# 1. Clone the repository
+git clone https://github.com/mdkaiumhasan/portfolio-3D.git
+cd portfolio-3D
 
----
+# 2. Install dependencies
+npm install
 
-## 📐 3D Asset Architecture & Model Download
+# 3. Verify or download all 6 3D (.glb) assets from GitHub Releases into public/models/
+npm run download-models
 
-To keep this open-source repository lightweight (~50MB) and strictly compliant with GitHub's 100MB file limit:
-- Avatar (`cool_man.glb`), pedestals (`Project_tower.glb`), and props are bundled directly inside the repository.
-- The high-fidelity 2K PBR environment model (**`after_the_rain_2k.glb`**, 220 MB) is hosted via GitHub Releases CDN with zero loss in visual quality.
+# 4. Configure environment variables (.env.local)
+cp .env.example .env.local
 
-### 📥 Direct 3D Model Download for Developers
-If you are running the project locally offline:
-1. Download the environment model: **[after_the_rain_2k.glb (Release v1.0.0)](https://github.com/mdkaiumhasan/portfolio-3D/releases/download/1.0.0/after_the_rain_2k.glb)**
-2. Place the downloaded file into your local project directory at `public/models/after_the_rain_2k.glb`
-3. In production deployments, the application automatically streams the asset directly from the GitHub Releases CDN URL with full CORS support.
+# 5. Launch local dev server (3D: /, 2D: /?view=2d, Admin: /admin)
+npm run dev
+```
+
+For MongoDB Atlas, Cloudinary, `/admin` customization, and Vercel deployment instructions, follow **[GUIDELINE.md](GUIDELINE.md)**.
 
 ---
 
-## 👤 Author
+## 📦 3D `.glb` Assets Included ([Release `v1.0.0`](https://github.com/mdkaiumhasan/portfolio-3D/releases/tag/1.0.0))
 
-**MD. Kaium Hasan**
-- **Website:** [www.mdkaiumhasan.site](https://www.mdkaiumhasan.site)
-- **LinkedIn:** [linkedin.com/in/md-kaium-hasan](https://linkedin.com/in/md-kaium-hasan)
+| Asset | File in `public/models/` | Purpose |
+| :--- | :--- | :--- |
+| Desktop Street Map | `after_the_rain_2k.glb` | 2K PBR Cyberpunk Rainy Street Environment |
+| Mobile Street Map | `after_the_rain_mobile.glb` | Mobile VRAM-Optimized Street Environment |
+| Character Avatar | `cool_man.glb` | Rigged Playable Third-Person Character |
+| Station Pedestal | `Project_tower.glb` | Interactive Holographic Station Tower |
+| Desktop Throne | `throne_of_iron__stone.glb` | Sculpted Iron Throne Centerpiece |
+| Mobile Throne | `throne_mobile.glb` | Mobile Optimized Iron Throne |
+
+---
+
+## 👤 Original Creator & Attribution
+
+**MD. Kaium Hasan** — *Network Engineer & Fullstack Developer*
+- **Portfolio:** [www.mdkaiumhasan.site](https://www.mdkaiumhasan.site)
 - **GitHub:** [@mdkaiumhasan](https://github.com/mdkaiumhasan)
+- **LinkedIn:** [linkedin.com/in/md-kaium-hasan-bb6009372](https://www.linkedin.com/in/md-kaium-hasan-bb6009372/)
 - **Email:** [mdkaiumhasan2005@gmail.com](mailto:mdkaiumhasan2005@gmail.com)
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE). Feel free to fork, learn from the code, and build your own 3D web experiences!
+Open-sourced under the **[MIT License](LICENSE)** — Copyright (c) 2026 **MD. Kaium Hasan**.  
+Feel free to fork, learn from the architecture, and build your own interactive 3D + 2D portfolio! If you find this engine useful, please give the repo a ⭐ on GitHub.

@@ -4,7 +4,10 @@ const TOKEN_PREFIX = 'agy_admin_v1';
 const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 function getSigningSecret() {
-  const secret = process.env.JWT_SECRET || process.env.ADMIN_PASSWORD;
+  const secret =
+    process.env.JWT_SECRET ||
+    process.env.ADMIN_TOKEN_SECRET ||
+    process.env.ADMIN_PASSWORD;
   if (!secret || secret.trim().length === 0) {
     return null;
   }

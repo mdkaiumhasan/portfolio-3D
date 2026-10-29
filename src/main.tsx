@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import { printCreatorSignature } from './utils/creatorSignature';
+
+printCreatorSignature('3D World');
 
 // Register Service Worker for permanent local disk caching of 3D models (0 bytes re-download on reload)
 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {

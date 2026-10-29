@@ -20,6 +20,7 @@ import { useGameStore, STATIONS, ActivePanel } from '../../store/gameStore';
 import { usePortfolioData, extractAuthorName, extractAuthorRole } from '../../hooks/usePortfolioData';
 import { sound } from '../../systems/audio';
 import { unlockOrientationLock } from '../../utils/orientation';
+import { CREATOR_SIGNATURE } from '../../utils/creatorSignature';
 
 const StreetRadar: React.FC = React.memo(() => {
   const playerPosition = useGameStore((state) => state.playerPosition);
@@ -602,6 +603,40 @@ export const HUD: React.FC = React.memo(() => {
             [3] Cough
           </button>
         </div>
+      )}
+
+      {/* Bottom Right: Subtle Creator & Open-Source Engine Signature (Desktop only so touch zones stay unobstructed) */}
+      {!isMobile && (
+        <a
+          href={CREATOR_SIGNATURE.repoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="glass-panel desktop-only"
+          title="Open-Source 3D/2D Hybrid Portfolio Engine by MD. Kaium Hasan"
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            right: '20px',
+            padding: '6px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(10, 14, 25, 0.72)',
+            border: '1px solid rgba(56, 189, 248, 0.2)',
+            borderRadius: '8px',
+            textDecoration: 'none',
+            fontFamily: 'var(--font-hud)',
+            fontSize: '10.5px',
+            fontWeight: 600,
+            letterSpacing: '0.5px',
+            color: '#94a3b8',
+            pointerEvents: 'auto',
+            transition: 'border-color 0.2s ease, color 0.2s ease'
+          }}
+        >
+          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#00e5ff', boxShadow: '0 0 6px #00e5ff' }} />
+          <span>Engine by <strong style={{ color: '#e2e8f0' }}>{CREATOR_SIGNATURE.author}</strong></span>
+        </a>
       )}
     </div>
   );

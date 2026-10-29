@@ -1,10 +1,17 @@
 {
   "name": "md-kaium-hasan-3d-portfolio",
-  "private": true,
-  "version": "1.0.0",
+  "private": false,
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": "MD. Kaium Hasan <mdkaiumhasan2005@gmail.com> (https://www.mdkaiumhasan.site)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdkaiumhasan/portfolio-3D.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "download-models": "node scripts/download-models.mjs",
     "build:classic-css": "tailwindcss -i ./src/styles/classic-tailwind-entry.css -o ./public/classic-tailwind.css --content ./public/classic.html --minify",
     "build": "npm run build:classic-css && tsc && vite build",
     "preview": "vite preview"

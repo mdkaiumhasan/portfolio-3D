@@ -3,18 +3,30 @@ import { isMobileDevice } from './orientation';
 /**
  * Lightweight 3D asset URL resolvers kept free of Three.js imports
  * so LoadingScreen and 2D views never pull Three.js into the initial bundle.
+ *
+ * Supports optional `VITE_MODEL_BASE_URL` (e.g. a GitHub Release / Cloudflare R2 / S3 CDN base URL)
+ * while defaulting to local `/models` inside `public/models/`.
  */
+const MODEL_BASE_URL = (import.meta.env.VITE_MODEL_BASE_URL || '/models').replace(/\/+$/, '');
+
 export const getRainStreetModelUrl = (): string => {
-  if (typeof window === 'undefined') return '/models/after_the_rain_mobile.glb';
+  if (typeof window === 'undefined') return `${MODEL_BASE_URL}/after_the_rain_mobile.glb`;
   return isMobileDevice()
-    ? '/models/after_the_rain_mobile.glb'
-    : '/models/after_the_rain_2k.glb';
+    ? `${MODEL_BASE_URL}/after_the_rain_mobile.glb`
+    : `${MODEL_BASE_URL}/after_the_rain_2k.glb`;
 };
 
 export const getThroneModelUrl = (): string => {
-  if (typeof window === 'undefined') return '/models/throne_mobile.glb';
+  if (typeof window === 'undefined') return `${MODEL_BASE_URL}/throne_mobile.glb`;
   return isMobileDevice()
-    ? '/models/throne_mobile.glb'
-    : '/models/throne_of_iron__stone.glb';
+    ? `${MODEL_BASE_URL}/throne_mobile.glb`
+    : `${MODEL_BASE_URL}/throne_of_iron__stone.glb`;
 };
 
+export const getPlayerModelUrl = (): string => {
+  return `${MODEL_BASE_URL}/cool_man.glb?v=v10_clean_idle_grounded`;
+};
+
+export const getStationTowerModelUrl = (): string => {
+  return `${MODEL_BASE_URL}/Project_tower.glb`;
+};

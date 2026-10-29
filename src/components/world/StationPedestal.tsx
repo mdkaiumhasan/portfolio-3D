@@ -5,8 +5,9 @@ import * as THREE from 'three';
 import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { StationInfo, useGameStore, playerRealtimePos } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { getStationTowerModelUrl } from '../../utils/modelUrl';
 
-const PROJECT_TOWER_URL = '/models/Project_tower.glb';
+const PROJECT_TOWER_URL = getStationTowerModelUrl();
 
 interface StationTowerModelProps {
   url: string;

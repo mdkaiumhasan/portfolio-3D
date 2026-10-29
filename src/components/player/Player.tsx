@@ -12,12 +12,13 @@ import {
 } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 import { preparePlayerAnimations } from './characterAnimations';
+import { getPlayerModelUrl } from '../../utils/modelUrl';
 
 interface PlayerProps {
   cameraRef?: React.RefObject<THREE.Camera>;
 }
 
-const PLAYER_MODEL_URL = '/models/cool_man.glb?v=v10_clean_idle_grounded';
+const PLAYER_MODEL_URL = getPlayerModelUrl();
 
 // Module-scoped scratch vectors for zero-GC 60/120fps physics loop
 const _camForward = new THREE.Vector3();

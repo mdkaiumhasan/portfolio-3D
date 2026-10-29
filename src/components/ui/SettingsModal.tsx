@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Volume2, VolumeX, Monitor, Sliders, Sparkles, Layout } from 'lucide-react';
 import { useGameStore, QualityTier } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { CREATOR_SIGNATURE } from '../../utils/creatorSignature';
 
 export const SettingsModal: React.FC = () => {
   const setActivePanel = useGameStore((s) => s.setActivePanel);
@@ -201,6 +202,39 @@ export const SettingsModal: React.FC = () => {
               <Sparkles size={15} />
               Replay Intro
             </button>
+          </div>
+
+          {/* Creator Attribution Footer */}
+          <div
+            style={{
+              paddingTop: '12px',
+              borderTop: '1px solid rgba(148, 163, 184, 0.14)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '8px',
+              fontSize: '11.5px',
+              color: '#94a3b8'
+            }}
+          >
+            <span>
+              ⚡ 3D/2D Engine Crafted by <strong style={{ color: '#f8fafc' }}>{CREATOR_SIGNATURE.author}</strong>
+            </span>
+            <a
+              href={CREATOR_SIGNATURE.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#38bdf8',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-hud)',
+                fontWeight: 700,
+                letterSpacing: '0.4px'
+              }}
+            >
+              Open Source (MIT) ↗
+            </a>
           </div>
         </div>
       </div>

@@ -231,6 +231,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <LogOut className="w-4 h-4" />
             </button>
           </div>
+
+          <a
+            href="https://github.com/mdkaiumhasan/portfolio-3D"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2.5 px-2 flex items-center justify-between text-[10px] font-medium text-slate-500 hover:text-emerald-400 transition-colors"
+          >
+            <span>⚡ Engine by MD. Kaium Hasan</span>
+            <span className="font-mono text-[9.5px] opacity-80">MIT v2.0</span>
+          </a>
         </div>
       </aside>
     </>
