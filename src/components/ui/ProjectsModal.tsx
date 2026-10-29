@@ -105,13 +105,18 @@ export const ProjectsModal: React.FC = () => {
 
         {/* Category Tabs */}
         <div
+          className="category-tabs"
           style={{
             padding: '12px 24px',
             background: 'rgba(15, 23, 42, 0.4)',
             borderBottom: '1px solid rgba(56, 189, 248, 0.15)',
             display: 'flex',
+            alignItems: 'center',
             gap: '8px',
-            overflowX: 'auto'
+            flexShrink: 0,
+            overflowX: 'auto',
+            overflowY: 'hidden',
+            WebkitOverflowScrolling: 'touch'
           }}
         >
           {categories.map((cat) => (
@@ -124,9 +129,13 @@ export const ProjectsModal: React.FC = () => {
                   : 'rgba(30, 41, 59, 0.5)',
                 border: `1px solid ${selectedCategory === cat ? '#ff007f' : 'rgba(148, 163, 184, 0.2)'}`,
                 color: selectedCategory === cat ? '#ffffff' : '#94a3b8',
-                padding: '6px 14px',
+                padding: '7px 16px',
                 borderRadius: '20px',
                 fontSize: '13px',
+                lineHeight: 1.3,
+                height: 'auto',
+                minHeight: '32px',
+                flexShrink: 0,
                 fontFamily: 'var(--font-hud)',
                 fontWeight: 700,
                 letterSpacing: '0.4px',
