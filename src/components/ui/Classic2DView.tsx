@@ -2,11 +2,21 @@ import React, { useEffect } from 'react';
 import { useGameStore } from '../../store/gameStore';
 
 export const Classic2DView: React.FC = () => {
-  const { setMode } = useGameStore();
+  const setMode = useGameStore((s) => s.setMode);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (event.origin && event.origin !== window.location.origin) return;
       if (event.data?.type === 'ENTER_3D') {
+        try {
+          const url = new URL(window.location.href);
+          if (url.searchParams.has('view')) {
+            url.searchParams.delete('view');
+            window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+          }
+        } catch {
+          // Ignore URL history update errors
+        }
         setMode('3d');
       }
     };
@@ -15,7 +25,7 @@ export const Classic2DView: React.FC = () => {
   }, [setMode]);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#0b0f17' }}>
+    <div style={{ width: '100vw', height: '100dvh', position: 'relative', overflow: 'hidden', background: '#0b0f17' }}>
       <iframe
         src="/classic.html"
         title="Classic 2D Portfolio - MD. Kaium Hasan"

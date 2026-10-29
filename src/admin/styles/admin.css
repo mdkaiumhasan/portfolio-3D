@@ -1,4 +1,7 @@
 /* Executive Admin Console Design System */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 *, *::before, *::after {
   box-sizing: border-box;

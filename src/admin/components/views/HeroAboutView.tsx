@@ -2,15 +2,16 @@ import React, { useState, useRef } from 'react';
 import {
   UserCheck,
   Upload,
-  Link as LinkIcon,
   Sparkles,
   ExternalLink,
-  CheckCircle2,
   FileText,
-  Image as ImageIcon
+  Image as ImageIcon,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 import { PortfolioData } from '../../types';
 import { uploadImageToCloudinary } from '../../api';
+import { sanitizeHtml } from '../../../utils/sanitize';
 
 interface HeroAboutViewProps {
   data: PortfolioData;
@@ -53,25 +54,44 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
     }
   };
 
-  // Render preview of heading
-  const previewHeading = (data.home_heading || '')
-    .replace(/{{ACCENT}}(.*?){\/ACCENT}/g, '<span class="text-emerald-400 font-extrabold">$1</span>')
-    .replace(/<span class="text-accent">(.*?)<\/span>/g, '<span class="text-emerald-400 font-extrabold">$1</span>');
+  const rawPreviewHeading = (data.home_heading || '')
+    .replace(/\{\{ACCENT\}\}(.*?)\{\{\/ACCENT\}\}/gi, '<span class="text-emerald-400 font-extrabold">$1</span>')
+    .replace(/<span class="text-accent">(.*?)<\/span>/gi, '<span class="text-emerald-400 font-extrabold">$1</span>');
+  const previewHeading = sanitizeHtml(rawPreviewHeading);
+  const isAvailable = data.available_for_work !== false;
 
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl">
       {/* Home Hero Section */}
       <div className="admin-card p-6 sm:p-8 space-y-6">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
           <div>
             <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-emerald-400" />
-              <span>Hero Headline & Tagline</span>
+              <span>Hero Headline, Availability & Portrait</span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Configures the main intro greeting displayed on both 3D HUD & 2D Classic portfolio.
+              Updates the Intro Loader, 3D HUD, 3D About Modal, and 2D Classic Hero simultaneously.
             </p>
           </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              onUpdate((prev) => ({
+                ...prev,
+                available_for_work: prev.available_for_work === false
+              }))
+            }
+            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer self-start sm:self-auto ${
+              isAvailable
+                ? 'bg-emerald-500/15 border-emerald-500/35 text-emerald-300'
+                : 'bg-rose-500/15 border-rose-500/35 text-rose-300'
+            }`}
+          >
+            {isAvailable ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+            <span>{isAvailable ? 'Available for Work' : 'Currently Engaged'}</span>
+          </button>
         </div>
 
         {/* Live Preview Box */}
@@ -113,7 +133,7 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
             className="admin-input font-medium"
           />
           <span className="text-[11px] text-slate-500 mt-1 block">
-            Tip: Use <code className="text-emerald-400 font-mono">{'{{ACCENT}}Text{{/ACCENT}}'}</code> to highlight words in neon emerald.
+            Tip: Use <code className="text-emerald-400 font-mono">{'{{ACCENT}}Text{{/ACCENT}}'}</code> to highlight your name across 2D & 3D.
           </span>
         </div>
 
@@ -143,7 +163,7 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
           {/* CV Link */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-              CV / Resume Download Link (Hero Section)
+              Primary CV / Resume URL (Hero Section)
             </label>
             <div className="relative">
               <input
@@ -234,16 +254,16 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
         </div>
       </div>
 
-      {/* About Me Bio Section */}
+      {/* About Me Bio & Resume Vault Section */}
       <div className="admin-card p-6 sm:p-8 space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
           <div>
             <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               <UserCheck className="w-5 h-5 text-cyan-400" />
-              <span>About Me Bio & Details</span>
+              <span>About Me Bio & Resume Vault Tracks</span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              The detailed commercial experience narrative displayed in the About Modal.
+              Powers both the 2D About section and the 3D About & Resume Vault modals.
             </p>
           </div>
         </div>
@@ -278,31 +298,72 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
           />
         </div>
 
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-            CV Download Link (About Section)
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              value={data.about_cv_link || ''}
-              onChange={(e) =>
-                onUpdate((prev) => ({ ...prev, about_cv_link: e.target.value }))
-              }
-              placeholder="https://..."
-              className="admin-input pr-10 font-mono text-xs"
-            />
-            {data.about_cv_link && data.about_cv_link !== '#' && (
-              <a
-                href={data.about_cv_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-cyan-400"
-                title="Open Resume Link"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-4">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-purple-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+              CV & 3D Dual-Track Resume Links
+            </h3>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+              Main / About Section CV Link
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={data.about_cv_link || ''}
+                onChange={(e) =>
+                  onUpdate((prev) => ({ ...prev, about_cv_link: e.target.value }))
+                }
+                placeholder="https://..."
+                className="admin-input pr-10 font-mono text-xs"
+              />
+              {data.about_cv_link && data.about_cv_link !== '#' && (
+                <a
+                  href={data.about_cv_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-cyan-400"
+                  title="Open Resume Link"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-purple-300 mb-1.5">
+                3D Software Track PDF (Optional)
+              </label>
+              <input
+                type="text"
+                value={data.software_cv_link || ''}
+                onChange={(e) =>
+                  onUpdate((prev) => ({ ...prev, software_cv_link: e.target.value }))
+                }
+                placeholder="Defaults to Main CV Link if left blank"
+                className="admin-input font-mono text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-amber-300 mb-1.5">
+                3D Network & CCNA Track PDF (Optional)
+              </label>
+              <input
+                type="text"
+                value={data.network_cv_link || ''}
+                onChange={(e) =>
+                  onUpdate((prev) => ({ ...prev, network_cv_link: e.target.value }))
+                }
+                placeholder="Defaults to Main CV Link if left blank"
+                className="admin-input font-mono text-xs"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -65,15 +65,23 @@ export interface PortfolioData {
   about_info_heading?: string;
   about_info_text?: string;
   about_cv_link?: string;
+  software_cv_link?: string;
+  network_cv_link?: string;
   stats?: StatItem[];
   skills?: SkillItem[];
   skill_categories?: string[];
   activities?: ActivityItem[];
   projects?: ProjectItem[];
   project_categories?: string[];
+  portfolio_cv_link?: string;
+  portfolio__showConstructionMessage?: boolean;
   experiences?: ExperienceItem[];
+  timeline_cv_link?: string;
+  timeline__showConstructionMessage?: boolean;
   posts?: PostItem[];
   blog_categories?: string[];
+  blogs_cv_link?: string;
+  blogs__showConstructionMessage?: boolean;
   contact_info_heading?: string;
   contact_info_text?: string;
   contact_cv_link?: string;
@@ -392,8 +400,93 @@ router ospf 1
   ]
 };
 
-// In-memory cache to prevent refetch flickering
+// In-memory cache + in-flight deduplication + cross-tab BroadcastChannel sync
 let cachedData: PortfolioData | null = null;
+let inflightPromise: Promise<PortfolioData> | null = null;
+const subscribers = new Set<(data: PortfolioData) => void>();
+
+function mergeWithFallback(raw: Partial<PortfolioData> | null | undefined): PortfolioData {
+  if (!raw || typeof raw !== 'object') return FALLBACK_DATA;
+  return {
+    ...FALLBACK_DATA,
+    ...raw,
+    stats: Array.isArray(raw.stats) ? raw.stats : FALLBACK_DATA.stats,
+    skills: Array.isArray(raw.skills) ? raw.skills : FALLBACK_DATA.skills,
+    skill_categories: Array.isArray(raw.skill_categories) && raw.skill_categories.length > 0
+      ? raw.skill_categories
+      : FALLBACK_DATA.skill_categories,
+    activities: Array.isArray(raw.activities) ? raw.activities : FALLBACK_DATA.activities,
+    projects: Array.isArray(raw.projects) ? raw.projects : FALLBACK_DATA.projects,
+    project_categories: Array.isArray(raw.project_categories) && raw.project_categories.length > 0
+      ? raw.project_categories
+      : FALLBACK_DATA.project_categories,
+    experiences: Array.isArray(raw.experiences) ? raw.experiences : FALLBACK_DATA.experiences,
+    posts: Array.isArray(raw.posts) ? raw.posts : FALLBACK_DATA.posts,
+    blog_categories: Array.isArray(raw.blog_categories) && raw.blog_categories.length > 0
+      ? raw.blog_categories
+      : FALLBACK_DATA.blog_categories,
+    contactDetails: Array.isArray(raw.contactDetails) ? raw.contactDetails : FALLBACK_DATA.contactDetails,
+    socialLinks: Array.isArray(raw.socialLinks) ? raw.socialLinks : FALLBACK_DATA.socialLinks
+  };
+}
+
+function notifySubscribers(next: PortfolioData) {
+  cachedData = next;
+  subscribers.forEach((fn) => fn(next));
+}
+
+export function fetchPortfolioDataOnce(forceRefresh = false): Promise<PortfolioData> {
+  if (!forceRefresh && cachedData) {
+    return Promise.resolve(cachedData);
+  }
+  if (!forceRefresh && inflightPromise) {
+    return inflightPromise;
+  }
+
+  inflightPromise = fetch('/api/portfolio', { cache: 'no-store' })
+    .then((res) => {
+      if (!res.ok) throw new Error(`API status ${res.status}`);
+      return res.json();
+    })
+    .then((fetchedData) => {
+      const merged = mergeWithFallback(fetchedData);
+      notifySubscribers(merged);
+      return merged;
+    })
+    .catch(async (err) => {
+      console.warn('Using static/local fallback data for portfolio:', err);
+      try {
+        const res = await fetch('/data/legacy_data.json');
+        if (res.ok) {
+          const staticData = await res.json();
+          const merged = mergeWithFallback(staticData);
+          notifySubscribers(merged);
+          return merged;
+        }
+      } catch {
+        // Ignore static fallback read errors
+      }
+      const fallback = cachedData || FALLBACK_DATA;
+      notifySubscribers(fallback);
+      return fallback;
+    })
+    .finally(() => {
+      inflightPromise = null;
+    });
+
+  return inflightPromise;
+}
+
+if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+  try {
+    const channel = new BroadcastChannel('portfolio_data_updated');
+    channel.onmessage = () => {
+      fetchPortfolioDataOnce(true).catch(() => {});
+    };
+  } catch {
+    // Ignore restricted BroadcastChannel environments
+  }
+}
 
 export function usePortfolioData() {
   const [data, setData] = useState<PortfolioData>(cachedData || FALLBACK_DATA);
@@ -401,61 +494,26 @@ export function usePortfolioData() {
 
   useEffect(() => {
     let mounted = true;
+    const listener = (updated: PortfolioData) => {
+      if (mounted) {
+        setData(updated);
+        setLoading(false);
+      }
+    };
+    subscribers.add(listener);
 
-    // Fetch from live /api/portfolio
-    fetch('/api/portfolio')
-      .then((res) => {
-        if (!res.ok) throw new Error('API fetch failed');
-        return res.json();
-      })
-      .then((fetchedData) => {
-        if (mounted && fetchedData && typeof fetchedData === 'object') {
-          // Merge with fallback to ensure all keys exist
-          const merged: PortfolioData = {
-            ...FALLBACK_DATA,
-            ...fetchedData,
-            // Ensure projects has at least the items if empty
-            projects: (fetchedData.projects && fetchedData.projects.length > 0)
-              ? fetchedData.projects
-              : FALLBACK_DATA.projects,
-            posts: (fetchedData.posts && fetchedData.posts.length > 0)
-              ? fetchedData.posts
-              : FALLBACK_DATA.posts
-          };
-          cachedData = merged;
-          setData(merged);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.warn('Using cached/local fallback data for portfolio:', err);
-        // Try to fetch static public/data/legacy_data.json
-        fetch('/data/legacy_data.json')
-          .then((res) => res.ok ? res.json() : null)
-          .then((staticData) => {
-            if (mounted && staticData) {
-              const merged: PortfolioData = {
-                ...FALLBACK_DATA,
-                ...staticData,
-                projects: (staticData.projects && staticData.projects.length > 0)
-                  ? staticData.projects
-                  : FALLBACK_DATA.projects,
-                posts: (staticData.posts && staticData.posts.length > 0)
-                  ? staticData.posts
-                  : FALLBACK_DATA.posts
-              };
-              cachedData = merged;
-              setData(merged);
-            }
-          })
-          .catch(() => {})
-          .finally(() => {
-            if (mounted) setLoading(false);
-          });
+    if (!cachedData) {
+      fetchPortfolioDataOnce().finally(() => {
+        if (mounted) setLoading(false);
       });
+    } else {
+      setData(cachedData);
+      setLoading(false);
+    }
 
     return () => {
       mounted = false;
+      subscribers.delete(listener);
     };
   }, []);
 

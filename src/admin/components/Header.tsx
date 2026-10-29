@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#090d16]/90 border-b border-slate-800/80 backdrop-blur-xl flex items-center justify-between px-4 sm:px-6 md:ml-72 transition-all">
+    <header className="sticky top-0 z-30 h-16 w-full bg-[#090d16]/90 border-b border-slate-800/80 backdrop-blur-xl flex items-center justify-between px-4 sm:px-6 transition-all">
       {/* Left: Mobile hamburger & Breadcrumbs */}
       <div className="flex items-center gap-3">
         <button

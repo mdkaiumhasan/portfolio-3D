@@ -30,7 +30,7 @@ const StreetRadar: React.FC = React.memo(() => {
       style={{
         position: 'absolute',
         top: '76px',
-        right: '16px',
+        right: 'max(16px, env(safe-area-inset-right, 16px))',
         width: '120px',
         height: '120px',
         padding: '8px',
@@ -42,13 +42,13 @@ const StreetRadar: React.FC = React.memo(() => {
         pointerEvents: 'auto'
       }}
     >
-      <div style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', fontWeight: 700, letterSpacing: '0.8px', color: '#38bdf8', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <div className="hud-radar-label" style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', fontWeight: 700, letterSpacing: '0.8px', color: '#38bdf8', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
         <Compass size={12} />
-        STREET RADAR
+        RADAR
       </div>
 
-      {/* Circular Radar Screen */}
       <div
+        className="hud-radar-circle"
         style={{
           position: 'relative',
           width: '85px',
@@ -59,11 +59,9 @@ const StreetRadar: React.FC = React.memo(() => {
           overflow: 'hidden'
         }}
       >
-        {/* Radar Grid Lines */}
         <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(56, 189, 248, 0.2)' }} />
         <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'rgba(56, 189, 248, 0.2)' }} />
 
-        {/* Stations Blips */}
         {STATIONS.map((st) => {
           const relX = (st.position[0] - playerPosition[0]) * 1.5;
           const relZ = (st.position[2] - playerPosition[2]) * 0.7;
@@ -78,8 +76,8 @@ const StreetRadar: React.FC = React.memo(() => {
               title={st.title}
               style={{
                 position: 'absolute',
-                left: `${screenX}px`,
-                top: `${screenY}px`,
+                left: `${(screenX / 85) * 100}%`,
+                top: `${(screenY / 85) * 100}%`,
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
@@ -91,12 +89,11 @@ const StreetRadar: React.FC = React.memo(() => {
           );
         })}
 
-        {/* Player Center Blip */}
         <div
           style={{
             position: 'absolute',
-            left: '42.5px',
-            top: '42.5px',
+            left: '50%',
+            top: '50%',
             width: '8px',
             height: '8px',
             borderRadius: '50%',
@@ -110,30 +107,7 @@ const StreetRadar: React.FC = React.memo(() => {
   );
 });
 
-export const HUD: React.FC = () => {
-  const {
-    activePanel,
-    setActivePanel,
-    nearbyStation,
-    audioEnabled,
-    toggleAudio,
-    mode,
-    setMode,
-    discoveredStations,
-    activeNotification,
-    setActiveEmote,
-    isMobile
-  } = useGameStore();
-
-  const { data } = usePortfolioData();
-  const authorName = React.useMemo(() => {
-    return extractAuthorName(data.home_heading).toUpperCase();
-  }, [data.home_heading]);
-
-  const authorSubheading = React.useMemo(() => {
-    return extractAuthorRole(data.home_subheading, data.home_heading);
-  }, [data.home_subheading, data.home_heading]);
-
+const FpsBadge: React.FC<{ isMobile: boolean }> = React.memo(({ isMobile }) => {
   const [fps, setFps] = React.useState(60);
   const [renderStats, setRenderStats] = React.useState('');
 
@@ -145,12 +119,12 @@ export const HUD: React.FC = () => {
     const measureFps = () => {
       frameCount++;
       const now = performance.now();
-      if (now - lastTime >= 500) {
+      if (now - lastTime >= 600) {
         setFps(Math.round((frameCount * 1000) / (now - lastTime)));
         frameCount = 0;
         lastTime = now;
         const stats = (window as any).__THREE_STATS__;
-        if (stats) {
+        if (stats && !isMobile) {
           setRenderStats(`${stats.calls} dc • ${Math.round(stats.triangles / 1000)}k`);
         }
       }
@@ -158,7 +132,66 @@ export const HUD: React.FC = () => {
     };
     animId = requestAnimationFrame(measureFps);
     return () => cancelAnimationFrame(animId);
-  }, []);
+  }, [isMobile]);
+
+  const statusColor = fps >= 50 ? '#22c55e' : fps >= 30 ? '#eab308' : '#ef4444';
+
+  return (
+    <div
+      className="hud-fps-badge"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '5px',
+        padding: '4px 8px',
+        borderRadius: '6px',
+        background: 'rgba(15, 23, 42, 0.65)',
+        border: '1px solid rgba(56, 189, 248, 0.2)',
+        fontFamily: 'var(--font-hud)',
+        fontSize: '12px',
+        fontWeight: 700,
+        letterSpacing: '0.5px',
+        color: statusColor,
+        whiteSpace: 'nowrap'
+      }}
+      title="Real-time frame rate"
+    >
+      <span
+        style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: statusColor,
+          display: 'inline-block'
+        }}
+      />
+      {fps} FPS {!isMobile && renderStats ? `[${renderStats}]` : ''}
+    </div>
+  );
+});
+
+export const HUD: React.FC = React.memo(() => {
+  const activePanel = useGameStore((s) => s.activePanel);
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const nearbyStation = useGameStore((s) => s.nearbyStation);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
+  const toggleAudio = useGameStore((s) => s.toggleAudio);
+  const mode = useGameStore((s) => s.mode);
+  const setMode = useGameStore((s) => s.setMode);
+  const discoveredCount = useGameStore((s) => s.discoveredStations.length);
+  const activeNotification = useGameStore((s) => s.activeNotification);
+  const setActiveEmote = useGameStore((s) => s.setActiveEmote);
+  const isMobile = useGameStore((s) => s.isMobile);
+  const availableForWork = usePortfolioData().data.available_for_work !== false;
+
+  const { data } = usePortfolioData();
+  const authorName = React.useMemo(() => {
+    return extractAuthorName(data.home_heading).toUpperCase();
+  }, [data.home_heading]);
+
+  const authorSubheading = React.useMemo(() => {
+    return extractAuthorRole(data.home_subheading, data.home_heading);
+  }, [data.home_subheading, data.home_heading]);
 
   const handleOpenPanel = (panel: ActivePanel) => {
     if (audioEnabled) sound.playClick();
@@ -175,6 +208,8 @@ export const HUD: React.FC = () => {
     }
   };
 
+  const dotColor = availableForWork ? '#10b981' : '#f43f5e';
+
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100, overflow: 'hidden' }}>
       {/* Top Header Navigation Bar */}
@@ -182,9 +217,9 @@ export const HUD: React.FC = () => {
         className="hud-header"
         style={{
           position: 'absolute',
-          top: '16px',
-          left: '16px',
-          right: '16px',
+          top: 'max(14px, env(safe-area-inset-top, 14px))',
+          left: 'max(16px, env(safe-area-inset-left, 16px))',
+          right: 'max(16px, env(safe-area-inset-right, 16px))',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -195,6 +230,7 @@ export const HUD: React.FC = () => {
         {/* Left: Brand / Name Badge */}
         <div
           className="glass-panel hud-brand"
+          onClick={() => handleOpenPanel('about')}
           style={{
             padding: '8px 16px',
             display: 'flex',
@@ -203,8 +239,10 @@ export const HUD: React.FC = () => {
             background: 'rgba(10, 14, 25, 0.9)',
             height: '46px',
             boxSizing: 'border-box',
-            flexShrink: 0
+            flexShrink: 0,
+            cursor: 'pointer'
           }}
+          title={availableForWork ? 'Available for Work — Click to view Dossier' : 'Currently Engaged — Click to view Dossier'}
         >
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div
@@ -212,8 +250,8 @@ export const HUD: React.FC = () => {
                 width: '10px',
                 height: '10px',
                 borderRadius: '50%',
-                backgroundColor: '#10b981',
-                boxShadow: '0 0 10px #10b981'
+                backgroundColor: dotColor,
+                boxShadow: `0 0 10px ${dotColor}`
               }}
             />
             <div
@@ -225,7 +263,7 @@ export const HUD: React.FC = () => {
                 width: '16px',
                 height: '16px',
                 borderRadius: '50%',
-                border: '1.5px solid #10b981'
+                border: `1.5px solid ${dotColor}`
               }}
             />
           </div>
@@ -281,57 +319,64 @@ export const HUD: React.FC = () => {
           }}
         >
           <button
+            type="button"
             onClick={() => handleOpenPanel('about')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
           >
             <User size={13} color="#00e5ff" />
             About
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('projects')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
           >
             <Terminal size={13} color="#ff007f" />
             Projects
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('skills')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
           >
             <Cpu size={13} color="#39ff14" />
             Skills
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('experience')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
           >
             <Radio size={13} color="#ffb703" />
             NOC
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('resume')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px', borderColor: '#a855f7' }}
+            style={{ padding: '6px 12px', fontSize: '11px', borderColor: '#a855f7', whiteSpace: 'nowrap' }}
           >
             <FileText size={13} color="#a855f7" />
             Resumes
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('contact')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
           >
             <Send size={13} color="#06b6d4" />
             Contact
           </button>
           <button
+            type="button"
             onClick={() => handleOpenPanel('blog')}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px', borderColor: '#f43f5e' }}
+            style={{ padding: '6px 12px', fontSize: '11px', borderColor: '#f43f5e', whiteSpace: 'nowrap' }}
           >
             <BookOpen size={13} color="#f43f5e" />
             Blog
@@ -340,7 +385,7 @@ export const HUD: React.FC = () => {
 
         {/* Right: Quick Action Controls */}
         <div
-          className="glass-panel"
+          className="glass-panel hud-actions"
           style={{
             padding: '6px 10px',
             display: 'flex',
@@ -350,38 +395,10 @@ export const HUD: React.FC = () => {
             flexShrink: 0
           }}
         >
-          {/* Real-time FPS Monitor */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              padding: '4px 8px',
-              borderRadius: '6px',
-              background: 'rgba(15, 23, 42, 0.65)',
-              border: '1px solid rgba(56, 189, 248, 0.2)',
-              fontFamily: 'var(--font-hud)',
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.5px',
-              color: fps >= 50 ? '#22c55e' : fps >= 30 ? '#eab308' : '#ef4444'
-            }}
-            title="Real-time frame rate"
-          >
-            <span
-              style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                background: fps >= 50 ? '#22c55e' : fps >= 30 ? '#eab308' : '#ef4444',
-                display: 'inline-block'
-              }}
-            />
-            {fps} FPS {!isMobile && renderStats ? `[${renderStats}]` : ''}
-          </div>
+          <FpsBadge isMobile={isMobile} />
 
-          {/* Audio */}
           <button
+            type="button"
             onClick={handleAudioToggle}
             className="btn-cyber"
             style={{ padding: '8px', borderRadius: '8px' }}
@@ -390,8 +407,8 @@ export const HUD: React.FC = () => {
             {audioEnabled ? <Volume2 size={16} color="#38bdf8" /> : <VolumeX size={16} color="#94a3b8" />}
           </button>
 
-          {/* Mode Switch (3D <-> 2D) */}
           <button
+            type="button"
             onClick={() => {
               if (audioEnabled) sound.playClick();
               if (mode === '3d') {
@@ -400,15 +417,15 @@ export const HUD: React.FC = () => {
               setMode(mode === '3d' ? '2d' : '3d');
             }}
             className="btn-cyber"
-            style={{ padding: '6px 12px', fontSize: '11px' }}
+            style={{ padding: '6px 12px', fontSize: '11px', whiteSpace: 'nowrap' }}
             title="Switch View Mode"
           >
             {mode === '3d' ? <Layout size={14} color="#ff007f" /> : <Monitor size={14} color="#00e5ff" />}
             {mode === '3d' ? '2D View' : '3D World'}
           </button>
 
-          {/* Settings */}
           <button
+            type="button"
             onClick={() => handleOpenPanel('settings')}
             className="btn-cyber"
             style={{ padding: '8px', borderRadius: '8px' }}
@@ -417,8 +434,8 @@ export const HUD: React.FC = () => {
             <Sliders size={16} />
           </button>
 
-          {/* Help */}
           <button
+            type="button"
             onClick={() => handleOpenPanel('tutorial')}
             className="btn-cyber"
             style={{ padding: '8px', borderRadius: '8px' }}
@@ -438,7 +455,7 @@ export const HUD: React.FC = () => {
         style={{
           position: 'absolute',
           top: '76px',
-          left: '16px',
+          left: 'max(16px, env(safe-area-inset-left, 16px))',
           padding: '8px 14px',
           display: 'flex',
           alignItems: 'center',
@@ -447,13 +464,13 @@ export const HUD: React.FC = () => {
           pointerEvents: 'auto'
         }}
       >
-        <Trophy size={16} color="#fbbf24" />
+        <Trophy size={16} color="#fbbf24" style={{ flexShrink: 0 }} />
         <div>
-          <div style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
+          <div className="hud-quests-label" style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: 700 }}>
             Exploration Quests
           </div>
           <div style={{ fontSize: '13px', fontFamily: 'var(--font-hud)', fontWeight: 700, color: '#ffffff', letterSpacing: '0.4px' }}>
-            {discoveredStations.length} / {STATIONS.length} Stations Discovered
+            {discoveredCount} / {STATIONS.length} Stations
           </div>
         </div>
       </div>
@@ -497,45 +514,47 @@ export const HUD: React.FC = () => {
             if (audioEnabled) sound.playChime();
             setActivePanel(nearbyStation.panel);
           }}
-          className="glass-panel"
+          className="glass-panel hud-interact-banner"
           style={{
             position: 'absolute',
-            bottom: '36px',
+            bottom: 'max(28px, calc(16px + env(safe-area-inset-bottom, 0px)))',
             left: '50%',
             transform: 'translateX(-50%)',
-            padding: '14px 28px',
+            padding: '12px 24px',
             display: 'flex',
             alignItems: 'center',
-            gap: '16px',
+            gap: '14px',
             background: 'rgba(10, 14, 25, 0.95)',
             border: `2px solid ${nearbyStation.color}`,
             boxShadow: `0 0 30px ${nearbyStation.color}88`,
             cursor: 'pointer',
             pointerEvents: 'auto',
-            animation: 'modalFadeIn 0.2s ease-out'
+            animation: 'modalFadeIn 0.2s ease-out',
+            maxWidth: 'min(420px, 60vw)'
           }}
         >
           <span
             style={{
-              padding: '6px 12px',
+              padding: '6px 11px',
               borderRadius: '6px',
               background: nearbyStation.color,
               color: '#000000',
               fontWeight: 800,
               fontFamily: 'var(--font-hud)',
-              fontSize: '15px',
-              letterSpacing: '0.5px'
+              fontSize: '14px',
+              letterSpacing: '0.5px',
+              flexShrink: 0
             }}
           >
-            [E]
+            {isMobile ? 'TAP' : '[E]'}
           </span>
 
-          <div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: 700, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               Enter {nearbyStation.title}
             </div>
             <div style={{ fontFamily: 'var(--font-hud)', fontSize: '12px', color: nearbyStation.color, fontWeight: 600, letterSpacing: '0.5px' }}>
-              Press [E] or Click to inspect station
+              {isMobile ? 'Tap banner or OPEN button' : 'Press [E] or Click to inspect'}
             </div>
           </div>
         </div>
@@ -559,6 +578,7 @@ export const HUD: React.FC = () => {
         >
           <span style={{ fontSize: '11px', fontFamily: 'var(--font-hud)', color: '#94a3b8', marginRight: '4px', fontWeight: 700, letterSpacing: '0.6px' }}>Emotes:</span>
           <button
+            type="button"
             onClick={() => setActiveEmote('salute')}
             className="btn-cyber"
             style={{ padding: '4px 8px', fontSize: '11px' }}
@@ -566,6 +586,7 @@ export const HUD: React.FC = () => {
             [1] Salute
           </button>
           <button
+            type="button"
             onClick={() => setActiveEmote('shakehand')}
             className="btn-cyber"
             style={{ padding: '4px 8px', fontSize: '11px' }}
@@ -573,6 +594,7 @@ export const HUD: React.FC = () => {
             [2] Handshake
           </button>
           <button
+            type="button"
             onClick={() => setActiveEmote('cough')}
             className="btn-cyber"
             style={{ padding: '4px 8px', fontSize: '11px' }}
@@ -583,4 +605,4 @@ export const HUD: React.FC = () => {
       )}
     </div>
   );
-};
+});

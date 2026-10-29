@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { X, Download, ExternalLink, FileText, CheckCircle2, Shield, Code } from 'lucide-react';
+import { X, Download, ExternalLink, CheckCircle2, Shield, Code } from 'lucide-react';
 import { usePortfolioData, extractAuthorName } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { stripHtml, resolveCvLink } from '../../utils/sanitize';
 
 export const ResumeModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
   const [activeTrack, setActiveTrack] = useState<'software' | 'network'>('software');
 
@@ -14,18 +16,35 @@ export const ResumeModal: React.FC = () => {
     setActivePanel(null);
   };
 
-  const cvLink = data.about_cv_link || data.home_cv_link || "https://files.catbox.moe/0juxap.pdf";
+  const softwareCvUrl = resolveCvLink(
+    data.software_cv_link,
+    data.about_cv_link,
+    data.home_cv_link,
+    data.contact_cv_link
+  );
+  const networkCvUrl = resolveCvLink(
+    data.network_cv_link,
+    data.about_cv_link,
+    data.home_cv_link,
+    data.contact_cv_link
+  );
 
-  // Dynamic highlights directly from live projects & experiences in database
+  // Dynamic highlights directly from live projects & experiences in database (stripped of raw HTML tags)
   const softwareHighlights = (data.projects && data.projects.length > 0)
-    ? data.projects.slice(0, 4).map(p => `${p.title}: ${p.shortDesc || p.technology}`)
+    ? data.projects.slice(0, 4).map((p) => {
+        const cleanDesc = stripHtml(p.shortDesc || p.fullDetails || p.technology || '');
+        return `${p.title}: ${cleanDesc}`;
+      })
     : [
         'Production Software Engineering: Fullstack applications with real-time reactive sync and stateful architecture.',
         'Network Topology & Automation: Automated configuration, testing, and modern application deployment.',
       ];
 
   const networkHighlights = (data.experiences && data.experiences.length > 0)
-    ? data.experiences.slice(0, 4).map(e => `${e.title} (${e.date}): ${e.description}`)
+    ? data.experiences.slice(0, 4).map((e) => {
+        const cleanDesc = stripHtml(e.description || '');
+        return `${e.title}${e.date ? ` (${e.date})` : ''}: ${cleanDesc}`;
+      })
     : [
         'Network Infrastructure: Routing, switching, VLAN segmentation, and firewall bandwidth management.',
         'Systems Administration: Linux and server configuration with access control and reliability monitoring.',
@@ -38,18 +57,18 @@ export const ResumeModal: React.FC = () => {
       title: 'Fullstack & Systems Engineer',
       badge: 'Software Track',
       color: '#a855f7',
-      url: cvLink,
+      url: softwareCvUrl,
       fileName: `${candidateName}_Software_Engineer_Resume.pdf`,
-      summary: data.about_info_text || "Fullstack and systems developer with hands-on experience building mobile apps, real-time reactive databases, and clean modern interfaces.",
+      summary: stripHtml(data.about_info_text) || 'Fullstack and systems developer with hands-on experience building mobile apps, real-time reactive databases, and clean modern interfaces.',
       highlights: softwareHighlights
     },
     network: {
       title: 'Network & Infrastructure Support Engineer',
       badge: 'CCNA & ISP Track',
       color: '#ffb703',
-      url: cvLink,
+      url: networkCvUrl,
       fileName: `${candidateName}_Network_Engineer_Resume.pdf`,
-      summary: data.home_subheading || "Network Support Engineer with hands-on ISP field experience in MikroTik router, switch and OLT configuration, bandwidth management and network troubleshooting.",
+      summary: stripHtml(data.home_subheading) || 'Network Support Engineer with hands-on ISP field experience in MikroTik router, switch and OLT configuration, bandwidth management and network troubleshooting.',
       highlights: networkHighlights
     }
   };
@@ -68,7 +87,8 @@ export const ResumeModal: React.FC = () => {
                 height: '12px',
                 borderRadius: '50%',
                 backgroundColor: current.color,
-                boxShadow: `0 0 10px ${current.color}`
+                boxShadow: `0 0 10px ${current.color}`,
+                flexShrink: 0
               }}
             />
             <div>
@@ -92,7 +112,8 @@ export const ResumeModal: React.FC = () => {
             background: 'rgba(15, 23, 42, 0.4)',
             borderBottom: '1px solid rgba(56, 189, 248, 0.15)',
             display: 'flex',
-            gap: '10px'
+            gap: '10px',
+            overflowX: 'auto'
           }}
         >
           <button
@@ -114,6 +135,7 @@ export const ResumeModal: React.FC = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
+              whiteSpace: 'nowrap',
               boxShadow: activeTrack === 'software' ? '0 0 12px rgba(168, 85, 247, 0.35)' : 'none',
               transition: 'all 0.2s ease'
             }}
@@ -141,6 +163,7 @@ export const ResumeModal: React.FC = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
+              whiteSpace: 'nowrap',
               boxShadow: activeTrack === 'network' ? '0 0 12px rgba(255, 183, 3, 0.35)' : 'none',
               transition: 'all 0.2s ease'
             }}
@@ -167,7 +190,7 @@ export const ResumeModal: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
                   {current.title}
                 </h3>
@@ -186,11 +209,11 @@ export const ResumeModal: React.FC = () => {
                 </span>
               </div>
               <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                Verified technical dossier with production credentials & contact data
+                Verified technical dossier synchronized with the Unified Admin Console
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <a
                 href={current.url}
                 target="_blank"
@@ -204,6 +227,8 @@ export const ResumeModal: React.FC = () => {
 
               <a
                 href={current.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 download={current.fileName}
                 className="btn-cyber btn-cyber-primary"
                 style={{
@@ -254,8 +279,10 @@ export const ResumeModal: React.FC = () => {
             }}
           >
             <iframe
+              key={current.url}
               src={`${current.url}#toolbar=0&navpanes=0`}
               title={current.title}
+              loading="lazy"
               style={{
                 width: '100%',
                 height: '100%',

@@ -4,15 +4,13 @@ import { useGameStore, QualityTier } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
 export const SettingsModal: React.FC = () => {
-  const {
-    setActivePanel,
-    audioEnabled,
-    toggleAudio,
-    qualityTier,
-    setQualityTier,
-    mode,
-    setMode
-  } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
+  const toggleAudio = useGameStore((s) => s.toggleAudio);
+  const qualityTier = useGameStore((s) => s.qualityTier);
+  const setQualityTier = useGameStore((s) => s.setQualityTier);
+  const mode = useGameStore((s) => s.mode);
+  const setMode = useGameStore((s) => s.setMode);
 
   const handleClose = () => {
     if (audioEnabled) sound.playClick();
@@ -56,6 +54,8 @@ export const SettingsModal: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
               background: 'rgba(15, 23, 42, 0.6)'
             }}
           >
@@ -144,6 +144,8 @@ export const SettingsModal: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
               background: 'rgba(15, 23, 42, 0.6)'
             }}
           >
@@ -173,6 +175,8 @@ export const SettingsModal: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
               background: 'rgba(15, 23, 42, 0.6)'
             }}
           >

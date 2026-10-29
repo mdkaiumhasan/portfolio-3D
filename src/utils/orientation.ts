@@ -1,15 +1,25 @@
 /**
- * Device Orientation & Screen Lock Utilities for 3D Cyberpunk City
+ * Device Orientation & Screen Detection Utilities
+ * Accurately distinguishes handheld phones/tablets from touchscreen Windows/Mac laptops.
  */
 
 export const isMobileDevice = (): boolean => {
   if (typeof window === 'undefined') return false;
-  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isSmallScreen = window.innerWidth <= 768 || (window.innerWidth <= 1024 && window.innerHeight <= 600);
-  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(
-    navigator.userAgent
-  );
-  return hasTouch || isMobileUA || isSmallScreen;
+
+  const ua = navigator.userAgent || '';
+  const isMobileUA =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua) ||
+    // iPadOS 13+ reports Macintosh UA with multi-touch and coarse pointer
+    (/Macintosh/i.test(ua) &&
+      navigator.maxTouchPoints > 1 &&
+      Boolean(window.matchMedia?.('(pointer: coarse)').matches));
+
+  const isCoarsePointer = Boolean(window.matchMedia?.('(pointer: coarse)').matches);
+  const shortestSide = Math.min(window.innerWidth, window.innerHeight);
+
+  // Only treat coarse-pointer devices with tablet/phone dimensions or explicit mobile UAs as mobile.
+  // Desktop/laptop touchscreens (1920x1080 with fine trackpad/mouse pointer) remain desktop.
+  return isMobileUA || (isCoarsePointer && shortestSide <= 1024);
 };
 
 export const isPortraitOrientation = (): boolean => {
@@ -18,11 +28,9 @@ export const isPortraitOrientation = (): boolean => {
 };
 
 export const requestLandscapeLock = async (): Promise<boolean> => {
-  // We do not force screen.orientation.lock because Android Chrome tears down the Activity and reloads the page.
-  // Instead, the user simply turns their physical phone to landscape, and our UI immediately responds smoothly.
-  return window.innerWidth > window.innerHeight;
+  return typeof window !== 'undefined' ? window.innerWidth > window.innerHeight : true;
 };
 
 export const unlockOrientationLock = async (): Promise<void> => {
-  // Safe cleanup - no destructive browser calls
+  // No-op safe cleanup (avoids Android Chrome orientation-lock activity teardown)
 };

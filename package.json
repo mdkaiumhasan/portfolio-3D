@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build:classic-css": "tailwindcss -i ./src/styles/classic-tailwind-entry.css -o ./public/classic-tailwind.css --content ./public/classic.html --minify",
+    "build": "npm run build:classic-css && tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -28,6 +29,9 @@
     "@types/react-dom": "^18.3.1",
     "@types/three": "^0.170.0",
     "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.6.3",
     "vite": "^5.4.10"
   }

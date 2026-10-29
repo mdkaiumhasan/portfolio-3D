@@ -1,16 +1,19 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  X, 
-  Briefcase, 
-  Calendar, 
-  CheckCircle2
+import {
+  X,
+  Briefcase,
+  Calendar,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 import { usePortfolioData, ExperienceItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { sanitizeHtml, optimizeCloudinaryUrl } from '../../utils/sanitize';
 
 export const ExperienceModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
   const [enlargedImage, setEnlargedImage] = useState<{ url: string; title: string } | null>(null);
 
@@ -27,10 +30,10 @@ export const ExperienceModal: React.FC = () => {
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
-      <div 
-        className="modal-content" 
-        style={{ 
-          maxWidth: '1060px', 
+      <div
+        className="modal-content"
+        style={{
+          maxWidth: '1060px',
           width: '95%',
           maxHeight: '90vh',
           display: 'flex',
@@ -38,7 +41,7 @@ export const ExperienceModal: React.FC = () => {
           background: 'radial-gradient(ellipse at top, #111b2b 0%, #090e17 100%)',
           border: '1px solid rgba(56, 189, 248, 0.25)',
           boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(6, 182, 212, 0.15)'
-        }} 
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
@@ -51,7 +54,8 @@ export const ExperienceModal: React.FC = () => {
                 borderRadius: '50%',
                 backgroundColor: '#00e5ff',
                 boxShadow: '0 0 12px #00e5ff',
-                animation: 'pulse 2s infinite'
+                animation: 'pulse 2s infinite',
+                flexShrink: 0
               }}
             />
             <div>
@@ -85,25 +89,49 @@ export const ExperienceModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Modal Body: Direct Professional Grid without category tabs */}
-        <div 
-          className="modal-body" 
-          style={{ 
-            padding: '24px', 
+        {/* Modal Body */}
+        <div
+          className="modal-body"
+          style={{
+            padding: '24px',
             overflowY: 'auto',
-            flex: 1
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '18px'
           }}
         >
+          {data.timeline__showConstructionMessage && (
+            <div
+              style={{
+                padding: '14px 18px',
+                borderRadius: '12px',
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#fcd34d'
+              }}
+            >
+              <AlertTriangle size={18} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <div style={{ fontSize: '13px', lineHeight: 1.5 }}>
+                <strong style={{ color: '#fde68a' }}>Timeline Maintenance Active:</strong> Additional NOC logs, field deployments, and certifications are currently being synchronized.
+              </div>
+            </div>
+          )}
+
           {dynamicExperiences.length > 0 ? (
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
                 gap: '18px'
               }}
             >
               {dynamicExperiences.map((exp: ExperienceItem, idx: number) => {
-                const hasValidImage = exp.imageUrl && exp.imageUrl.trim().length > 0;
+                const hasValidImage = Boolean(exp.imageUrl && exp.imageUrl.trim().length > 0);
+                const safeDescription = exp.description ? sanitizeHtml(exp.description) : '';
 
                 return (
                   <div
@@ -123,8 +151,8 @@ export const ExperienceModal: React.FC = () => {
                     }}
                   >
                     {/* Top Row: Image Avatar, Title & Date */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1 1 200px', minWidth: 0 }}>
                         {/* Role Logo / Image Avatar */}
                         <div
                           style={{
@@ -143,15 +171,16 @@ export const ExperienceModal: React.FC = () => {
                           }}
                           onClick={() => {
                             if (hasValidImage) {
-                              setEnlargedImage({ url: exp.imageUrl || '', title: exp.title });
+                              setEnlargedImage({ url: optimizeCloudinaryUrl(exp.imageUrl, 1200), title: exp.title });
                             }
                           }}
-                          title={hasValidImage ? "Click to inspect image" : undefined}
+                          title={hasValidImage ? 'Click to inspect image' : undefined}
                         >
                           {hasValidImage ? (
                             <img
-                              src={exp.imageUrl}
+                              src={optimizeCloudinaryUrl(exp.imageUrl, 160)}
                               alt={exp.title}
+                              loading="lazy"
                               style={{
                                 width: '100%',
                                 height: '100%',
@@ -208,8 +237,8 @@ export const ExperienceModal: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Description Text */}
-                    {exp.description && (
+                    {/* Sanitized Description Text */}
+                    {safeDescription && (
                       <div
                         style={{
                           fontSize: '13.5px',
@@ -220,7 +249,7 @@ export const ExperienceModal: React.FC = () => {
                           borderRadius: '8px',
                           border: '1px solid rgba(255, 255, 255, 0.04)'
                         }}
-                        dangerouslySetInnerHTML={{ __html: exp.description }}
+                        dangerouslySetInnerHTML={{ __html: safeDescription }}
                       />
                     )}
                   </div>
@@ -260,7 +289,7 @@ export const ExperienceModal: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <CheckCircle2 size={14} color="#00e5ff" />
             <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-              All experience records are managed live via the MongoDB Admin Console.
+              All experience records are managed live via the Unified Admin Console.
             </span>
           </div>
 
@@ -328,6 +357,7 @@ export const ExperienceModal: React.FC = () => {
                   cursor: 'pointer',
                   padding: '4px'
                 }}
+                aria-label="Close image preview"
               >
                 <X size={18} />
               </button>

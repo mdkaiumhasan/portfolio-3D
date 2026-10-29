@@ -60,6 +60,8 @@ export interface InboxMessageItem {
   fromEmail: string;
   subject: string;
   body: string;
+  source?: '2d' | '3d';
+  read?: boolean;
   date: string;
 }
 
@@ -71,6 +73,9 @@ export interface PortfolioData {
   about_info_heading: string;
   about_info_text: string;
   about_cv_link: string;
+  software_cv_link?: string;
+  network_cv_link?: string;
+  available_for_work?: boolean;
   stats: StatItem[];
   skills: SkillItem[];
   skill_categories: string[];

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="oyz9EWj9FOGLOR3BjjZw7AP0MfPGV3Tf1y9q5OBp71U" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <!-- === PROFESSIONAL SEO & SOCIAL MEDIA META TAGS === -->
 
@@ -44,7 +44,7 @@
 <!-- === END FAVICON === -->
 
     
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/classic-tailwind.css">
 
     
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1297,9 +1297,9 @@
 
 <script>
     // Safely escaped portfolio data - 100% Local, zero Firebase dependency
-    const INITIAL_PORTFOLIO_DATA = {"showBlogsConstruction":true,"home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","timeline_cv_link":"#","blogs_cv_link":"#","skill_categories":["Network Engineering","Security & Systems","Programming & Software"],"skills":[{"percent":95,"name":"ROUTING","category":"Network Engineering"},{"name":"SWITCHING","percent":95,"category":"Network Engineering"},{"name":"CONFIGURE","percent":90,"category":"Network Engineering"},{"name":"FIREWALL","percent":80,"category":"Security & Systems"},{"percent":75,"name":"C++","category":"Programming & Software"},{"percent":80,"name":"PYTHON","category":"Programming & Software"}],"about_cv_link":"https://files.catbox.moe/0juxap.pdf","portfolio_cv_link":"#","about_info_heading":"INFORMATION ABOUT ME","contact_info_heading":"CONTACT ME HERE","posts":[{"shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","category":"Tutorial","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","date":"Oct 26, 2025","title":"How to Create Your Own Website.       read more...","fullContent":"<!DOCTYPE html>\n<html lang=\"bn\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Access Control List (ACL) – সম্পূর্ণ গাইড</title>\n</head>\n<body>\n\n<h1>Access Control List (ACL) – সম্পূর্ণ গাইড</h1>\n\n<p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। সহজভাবে বললে, ACL নির্ধারণ করে কে কাকে অ্যাক্সেস করতে পারবে এবং কে পারবে না।</p>\n\n<h2>🎯 রিয়েল ওয়ার্ল্ড উদাহরণ:</h2>\n<p>ধরো একটি অফিসে দুটি বিভাগ আছে — Accounts ও HR। এখন তুমি চাও যেন Accounts বিভাগের কম্পিউটারগুলো শুধু ইন্টারনেট ব্যবহার করতে পারে কিন্তু HR বিভাগের সার্ভারে ঢুকতে না পারে।  \nএই কাজটি ACL দিয়ে সহজে করা যায় — নির্দিষ্ট IP রেঞ্জকে “deny” করে দিয়ে, বাকিদের “permit” করা যায়।</p>\n<blockquote class=\"imgur-embed-pub\" lang=\"en\" data-id=\"a/Geaj8KR\" data-context=\"false\" ><a href=\"//imgur.com/a/Geaj8KR\"></a></blockquote><script async src=\"//s.imgur.com/min/embed.js\" charset=\"utf-8\"><\/script>\n<h2>🔍 ACL এর ধরন:</h2>\n<ul>\n<li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li>\n<li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li>\n</ul>\n\n<h2>🧩 Cisco Packet Tracer এ ACL কনফিগারেশন (Zero থেকে):</h2>\n\n<h3>Step 1: Basic Network Setup</h3>\n<p>দুটি নেটওয়ার্ক নাও:</p>\n<pre>\nNetwork 1: 192.168.10.0/24  \nNetwork 2: 192.168.20.0/24\nRouter Interface:\n- G0/0 → 192.168.10.1\n- G0/1 → 192.168.20.1\n</pre>\n\n<h3>Step 2: IP Assign</h3>\n<p>PC এবং রাউটারে IP অ্যাসাইন করো।</p>\n\n<h3>Step 3: ACL তৈরি</h3>\n<p>উদাহরণ: Network 10 থেকে Network 20-এ অ্যাক্সেস ব্লক করা</p>\n<pre>\nRouter> enable\nRouter# configure terminal\nRouter(config)# access-list 10 deny 192.168.10.0 0.0.0.255\nRouter(config)# access-list 10 permit any\n</pre>\n\n<h3>Step 4: ACL Apply করা</h3>\n<p>যে ইন্টারফেসে ব্লক করতে চাও, সেখানে ইনবাউন্ড বা আউটবাউন্ড হিসেবে Apply করো।</p>\n<pre>\nRouter(config)# interface g0/1\nRouter(config-if)# ip access-group 10 in\nRouter(config-if)# exit\nRouter# end\n</pre>\n\n<h3>Step 5: Verify</h3>\n<p>PC থেকে ping করে দেখো — Network 10 থেকে Network 20 এ ট্রাফিক ব্লক হয়েছে কিনা।</p>\n\n<h2>🧠 টিপস:</h2>\n<ul>\n<li>ACL সবসময় “Top to Bottom” ক্রমে কাজ করে।</li>\n<li>শেষে implicit “deny all” থাকে — তাই সব রুল শেষে “permit any” দিতে ভুলো না।</li>\n</ul>\n\n<p><a href=\"https://www.mdkaiumhasan.site\">Visit Now</a></p>\n\n</body>\n</html>"},{"fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3>\n\n<p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Facebook, Google, YouTube theke shuru kore apnar office-er printer porjonto—shob kichui network-er opor nirbhorshil.</p>\n\n<p>Jodi apni ei exciting sector-e career gorte chan, tahole network engineer hishebe apnar journey shuru korar prothom, ebong sobcheye guruttwopurno, dhap holo <strong>CCNA certification</strong>.</p>\n\n<h3>Keno CCNA Ekhono Eto Guruttwopurno?</h3>\n\n<p>Technology-r jogot onek druto bodle jacche, kintu CCNA-r chahida ekhono opar. Er karon holo eti shudhu \"kivabe\" (how) noy, eti \"keno\" (why) shekhay. Ei foundational knowledge apnake complex network-er somossa samadhan (troubleshooting) korte shaajjo kore.</p>\n\n<p>Job market-e CCNA-r ekta alada mullo ache. Hiring manager-ra ei certificate-ke vishon-vabe pradhanno den, karon eta proman kore je apnar network fundamentals-er opor sposto dharona ache. Eti apnar CV-ke onnoder theke alada kore rakhe.</p>\n\n<!-- Apnar request onujayi image-ti ekhane add kora holo -->\n\n<a href=\"https://www.arduino.cc\" target=\"_blank\">\n<img src=\"https://files.catbox.moe/pasmm0.jpg\" alt=\"CCNA Network Diagram Concept\" style=\"width:100%; max-width:600px; margin: 20px auto; display: block; border-radius: 8px;\">\n</a>\n\n<h3>Adhunik CCNA-te (200-301) Notun ki ache?</h3>\n\n<p>Adhunik CCNA (version 200-301) ekhonkar projuktir sathe taal miliye onek updated. Eti shudhu traditional routing/switching-e simaboddho noy. Ekhon er moddhe included ache:</p>\n\n<ul>\n<li><strong>Automation & Programmability:</strong> Network automation-er dharona, jemon Python, Ansible, ebong DNA Center-er sathe porichoy.</li>\n<li><strong>Security Fundamentals:</strong> VPN, wireless security (WPA3), ebong port security-r mool dharona.</li>\n<li><strong>Wireless Networking:</strong> Wi-Fi 6 ebong WLC (Wireless LAN Controller) er basic concepts.</li>\n</ul>\n\n<h3>Porishesh</h3>\n\n<p>Jodi apni network engineering-e ekta successful career gorte chan, tobe CCNA holo tar shera shuruvat. Eti apnake shudhu ekta bhalo chakri petei shaajjo korbe na (jemon: Network Engineer, System Admin, Network Support), borong apnar poroborti specialization (jemon CCNP, Cyber Security, ba Cloud Networking) er jonno ekta shokto vitti toiri kore debe.</p>","category":"Web Design","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg","title":"How to Become an Expert in Web Design","shortDesc":"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus natus voluptas, eos...","date":"Oct 25, 2025 "}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}],"home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","portfolio__showConstructionMessage":true,"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WIDOWS SERVER CONFIGURETION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURETION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE "},{"description":"MIKROTIK CERTIFIED ROUTING ENGINEER ","heading":"MTCRE"}],"available_for_work":true,"showPortfolioConstruction":true,"timeline__showConstructionMessage":false,"showTimelineConstruction":true,"timeline_showConstructionMessage":false,"contact_info_text":"For Network consultancy services, please get in touch.","home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership.\n"}],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","category":"Mobile & Realtime","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","category":"Networking & Security","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","category":"Mobile & Realtime","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://files.catbox.moe/bcktxt.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","category":"Robotics & Hardware","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"home_cv_link":"#","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","blogs__showConstructionMessage":true,"experiences":[{"title":"Network Support Engineer – FNF Online (ISP)","date":"Jan 2026 – Present","description":"Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.","imageUrl":"/data/fnf_isp_logo.svg"},{"title":"Independent Fullstack & Systems Developer","date":"2025 – Present","description":"Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.","imageUrl":"/data/fullstack_dev_logo.svg"},{"title":"Cisco CCNA 200-301 & Enterprise Infrastructure Labs","date":"2025 – 2026","description":"Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.","imageUrl":"https://files.catbox.moe/pasmm0.jpg"},{"title":"Diploma in Engineering (Computer Science & Technology)","date":"Completed 2026","description":"Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"}],"contact_cv_link":"https://files.catbox.moe/0juxap.pdf","project_categories":["Networking & Security","Mobile & Realtime","Robotics & Hardware"]};
+    const INITIAL_PORTFOLIO_DATA = {"home_heading":"Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.","home_subheading":"I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.","home_cv_link":"https://files.catbox.moe/0juxap.pdf","home_profile_image":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg","about_info_heading":"INFORMATION ABOUT ME","about_info_text":"I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.","about_cv_link":"https://files.catbox.moe/0juxap.pdf","available_for_work":true,"portfolio__showConstructionMessage":false,"timeline__showConstructionMessage":false,"blogs__showConstructionMessage":false,"skill_categories":["Network Engineering","Security & Systems","Programming & Software"],"skills":[{"percent":95,"name":"ROUTING","category":"Network Engineering"},{"name":"SWITCHING","percent":95,"category":"Network Engineering"},{"name":"CONFIGURE","percent":90,"category":"Network Engineering"},{"name":"FIREWALL","percent":80,"category":"Security & Systems"},{"percent":75,"name":"C++","category":"Programming & Software"},{"percent":80,"name":"PYTHON","category":"Programming & Software"}],"stats":[{"heading":"CCNA","description":"CISCO CERTIFIED NETWORK ASSOCIATE"},{"heading":"MIKROTIK","description":"MIKROTIK ROUTER CONFIGURE & MANAGEMENT"},{"heading":"WINDOWS SERVER","description":"WINDOWS SERVER CONFIGURATION & MANAGEMENT"},{"heading":"LINUX SERVER","description":"LINUX SERVER CONFIGURATION & MANAGEMENT"},{"heading":"MTCNA","description":"MIKROTIK CERTIFIED NETWORK ASSOCIATE"},{"heading":"MTCRE","description":"MIKROTIK CERTIFIED ROUTING ENGINEER"}],"activities":[{"title":"District Science Exhibition - 2024 Project - LFR","description":"My Line Follower Robot (LFR) project demonstrates how sensors and automation can guide a robot along a path without human control. Presented at District Science Exhibition 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"},{"imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035638/portfolio/activities/wgly8kbx4dcj3jdxzwod.jpg","title":"Cultural Day Football Tournament-2025","description":"Participated as captain in the Cultural Day football tournament at our office. Guided my team to the semi-finals, showcasing sportsmanship, coordination, and leadership."}],"project_categories":["Networking & Security","Mobile & Realtime","Robotics & Hardware"],"projects":[{"title":"Mess Management APP (EasyMess)","role":"Android & Fullstack Developer","category":"Mobile & Realtime","technology":"JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin","imageUrl":"https://i.ibb.co.com/jmy2C5v/Screenshot-2026-01-04-232855.png","shortDesc":"Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.","fullDetails":"<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Enterprise Network","role":"Network Architect & Administrator","category":"Networking & Security","technology":"Cisco IOS, OSPF, VLAN / 802.1Q, NAT / PAT, Stateful ACLs, DHCP Snooping","imageUrl":"https://i.ibb.co.com/7tXff9kw/Screenshot-2025-12-31-193032.png","shortDesc":"High-Availability redundant network topology for a 600-staff trading floor with multi-area OSPF routing, 802.1Q VLANs, and stateful ACL security.","fullDetails":"<h3>High-Availability 600-Staff Trading Floor Network Infrastructure</h3><p>Engineered a fault-tolerant campus and trading floor enterprise network infrastructure for 600 financial operators. Utilized multi-area OSPF for rapid sub-second convergence, strict VLAN isolation between management, trading, and guest traffic, and robust access control lists (ACLs) to mitigate unauthorized lateral movement.</p><ul><li>600 Active Hosts across 3 floors</li><li>Sub-second OSPF convergence & redundant failover</li><li>Tier-1 packet inspection & Port Security</li></ul>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"},{"title":"Ramadan Journey","role":"Android Developer","category":"Mobile & Realtime","technology":"React.js, Android Studio, Kotlin, Push Notifications","imageUrl":"https://files.catbox.moe/bcktxt.png","shortDesc":"Real-time prayer helper and Islamic companion providing accurate salah reminders, Sahri/Iftar alarms, and offline supplications.","fullDetails":"<h3>Ramadan Journey - Real-Time Prayer Helper</h3><p>Using this application you can stay connected with prayer times, accurate Sahri & Iftar countdown alarms, daily Islamic reminders, and offline prayer trackers.</p>","live":"https://files.catbox.moe/b5bgv1.apk","github":"https://github.com/mdkaiumhasan"},{"title":"Autonomous Line Follower Robot (LFR)","role":"Hardware & Robotics Engineer","category":"Robotics & Hardware","technology":"Arduino / C++, ATmega328P, IR Reflectance Sensor Array, L298N Motor Driver","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp","shortDesc":"Autonomous navigation robot using microsecond IR reflectance sensors and differential motor control for path tracking at the District Science Fair.","fullDetails":"<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>","live":"https://www.mdkaiumhasan.site","github":"https://github.com/mdkaiumhasan"}],"experiences":[{"title":"Network Support Engineer – FNF Online (ISP)","date":"Jan 2026 – Present","description":"Managing MikroTik routers, distribution switches, GPON OLTs, PPPoE queues, and subscriber bandwidth management for multi-tenant fiber network connectivity.","imageUrl":"/data/fnf_isp_logo.svg"},{"title":"Independent Fullstack & Systems Developer","date":"2025 – Present","description":"Engineering production-grade web applications, distributed backend services, and native Android mobile apps including EasyMess and Ramadan Journey.","imageUrl":"/data/fullstack_dev_logo.svg"},{"title":"Cisco CCNA 200-301 & Enterprise Infrastructure Labs","date":"2025 – 2026","description":"Multi-area OSPF routing, 802.1Q VLAN trunking, STP loop prevention, stateful ACL traffic segmentation, MikroTik RouterOS, and Red Hat Linux server administration.","imageUrl":"https://files.catbox.moe/pasmm0.jpg"},{"title":"Diploma in Engineering (Computer Science & Technology)","date":"Completed 2026","description":"Mymensingh Polytechnic Institute. Advanced coursework in network architectures, operating systems, and autonomous robotics presented at District Science Fair 2024.","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"}],"blog_categories":["Networking Guide","Career & Certification","Network Architecture","Tutorial"],"posts":[{"title":"Access Control List (ACL) – সম্পূর্ণ গাইড","date":"Oct 26, 2025","category":"Networking Guide","imageUrl":"https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg","shortDesc":"Access Control List (ACL) হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি। Cisco Packet Tracer এ বাস্তব কনফিগারেশন গাইড।","fullContent":"<h2>Access Control List (ACL) – সম্পূর্ণ গাইড</h2><p><b>Access Control List (ACL)</b> হলো এমন এক সেট নেটওয়ার্ক রুলস যা দিয়ে আমরা রাউটার বা সুইচের মাধ্যমে ডাটা ট্রাফিক নিয়ন্ত্রণ করি।</p><h3>ACL এর ধরন:</h3><ul><li><b>Standard ACL:</b> শুধু সোর্স IP ঠিকানার ভিত্তিতে ট্রাফিক নিয়ন্ত্রণ করে।</li><li><b>Extended ACL:</b> সোর্স, ডেস্টিনেশন, প্রোটোকল এবং পোর্ট — সব কিছু ভিত্তিতে নিয়ন্ত্রণ করতে পারে।</li></ul>"},{"title":"CCNA কি? Networking Career-er Sothik Shuruvat","date":"Oct 25, 2025","category":"Career & Certification","imageUrl":"https://files.catbox.moe/pasmm0.jpg","shortDesc":"Amra ek digital jogote baas kori, aar ei digital jogoter backbone holo network. CCNA certification holo network engineer hishebe journey shuru korar prothom ebong sobcheye guruttwopurno dhap.","fullContent":"<h3>CCNA ki? Networking Career-er Sothik Shuruvat</h3><p>Amra ek digital jogote baas kori, aar ei digital jogoter merudondo (backbone) holo network. Network engineer hishebe journey shuru korar prothom dhap holo <strong>CCNA certification</strong>.</p>"}],"contact_info_heading":"CONTACT ME HERE","contact_info_text":"For Network consultancy services, fullstack software architecture, or collaboration, please get in touch.","contact_cv_link":"https://files.catbox.moe/0juxap.pdf","contactDetails":[{"value":"Dhanmondi 27, Dhaka","type":"Location"},{"value":"mdkaiumhasan2005@gmail.com","type":"Email"},{"type":"Contact Number","value":"+880 1560-014339"},{"type":"Languages","value":"Bangla, English, Hindi"}],"socialLinks":[{"url":"https://x.com/mdkaium2005?s=11","platform":"twitter"},{"platform":"instagram","url":"https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto"},{"url":"https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr","platform":"facebook"},{"url":"https://www.linkedin.com/in/md-kaium-hasan-bb6009372/","platform":"Linkedin"},{"platform":"github","url":"https://github.com/mdkaiumhasan"}]};
 
-    // Auto-initialize instantly with cached clean data
+    // Instant baseline render; single API sync is handled by initPortfolio() below
     document.addEventListener('DOMContentLoaded', () => {
         if (typeof updatePortfolioContent === 'function') {
             updatePortfolioContent(INITIAL_PORTFOLIO_DATA);
@@ -1309,17 +1309,6 @@
             if (mainContent) mainContent.classList.remove('hidden');
             const mainNav = document.getElementById('main-nav');
             if (mainNav) mainNav.classList.remove('hidden');
-
-            // Asynchronously sync with MongoDB API for live updates
-            fetch('/api/portfolio')
-                .then(res => res.ok ? res.json() : null)
-                .then(latestData => {
-                    if (latestData && typeof updatePortfolioContent === 'function') {
-                        console.log('Synchronized latest portfolio content from MongoDB');
-                        updatePortfolioContent(latestData);
-                    }
-                })
-                .catch(() => {});
         }
     });
 </script>
@@ -1341,13 +1330,13 @@
 <script>
 function handleEnter3D() {
     if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: 'ENTER_3D' }, '*');
+        window.parent.postMessage({ type: 'ENTER_3D' }, window.location.origin);
+        return;
     }
     const url = new URL(window.location.href);
     url.searchParams.delete('view');
     url.pathname = '/';
-    if (window.top) window.top.location.href = url.toString();
-    else window.location.href = url.toString();
+    window.location.href = url.toString();
 }
 </script>
 
@@ -1442,6 +1431,10 @@ function handleEnter3D() {
 
                     
 <div class="order-first md:order-last text-center md:text-left">
+                        <div id="home-availability-badge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold mb-4" style="background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;">
+                            <span id="home-availability-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; display: inline-block;"></span>
+                            <span id="home-availability-text">Available for Work</span>
+                        </div>
                         <h1 id="home-heading" class="text-4xl md:text-6xl font-bold leading-tight mb-4">
                             Hi, I'm.<span class="text-accent">MD. Kaium Hasan</span> A Network
                             Engineer.
@@ -1527,7 +1520,7 @@ function handleEnter3D() {
 
                 
 <div class="mt-24">
-                    <h2 class="section-title">ACTIVITIES</span>
+                    <h2 class="section-title">ACTIVITIES
                         <span class="section-title-bg">INTERESTS</span>
                     </h2>
                     <div id="activities-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1545,9 +1538,9 @@ function handleEnter3D() {
                     <span class="section-title-bg">WORK</span>
                 </h2>
 
-                <p id="portfolio-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
-                    This Page Is Under Constuction!
-                </p>
+                <div id="portfolio-construction-message" class="text-center text-sm sm:text-base font-semibold mb-10 p-4 rounded-xl hidden" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24;">
+                    <i class="fas fa-tools mr-2"></i> This section is currently being updated with new projects!
+                </div>
 
                 <!-- Portfolio Category Filter Bar & Dropdown -->
                 <div class="portfolio-filter-bar mb-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
@@ -1608,9 +1601,9 @@ function handleEnter3D() {
                 </h2>
 
                 
-<p id="timeline-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
-                    This page is under Constuction!
-                </p>
+<div id="timeline-construction-message" class="text-center text-sm sm:text-base font-semibold mb-10 p-4 rounded-xl hidden" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24;">
+                    <i class="fas fa-tools mr-2"></i> This timeline section is currently under maintenance!
+                </div>
 
                 <div id="timeline-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                     
@@ -1625,9 +1618,9 @@ function handleEnter3D() {
                     <span class="section-title-bg">POSTS</span>
                 </h2>
 
-                <p id="blogs-construction-message" class="text-center text-xl font-semibold text-secondary mb-12 hidden" style="color: var(--text-secondary);">
-                    This Page Is Under Constuction!
-                </p>
+                <div id="blogs-construction-message" class="text-center text-sm sm:text-base font-semibold mb-10 p-4 rounded-xl hidden" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24;">
+                    <i class="fas fa-tools mr-2"></i> Technical blog publications are currently being updated!
+                </div>
 
                 <!-- Blogs Category Filter Bar -->
                 <div class="blogs-filter-bar mb-10 flex flex-wrap items-center justify-center sm:justify-start gap-2.5" id="blogs-categories-container">
@@ -1652,7 +1645,7 @@ function handleEnter3D() {
 
 
         
-<section id="contact" class="main-section min-h-screen px-6 md:px-16 py-24" style="background-color: var(--bg-secondary);">
+<section id="contact" class="main-section min-h-screen px-6 md:px-16 pt-24 pb-32 md:pb-24" style="background-color: var(--bg-secondary);">
              <div class="container mx-auto">
                 <h2 class="section-title">CONTACT <span class="text-accent">ME</span>
                     <span class="section-title-bg">CONTACT</span>
@@ -1661,6 +1654,10 @@ function handleEnter3D() {
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     
 <div>
+                        <div id="contact-availability-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-3" style="background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399;">
+                            <span id="contact-availability-dot" style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; display: inline-block;"></span>
+                            <span id="contact-availability-text">Available for Full-Time & Consultancy Roles</span>
+                        </div>
                         <h3 id="contact-info-heading" class="text-2xl font-bold mb-4">Loading...</h3>
                         <p id="contact-info-text" class="text-secondary mb-8 leading-relaxed" style="color: var(--text-secondary);">
                             Loading information...
@@ -1714,6 +1711,7 @@ function handleEnter3D() {
 <section id="project-detail-view" class="detail-page-view hidden">
         <div class="detail-page-container">
             <h2 id="project-detail-title" class="detail-page-title"></h2>
+            <div id="project-detail-actions" class="flex flex-wrap items-center justify-center gap-3 mb-6"></div>
             <div class="detail-page-header">
                 <img id="project-detail-image" src="" alt="Project Image"
                      onerror="this.src='https://placehold.co/800x500/888/fff?text=Image+Not+Found'">
@@ -1729,6 +1727,7 @@ function handleEnter3D() {
 <section id="blog-detail-view" class="detail-page-view hidden">
         <div class="detail-page-container">
             <h2 id="blog-detail-title" class="detail-page-title"></h2>
+            <div id="blog-detail-actions" class="flex flex-wrap items-center justify-center gap-3 mb-6"></div>
             <div class="detail-page-header">
                 <img id="blog-detail-image" src="" alt="Blog Post Image"
                      onerror="this.src='https://placehold.co/800x500/888/fff?text=Image+Not+Found'">
@@ -1763,27 +1762,70 @@ function handleEnter3D() {
         const contactForm = document.getElementById('contact-form');
         const formStatus = document.getElementById('form-status');
 
+        let dynamicRecipientEmail = 'mdkaiumhasan2005@gmail.com';
+
+        function optimizeCloudinary(url, width) {
+            if (!url || typeof url !== 'string') return url || '';
+            const trimmed = url.trim();
+            if (!trimmed.includes('res.cloudinary.com') || !trimmed.includes('/upload/')) return trimmed;
+            if (/\/upload\/[^/]*(f_auto|q_auto|w_\d+)/.test(trimmed)) return trimmed;
+            return trimmed.replace('/upload/', `/upload/f_auto,q_auto,w_${width || 700},c_limit/`);
+        }
+
+        function resolveCvUrl(...candidates) {
+            for (const c of candidates) {
+                if (typeof c === 'string' && c.trim().length > 0 && c.trim() !== '#') {
+                    return c.trim();
+                }
+            }
+            return 'https://files.catbox.moe/0juxap.pdf';
+        }
+
+        function applyAvailabilityBadge(badgeId, dotId, textId, isAvailable, availableLabel, engagedLabel) {
+            const badge = document.getElementById(badgeId);
+            const dot = document.getElementById(dotId);
+            const text = document.getElementById(textId);
+            if (!badge || !dot || !text) return;
+            if (isAvailable) {
+                badge.style.background = 'rgba(16, 185, 129, 0.14)';
+                badge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                badge.style.color = '#34d399';
+                dot.style.background = '#10b981';
+                dot.style.boxShadow = '0 0 8px #10b981';
+                text.textContent = availableLabel;
+            } else {
+                badge.style.background = 'rgba(244, 63, 94, 0.14)';
+                badge.style.borderColor = 'rgba(244, 63, 94, 0.4)';
+                badge.style.color = '#fda4af';
+                dot.style.background = '#f43f5e';
+                dot.style.boxShadow = '0 0 8px #f43f5e';
+                text.textContent = engagedLabel;
+            }
+        }
+
         function updatePortfolioContent(data) {
             // Helper to safely get data or default
             const get = (key, defaultValue = '') => data?.[key] ?? defaultValue;
+            const isAvailable = data?.available_for_work !== false;
+
+            applyAvailabilityBadge('home-availability-badge', 'home-availability-dot', 'home-availability-text', isAvailable, 'Available for Work', 'Currently Engaged');
+            applyAvailabilityBadge('contact-availability-badge', 'contact-availability-dot', 'contact-availability-text', isAvailable, 'Available for Full-Time & Consultancy Roles', 'Currently Engaged');
 
             // 1. Home Section
-            // --- FIX: Uncommented home heading update ---
             const rawHeading = get('home_heading', "Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.");
             const parsedHeading = rawHeading
                 .replace(/\{\{ACCENT\}\}/gi, '<span class="text-accent">')
                 .replace(/\{\{\/ACCENT\}\}/gi, '</span>');
             document.getElementById('home-heading').innerHTML = sanitizeHTML(parsedHeading);
-            // --- END FIX ---
             document.getElementById('home-subheading').textContent = get('home_subheading', "I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and google maps etc..");
-            document.getElementById('home-cv-link').href = get('home_cv_link', '#');
+            document.getElementById('home-cv-link').href = resolveCvUrl(data?.home_cv_link, data?.about_cv_link, data?.contact_cv_link);
             const homeProfileImg = document.getElementById('home-profile-image');
-            if (homeProfileImg) homeProfileImg.src = get('home_profile_image', 'https://placehold.co/600x800/888/fff?text=Profile');
+            if (homeProfileImg) homeProfileImg.src = optimizeCloudinary(get('home_profile_image', 'https://placehold.co/600x800/888/fff?text=Profile'), 650);
 
             // 2. About Section
-            document.getElementById('about-info-heading').textContent = get('about_info_heading', 'Loading...');
-            document.getElementById('about-info-text').textContent = get('about_info_text', 'Loading information...');
-            document.getElementById('about-cv-link').href = get('about_cv_link', '#');
+            document.getElementById('about-info-heading').textContent = get('about_info_heading', 'INFORMATION ABOUT ME');
+            document.getElementById('about-info-text').textContent = get('about_info_text', '');
+            document.getElementById('about-cv-link').href = resolveCvUrl(data?.about_cv_link, data?.home_cv_link, data?.contact_cv_link);
 
             // Stats
             renderStats(get('stats', []));
@@ -1817,10 +1859,17 @@ function handleEnter3D() {
             updateBlogCategoryFilter();
 
             // 6. Contact Section
-            document.getElementById('contact-info-heading').textContent = get('contact_info_heading', 'Loading...');
-            document.getElementById('contact-info-text').textContent = get('contact_info_text', 'Loading information...');
-            document.getElementById('contact-cv-link').href = get('contact_cv_link', '#');
-            renderContactDetails(get('contactDetails', []));
+            document.getElementById('contact-info-heading').textContent = get('contact_info_heading', 'CONTACT ME HERE');
+            document.getElementById('contact-info-text').textContent = get('contact_info_text', '');
+            document.getElementById('contact-cv-link').href = resolveCvUrl(data?.contact_cv_link, data?.about_cv_link, data?.home_cv_link);
+            const detailsList = get('contactDetails', []);
+            const emailEntry = Array.isArray(detailsList)
+                ? detailsList.find(d => (d?.type || '').toLowerCase().includes('email'))
+                : null;
+            if (emailEntry && emailEntry.value) {
+                dynamicRecipientEmail = String(emailEntry.value).trim();
+            }
+            renderContactDetails(detailsList);
             renderSocialLinks(get('socialLinks', []));
         }
 
@@ -1925,20 +1974,22 @@ function handleEnter3D() {
                 const skillDiv = document.createElement('div');
                 skillDiv.className = 'skill-item';
                 const percentage = Math.max(0, Math.min(100, parseInt(skill.percent || 0, 10)));
-                const cat = getSkillCategory(skill);
-                // --- FIX: Use textContent for safety ---
                 skillDiv.innerHTML = `
                     <div class="flex justify-between items-center mb-1.5">
                         <span class="font-semibold text-lg skill-name-label"></span>
                         <span class="font-semibold text-lg text-secondary" style="color: var(--text-secondary);">${percentage}%</span>
                     </div>
                     <div class="skill-bar-bg">
-                        <div class="skill-bar-inner" data-percent="${percentage}%" style="width: ${percentage}%;"></div>
+                        <div class="skill-bar-inner" data-percent="${percentage}%" style="width: 0%;"></div>
                     </div>
                 `;
                 skillDiv.querySelector('.skill-name-label').textContent = skill.name || 'Skill';
-                // --- END FIX ---
                 skillsContainer.appendChild(skillDiv);
+            });
+            requestAnimationFrame(() => {
+                skillsContainer.querySelectorAll('.skill-bar-inner').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-percent') || '0%';
+                });
             });
         }
 
@@ -1963,7 +2014,7 @@ function handleEnter3D() {
                     </div>
                 `;
                 const img = activityDiv.querySelector('img');
-                img.src = activity.imageUrl || 'https://placehold.co/600x400/ccc/eee?text=Activity';
+                img.src = optimizeCloudinary(activity.imageUrl || 'https://placehold.co/600x400/ccc/eee?text=Activity', 650);
                 img.alt = activity.title || 'Activity Image';
                 
                 activityDiv.querySelector('.blog-title').textContent = activity.title || 'Activity Title';
@@ -2161,6 +2212,9 @@ function handleEnter3D() {
                 const category = getProjectCategory(project);
                 const catStyle = getProjectCategoryStyle(category);
                 
+                const liveUrl = project.live && project.live.trim() && project.live.trim() !== '#' ? project.live.trim() : '';
+                const githubUrl = project.github && project.github.trim() && project.github.trim() !== '#' ? project.github.trim() : '';
+
                 projectDiv.innerHTML = `
                     <div>
                         <div class="relative overflow-hidden rounded-t-[0.85rem] bg-black/40">
@@ -2171,6 +2225,12 @@ function handleEnter3D() {
                                     <span>${escapeHTML(category)}</span>
                                 </span>
                             </div>
+                            ${(liveUrl || githubUrl) ? `
+                            <div class="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
+                                ${githubUrl ? `<a href="${escapeHTML(githubUrl)}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full bg-black/75 hover:bg-black text-white flex items-center justify-center text-xs border border-white/20 transition-transform hover:scale-110" title="Source Code on GitHub"><i class="fab fa-github"></i></a>` : ''}
+                                ${liveUrl ? `<a href="${escapeHTML(liveUrl)}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full bg-black/75 hover:bg-black text-accent flex items-center justify-center text-xs border border-white/20 transition-transform hover:scale-110" title="Live Demo / Deployment"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                            </div>
+                            ` : ''}
                         </div>
                         <div class="portfolio-content">
                             <h3 class="portfolio-title"></h3>
@@ -2188,7 +2248,7 @@ function handleEnter3D() {
                 const img = projectDiv.querySelector('img');
                 const projectTitle = project.title || 'Project';
                 const defaultFallback = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%230b1120"/><stop offset="100%" stop-color="%231a2333"/></linearGradient></defs><rect width="600" height="380" fill="url(%23bg)"/><rect x="1" y="1" width="598" height="378" rx="8" fill="none" stroke="%2328a745" stroke-width="1.5" stroke-opacity="0.3"/><circle cx="300" cy="140" r="36" fill="%2328a745" fill-opacity="0.12"/><path d="M290 128l-12 12 12 12m20-24l12 12-12 12" stroke="%2328a745" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><text x="300" y="210" fill="%23f1f5f9" font-family="system-ui, sans-serif" font-size="16" font-weight="700" text-anchor="middle">${encodeURIComponent(projectTitle)}</text><text x="300" y="235" fill="%2328a745" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="1.5" text-anchor="middle">ACTIVE PROJECT</text></svg>`;
-                img.src = project.imageUrl || defaultFallback;
+                img.src = optimizeCloudinary(project.imageUrl || defaultFallback, 640);
                 img.alt = projectTitle;
                 img.onerror = function() {
                     this.onerror = null;
@@ -2227,7 +2287,9 @@ function handleEnter3D() {
                 const button = projectDiv.querySelector('button');
                 button.setAttribute('data-project-image', project.imageUrl || defaultFallback);
                 button.setAttribute('data-project-title', projectTitle);
-                button.setAttribute('data-project-details', safeFullDetails);
+                button.setAttribute('data-project-details', safeFullDetails || `<p>${escapeHTML(descText)}</p>`);
+                button.setAttribute('data-project-live', liveUrl);
+                button.setAttribute('data-project-github', githubUrl);
 
                 portfolioGrid.appendChild(projectDiv);
             });
@@ -2350,55 +2412,67 @@ function handleEnter3D() {
             blogsGrid.innerHTML = ''; // Clear previous
             posts.forEach(post => {
                 const postDiv = document.createElement('div');
-                postDiv.className = 'blog-item group flex flex-col justify-between';
-                const postLink = post.link && post.link.trim().length > 0 ? post.link.trim() : 'https://www.linkedin.com/in/mdkaiumhasan';
-                const isLinkedIn = postLink.toLowerCase().includes('linkedin');
-                
-                postDiv.setAttribute('data-post-url', postLink);
+                postDiv.className = 'blog-item group flex flex-col justify-between cursor-pointer';
+                const rawLink = post.link && post.link.trim().length > 0 && post.link.trim() !== '#' ? post.link.trim() : '';
+                const hasFullContent = Boolean(post.fullContent && post.fullContent.replace(/<[^>]*>/g, '').trim().length > 0);
+                const isLinkedIn = rawLink.toLowerCase().includes('linkedin');
+                const safeContent = sanitizeHTML(post.fullContent || `<p>${escapeHTML(post.shortDesc || '')}</p>`);
+                const rawImgUrl = post.imageUrl || 'https://placehold.co/600x400/1e293b/38bdf8?text=Article';
+
+                postDiv.setAttribute('data-post-url', rawLink);
+                postDiv.setAttribute('data-has-content', hasFullContent ? 'true' : 'false');
+                postDiv.setAttribute('data-blog-title', post.title || 'Blog Post');
+                postDiv.setAttribute('data-blog-image', rawImgUrl);
+                postDiv.setAttribute('data-blog-content', safeContent);
+
                 postDiv.innerHTML = `
                     <div>
                         <div class="relative overflow-hidden rounded-t-lg bg-black/40">
-                            <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="block">
-                                <img src="" alt="" class="w-full h-56 sm:h-60 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                            </a>
+                            <img src="" alt="" class="w-full h-56 sm:h-60 object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                             <div class="absolute top-2.5 left-2.5 z-10 pointer-events-none">
                                 <span class="px-2.5 py-1 rounded text-[11px] font-bold bg-black/75 backdrop-blur-md text-accent border border-accent/30">
                                     ${escapeHTML(post.category || 'Tutorial')}
                                 </span>
                             </div>
+                            ${rawLink ? `
                             <div class="absolute top-2.5 right-2.5 z-10">
-                                <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded text-[10.5px] font-bold bg-[#0a66c2] text-white flex items-center gap-1 shadow-md hover:bg-[#004182] transition-colors">
-                                    <i class="fab fa-linkedin-in text-xs"></i> LinkedIn
+                                <a href="${escapeHTML(rawLink)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded text-[10.5px] font-bold ${isLinkedIn ? 'bg-[#0a66c2] hover:bg-[#004182]' : 'bg-slate-900/90 hover:bg-black'} text-white flex items-center gap-1 shadow-md transition-colors">
+                                    <i class="${isLinkedIn ? 'fab fa-linkedin-in' : 'fas fa-external-link-alt'} text-xs"></i> ${isLinkedIn ? 'LinkedIn' : 'Source'}
                                 </a>
                             </div>
+                            ` : ''}
                         </div>
                         <div class="blog-content">
                             <div class="blog-meta flex items-center gap-2 text-xs text-secondary mb-2" style="color: var(--text-secondary);">
                                 <span><i class="far fa-calendar-alt mr-1"></i> ${escapeHTML(post.date || '')}</span>
                             </div>
-                            <h3 class="blog-title mb-2">
-                                <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors"> 
-                                    ${escapeHTML(post.title || 'Blog Post Title')}
-                                </a>
+                            <h3 class="blog-title mb-2 group-hover:text-accent transition-colors">
+                                ${escapeHTML(post.title || 'Blog Post Title')}
                             </h3>
                             <p class="blog-description line-clamp-3 mb-4" style="color: var(--text-secondary);">
-                                ${escapeHTML(post.shortDesc || '')}
+                                ${escapeHTML((post.shortDesc || '').replace(/<[^>]*>/g, ''))}
                             </p>
                         </div>
                     </div>
-                    <div class="px-5 pb-5">
-                        <a href="${escapeHTML(postLink)}" target="_blank" rel="noopener noreferrer" class="blog-read-more inline-flex items-center gap-1.5 font-bold text-accent hover:underline text-sm">
-                           ${isLinkedIn ? '<i class="fab fa-linkedin-in text-xs"></i> Read on LinkedIn' : 'Read Article'} <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                    <div class="px-5 pb-5 flex items-center justify-between gap-2 flex-wrap">
+                        ${hasFullContent ? `
+                        <button type="button" class="open-blog-btn blog-read-more inline-flex items-center gap-1.5 font-bold text-accent hover:underline text-sm bg-transparent border-0 p-0 cursor-pointer">
+                            <i class="fas fa-book-open text-xs"></i> Read Full Guide <i class="fas fa-arrow-right ml-0.5 text-xs"></i>
+                        </button>
+                        ` : `
+                        <a href="${escapeHTML(rawLink || 'https://www.linkedin.com/in/md-kaium-hasan-bb6009372/')}" target="_blank" rel="noopener noreferrer" class="blog-read-more inline-flex items-center gap-1.5 font-bold text-accent hover:underline text-sm">
+                            ${isLinkedIn ? '<i class="fab fa-linkedin-in text-xs"></i> Read on LinkedIn' : 'Read Article'} <i class="fas fa-external-link-alt ml-1 text-xs"></i>
                         </a>
+                        `}
                     </div>
                 `;
 
                 const img = postDiv.querySelector('img');
-                img.src = post.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Blog';
+                img.src = optimizeCloudinary(rawImgUrl, 680);
                 img.alt = post.title || 'Blog Post';
                 img.onerror = function() {
                     this.onerror = null;
-                    this.src = 'https://placehold.co/600x400/eee/ccc?text=Blog';
+                    this.src = 'https://placehold.co/600x400/1e293b/38bdf8?text=Article';
                 };
 
                 blogsGrid.appendChild(postDiv);
@@ -2466,26 +2540,49 @@ function handleEnter3D() {
              });
         }
 
-        // --- Contact Form Submission ---
-        contactForm?.addEventListener('submit', function(e) {
+        // --- Contact Form Submission (MongoDB Direct Inbox + Dynamic Mailto Fallback) ---
+        contactForm?.addEventListener('submit', async function(e) {
              e.preventDefault();
              if (!formStatus) return;
 
-             formStatus.textContent = 'Opening email client...';
-             formStatus.className = 'mt-4 text-center text-blue-600 dark:text-blue-400';
+             const name = contactForm.name ? contactForm.name.value.trim() : '';
+             const email = contactForm.email ? contactForm.email.value.trim() : '';
+             const subject = contactForm.subject ? contactForm.subject.value.trim() : 'Portfolio Contact Inquiry';
+             const message = contactForm.message ? contactForm.message.value.trim() : '';
+
+             formStatus.textContent = 'Sending your message...';
+             formStatus.className = 'mt-4 text-center text-blue-600 dark:text-blue-400 font-semibold';
              formStatus.classList.remove('hidden');
 
-             const name = contactForm.name ? contactForm.name.value : '';
-             const email = contactForm.email ? contactForm.email.value : '';
-             const subject = contactForm.subject ? contactForm.subject.value : 'Portfolio Contact Inquiry';
-             const message = contactForm.message ? contactForm.message.value : '';
+             try {
+                 const res = await fetch('/api/messages', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify({
+                         fromName: name,
+                         fromEmail: email,
+                         subject,
+                         body: message,
+                         source: '2d'
+                     })
+                 });
+                 const data = await res.json().catch(() => ({}));
+                 if (res.ok && data.success) {
+                     formStatus.textContent = 'Thank you! Your message has been delivered directly to Kaium\'s Inbox.';
+                     formStatus.className = 'mt-4 text-center text-green-600 dark:text-green-400 font-semibold';
+                     contactForm.reset();
+                     setTimeout(() => formStatus.classList.add('hidden'), 8000);
+                     return;
+                 }
+             } catch (_) {
+                 // Fall through to mailto draft fallback
+             }
 
-             const mailtoLink = 'mailto:mdkaiumhasan2005@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
-
+             const mailtoLink = 'mailto:' + encodeURIComponent(dynamicRecipientEmail) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
              window.open(mailtoLink, '_blank');
 
-             formStatus.textContent = 'Thank you! Mail draft opened. You can also email directly to mdkaiumhasan2005@gmail.com';
-             formStatus.className = 'mt-4 text-center text-green-600 dark:text-green-400';
+             formStatus.textContent = 'Mail draft opened! You can also email directly to ' + dynamicRecipientEmail;
+             formStatus.className = 'mt-4 text-center text-green-600 dark:text-green-400 font-semibold';
              contactForm.reset();
              setTimeout(() => formStatus.classList.add('hidden'), 8000);
         });
@@ -2540,7 +2637,7 @@ function handleEnter3D() {
         // Dynamic initialization from MongoDB live API
         async function initPortfolio() {
             try {
-                const res = await fetch('/api/portfolio');
+                const res = await fetch('/api/portfolio', { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     if (data && typeof data === 'object') {
@@ -2578,6 +2675,15 @@ function handleEnter3D() {
         }
 
         initPortfolio();
+
+        if ('BroadcastChannel' in window) {
+            try {
+                const syncChannel = new BroadcastChannel('portfolio_data_updated');
+                syncChannel.onmessage = () => {
+                    initPortfolio();
+                };
+            } catch (_) {}
+        }
     </script>
     <script>
         // Separate script for non-module JS (Theme, Navigation, Detail Views)
@@ -2761,34 +2867,66 @@ function handleEnter3D() {
             const projectDetailImage = document.getElementById('project-detail-image');
             const projectDetailTitle = document.getElementById('project-detail-title');
             const projectDetailDetails = document.getElementById('project-detail-details');
+            const projectDetailActions = document.getElementById('project-detail-actions');
 
             portfolioGridDelegation?.addEventListener('click', (e) => {
+                if (e.target.closest('a')) return;
                 const button = e.target.closest('.open-project-btn');
                 if (button && projectDetailView && projectDetailImage && projectDetailTitle && projectDetailDetails) {
                     const populateProject = () => {
                          projectDetailImage.src = button.getAttribute('data-project-image') || '';
                          projectDetailTitle.textContent = button.getAttribute('data-project-title') || '';
-                         // Directly set innerHTML for project details as it's pre-sanitized
                          projectDetailDetails.innerHTML = typeof sanitizeHTML === 'function' ? sanitizeHTML(button.getAttribute('data-project-details') || '') : escapeHTML(button.getAttribute('data-project-details') || '');
+                         if (projectDetailActions) {
+                             const live = button.getAttribute('data-project-live') || '';
+                             const github = button.getAttribute('data-project-github') || '';
+                             let actionsHtml = '';
+                             if (live) {
+                                 actionsHtml += `<a href="${escapeHTML(live)}" target="_blank" rel="noopener noreferrer" class="btn-custom text-xs"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>`;
+                             }
+                             if (github) {
+                                 actionsHtml += `<a href="${escapeHTML(github)}" target="_blank" rel="noopener noreferrer" class="btn-custom text-xs"><i class="fab fa-github mr-2"></i>Source Code</a>`;
+                             }
+                             projectDetailActions.innerHTML = actionsHtml;
+                         }
                     };
                     openDetailView(projectDetailView, '#portfolio', populateProject);
                 }
             });
 
-            // Blog Detail Event Delegation
+            // Blog Detail & External Link Event Delegation
             const blogsGridDelegation = document.getElementById('blogs-grid');
             const blogDetailImage = document.getElementById('blog-detail-image');
             const blogDetailTitle = document.getElementById('blog-detail-title');
             const blogDetailContent = document.getElementById('blog-detail-content');
+            const blogDetailActions = document.getElementById('blog-detail-actions');
 
-            // Blog Direct Link Delegation (Opens LinkedIn / external link directly without modal view)
             blogsGridDelegation?.addEventListener('click', (e) => {
-                 const directA = e.target.closest('a');
-                 if (directA) return; // Native <a> tag opens link in new tab directly
+                 if (e.target.closest('a')) return;
                  const card = e.target.closest('.blog-item');
-                 if (card) {
-                     const postUrl = card.getAttribute('data-post-url') || 'https://www.linkedin.com/in/mdkaiumhasan';
+                 if (!card) return;
+
+                 const hasContent = card.getAttribute('data-has-content') === 'true';
+                 const postUrl = card.getAttribute('data-post-url') || '';
+
+                 if (hasContent && blogDetailView && blogDetailImage && blogDetailTitle && blogDetailContent) {
+                     const populateBlog = () => {
+                         blogDetailImage.src = card.getAttribute('data-blog-image') || '';
+                         blogDetailTitle.textContent = card.getAttribute('data-blog-title') || '';
+                         blogDetailContent.innerHTML = typeof sanitizeHTML === 'function'
+                             ? sanitizeHTML(card.getAttribute('data-blog-content') || '')
+                             : escapeHTML(card.getAttribute('data-blog-content') || '');
+                         if (blogDetailActions) {
+                             blogDetailActions.innerHTML = postUrl
+                                 ? `<a href="${escapeHTML(postUrl)}" target="_blank" rel="noopener noreferrer" class="btn-custom text-xs"><i class="fas fa-external-link-alt mr-2"></i>Open Original Publication</a>`
+                                 : '';
+                         }
+                     };
+                     openDetailView(blogDetailView, '#blogs', populateBlog);
+                 } else if (postUrl) {
                      window.open(postUrl, '_blank', 'noopener,noreferrer');
+                 } else {
+                     window.open('https://www.linkedin.com/in/md-kaium-hasan-bb6009372/', '_blank', 'noopener,noreferrer');
                  }
             });
 

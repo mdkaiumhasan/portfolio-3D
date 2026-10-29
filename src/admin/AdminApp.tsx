@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   PortfolioData,
   AdminSection,
-  ToastMessage
+  ToastMessage,
+  InboxMessageItem
 } from './types';
 import {
   getAdminToken,
   removeAdminToken,
+  verifyAdminSession,
   fetchPortfolio,
   savePortfolio,
+  fetchInboxMessages,
+  AuthExpiredError,
   fallbackPortfolioData
 } from './api';
 import { Sidebar } from './components/Sidebar';
@@ -36,12 +40,15 @@ export const AdminApp: React.FC = () => {
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [data, setData] = useState<PortfolioData>(fallbackPortfolioData);
   const [originalData, setOriginalData] = useState<PortfolioData>(fallbackPortfolioData);
+  const [inboxMessages, setInboxMessages] = useState<InboxMessageItem[]>([]);
+  const [isInboxLoading, setIsInboxLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
   const [isOpenMobile, setIsOpenMobile] = useState<boolean>(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState<boolean>(false);
+  const hasLoadedOnceRef = useRef<boolean>(false);
 
   // Toast Helpers
   const addToast = useCallback((message: string, type: ToastMessage['type'] = 'success') => {
@@ -57,26 +64,60 @@ export const AdminApp: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Load Data on Startup
-  const loadData = useCallback(async () => {
-    setIsLoading(true);
+  const handleAuthExpired = useCallback((msg?: string) => {
+    removeAdminToken();
+    setIsAuthenticated(false);
+    addToast(msg || 'Session expired. Please sign in again.', 'warning');
+  }, [addToast]);
+
+  const loadInbox = useCallback(async () => {
+    setIsInboxLoading(true);
     try {
-      const fetched = await fetchPortfolio();
-      setData(fetched);
-      setOriginalData(fetched);
-      setHasUnsavedChanges(false);
+      const msgs = await fetchInboxMessages();
+      setInboxMessages(msgs);
+    } catch (err: any) {
+      if (err instanceof AuthExpiredError) {
+        handleAuthExpired(err.message);
+      }
+    } finally {
+      setIsInboxLoading(false);
+    }
+  }, [handleAuthExpired]);
+
+  // Verify session & load data on startup
+  const loadData = useCallback(async (preserveDraft = false) => {
+    if (!preserveDraft) {
+      setIsLoading(true);
+    }
+    try {
+      const valid = await verifyAdminSession();
+      if (!valid) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
+      }
+
+      if (!preserveDraft) {
+        const fetched = await fetchPortfolio();
+        setData(fetched);
+        setOriginalData(fetched);
+        setHasUnsavedChanges(false);
+        hasLoadedOnceRef.current = true;
+      }
+
+      await loadInbox();
     } catch (err: any) {
       addToast(`Error loading data: ${err.message}`, 'error');
     } finally {
       setIsLoading(false);
     }
-  }, [addToast]);
+  }, [addToast, loadInbox]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadData();
+      loadData(hasLoadedOnceRef.current && hasUnsavedChanges);
     }
-  }, [isAuthenticated, loadData]);
+  }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle Updates to Data
   const handleDataUpdate = useCallback((updater: (prev: PortfolioData) => PortfolioData) => {
@@ -95,13 +136,17 @@ export const AdminApp: React.FC = () => {
       const result = await savePortfolio(data);
       setOriginalData(data);
       setHasUnsavedChanges(false);
-      addToast(result.message || 'All changes synced with MongoDB successfully!', 'success');
+      addToast(result.message || 'All changes synced with 2D & 3D portfolios!', 'success');
     } catch (err: any) {
-      addToast(err.message || 'Failed to save changes to database', 'error');
+      if (err instanceof AuthExpiredError) {
+        handleAuthExpired(err.message);
+      } else {
+        addToast(err.message || 'Failed to save changes to database', 'error');
+      }
     } finally {
       setIsSaving(false);
     }
-  }, [data, isSaving, addToast]);
+  }, [data, isSaving, addToast, handleAuthExpired]);
 
   // Discard Unsaved Changes
   const handleDiscard = useCallback(() => {
@@ -116,13 +161,15 @@ export const AdminApp: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
         e.preventDefault();
-        handleSaveAll();
+        if (isAuthenticated) {
+          handleSaveAll();
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleSaveAll]);
+  }, [handleSaveAll, isAuthenticated]);
 
   // Logout Handler
   const handleLogout = useCallback(() => {
@@ -131,8 +178,15 @@ export const AdminApp: React.FC = () => {
     addToast('Signed out of executive console', 'info');
   }, [addToast]);
 
+  const unreadInboxCount = inboxMessages.filter((m) => !m.read).length;
+
   if (!isAuthenticated) {
-    return <LoginModal onSuccess={() => setIsAuthenticated(true)} />;
+    return (
+      <>
+        <LoginModal onSuccess={() => setIsAuthenticated(true)} />
+        <ToastContainer toasts={toasts} onDismiss={removeToast} />
+      </>
+    );
   }
 
   if (isLoading) {
@@ -145,7 +199,7 @@ export const AdminApp: React.FC = () => {
           Connecting to MongoDB Cloud...
         </div>
         <div className="text-xs text-slate-500 mt-1">
-          Loading portfolio schema & media collections
+          Loading unified 2D & 3D portfolio collections
         </div>
       </div>
     );
@@ -158,6 +212,7 @@ export const AdminApp: React.FC = () => {
         activeSection={activeSection}
         onSelectSection={(sec) => setActiveSection(sec)}
         data={data}
+        unreadInboxCount={unreadInboxCount}
         isOpenMobile={isOpenMobile}
         onCloseMobile={() => setIsOpenMobile(false)}
         onLogout={handleLogout}
@@ -179,6 +234,8 @@ export const AdminApp: React.FC = () => {
           {activeSection === 'dashboard' && (
             <DashboardView
               data={data}
+              inboxCount={inboxMessages.length}
+              unreadInboxCount={unreadInboxCount}
               onNavigate={(sec) => setActiveSection(sec)}
               onUpdate={handleDataUpdate}
             />
@@ -243,6 +300,10 @@ export const AdminApp: React.FC = () => {
           {activeSection === 'contact-inbox' && (
             <ContactInboxView
               data={data}
+              messages={inboxMessages}
+              isInboxLoading={isInboxLoading}
+              onRefreshInbox={loadInbox}
+              onMessagesChange={setInboxMessages}
               onUpdate={handleDataUpdate}
               onToast={addToast}
             />

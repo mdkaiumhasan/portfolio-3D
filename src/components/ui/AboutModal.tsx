@@ -1,11 +1,13 @@
 import React from 'react';
-import { X, Award, MapPin, Mail, Phone, FileText, Terminal } from 'lucide-react';
+import { X, Award, MapPin, Mail, Phone, FileText, Terminal, Globe, GraduationCap, Info } from 'lucide-react';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { sanitizeHtml, optimizeCloudinaryUrl } from '../../utils/sanitize';
 
 export const AboutModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
 
   const handleClose = () => {
@@ -46,17 +48,29 @@ export const AboutModal: React.FC = () => {
     });
   };
 
-  const profileImage = data.home_profile_image || "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg";
+  const rawProfileImage =
+    data.home_profile_image ||
+    'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg';
+  const profileImage = optimizeCloudinaryUrl(rawProfileImage, 320);
 
-  // Dynamic Contact helpers from database
-  const getDetail = (type: string, fallback: string) => {
-    const item = data.contactDetails?.find((d) => d.type.toLowerCase().includes(type.toLowerCase()));
-    return item ? item.value : fallback;
+  const contactChips =
+    data.contactDetails && data.contactDetails.length > 0
+      ? data.contactDetails
+      : [
+          { type: 'Location', value: 'Dhanmondi, Dhaka, Bangladesh' },
+          { type: 'Email', value: 'mdkaiumhasan2005@gmail.com' },
+          { type: 'Contact Number', value: '+880 1560-014339' },
+        ];
+
+  const renderChipIcon = (type: string, value: string) => {
+    const t = type.toLowerCase();
+    if (t.includes('email') || value.includes('@')) return <Mail size={14} color="#00e5ff" />;
+    if (t.includes('phone') || t.includes('contact') || t.includes('whatsapp')) return <Phone size={14} color="#00e5ff" />;
+    if (t.includes('location') || t.includes('address')) return <MapPin size={14} color="#00e5ff" />;
+    if (t.includes('edu') || t.includes('degree')) return <GraduationCap size={14} color="#00e5ff" />;
+    if (t.includes('lang') || t.includes('web')) return <Globe size={14} color="#00e5ff" />;
+    return <Info size={14} color="#00e5ff" />;
   };
-
-  const email = getDetail('email', 'mdkaiumhasan2005@gmail.com');
-  const phone = getDetail('contact number', '+880 1560-014339');
-  const location = getDetail('location', 'Dhanmondi, Dhaka, Bangladesh');
 
   return (
     <div className="modal-overlay" onClick={handleClose}>
@@ -70,7 +84,8 @@ export const AboutModal: React.FC = () => {
                 height: '12px',
                 borderRadius: '50%',
                 backgroundColor: '#00e5ff',
-                boxShadow: '0 0 10px #00e5ff'
+                boxShadow: '0 0 10px #00e5ff',
+                flexShrink: 0
               }}
             />
             <div>
@@ -122,6 +137,7 @@ export const AboutModal: React.FC = () => {
                 <img
                   src={profileImage}
                   alt="Profile"
+                  loading="lazy"
                   style={{
                     width: '100%',
                     height: '100%',
@@ -130,13 +146,13 @@ export const AboutModal: React.FC = () => {
                     display: 'block'
                   }}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";
+                    (e.target as HTMLImageElement).src = 'https://files.catbox.moe/jfuo0s.png';
                   }}
                 />
               </div>
 
               {/* Title & Status */}
-              <div style={{ flex: '1 1 340px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ flex: '1 1 260px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                   <div
                     style={{
@@ -195,46 +211,50 @@ export const AboutModal: React.FC = () => {
 
             {/* Detailed About Narrative from data.about_info_text */}
             {data.about_info_text && (
-              <p style={{ fontSize: '13.5px', lineHeight: '1.65', color: '#cbd5e1', margin: 0 }}>
-                {data.about_info_text}
-              </p>
+              <div
+                style={{ fontSize: '13.5px', lineHeight: '1.65', color: '#cbd5e1', margin: 0 }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(data.about_info_text) }}
+              />
             )}
 
-            {/* Quick Contact Chips from data.contactDetails */}
+            {/* Quick Contact Chips dynamically from data.contactDetails */}
             <div
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 gap: '14px',
-                paddingTop: '6px',
+                paddingTop: '8px',
                 fontSize: '12.5px',
                 borderTop: '1px solid rgba(255, 255, 255, 0.08)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94a3b8' }}>
-                <MapPin size={14} color="#00e5ff" />
-                <span style={{ color: '#e2e8f0' }}>{location}</span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Mail size={14} color="#00e5ff" />
-                <a href={`mailto:${email}`} style={{ color: '#e2e8f0', textDecoration: 'none' }}>
-                  {email}
-                </a>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Phone size={14} color="#00e5ff" />
-                <a href={`tel:${phone}`} style={{ color: '#e2e8f0', textDecoration: 'none' }}>
-                  {phone}
-                </a>
-              </div>
+              {contactChips.map((chip, idx) => {
+                const t = chip.type.toLowerCase();
+                const isEmail = t.includes('email') || chip.value.includes('@');
+                const isPhone = t.includes('phone') || t.includes('contact') || t.includes('whatsapp');
+                return (
+                  <div key={`${chip.type}-${idx}`} style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94a3b8' }}>
+                    {renderChipIcon(chip.type, chip.value)}
+                    {isEmail ? (
+                      <a href={`mailto:${chip.value.trim()}`} style={{ color: '#e2e8f0', textDecoration: 'none' }}>
+                        {chip.value}
+                      </a>
+                    ) : isPhone ? (
+                      <a href={`tel:${chip.value.replace(/\s+/g, '')}`} style={{ color: '#e2e8f0', textDecoration: 'none' }}>
+                        {chip.value}
+                      </a>
+                    ) : (
+                      <span style={{ color: '#e2e8f0' }}>{chip.value}</span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Key Metric Stats Grid (Dynamic from Admin Panel / DB) */}
           {data.stats && data.stats.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 170px), 1fr))', gap: '12px' }}>
               {data.stats.map((stat, idx) => (
                 <div
                   key={idx}
@@ -267,7 +287,7 @@ export const AboutModal: React.FC = () => {
                 <Award size={18} color="#38bdf8" />
                 EXTRA CURRICULAR ACTIVITIES
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '12px' }}>
                 {data.activities.map((act, idx) => (
                   <div
                     key={idx}
@@ -283,14 +303,18 @@ export const AboutModal: React.FC = () => {
                   >
                     {act.imageUrl && (
                       <img
-                        src={act.imageUrl}
+                        src={optimizeCloudinaryUrl(act.imageUrl, 200)}
                         alt={act.title}
+                        loading="lazy"
                         style={{ width: '60px', height: '60px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
                       />
                     )}
-                    <div>
+                    <div style={{ minWidth: 0 }}>
                       <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff', margin: 0 }}>{act.title}</h4>
-                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0', lineHeight: '1.4' }}>{act.description}</p>
+                      <div
+                        style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0', lineHeight: '1.45' }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(act.description) }}
+                      />
                     </div>
                   </div>
                 ))}

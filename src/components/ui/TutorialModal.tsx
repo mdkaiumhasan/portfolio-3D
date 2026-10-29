@@ -4,7 +4,9 @@ import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
 export const TutorialModal: React.FC = () => {
-  const { setActivePanel, audioEnabled, setAudioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
+  const setAudioEnabled = useGameStore((s) => s.setAudioEnabled);
 
   const handleClose = () => {
     if (!audioEnabled) {

@@ -1,15 +1,25 @@
-import { PortfolioData } from './types';
+import { PortfolioData, InboxMessageItem } from './types';
 
 const API_BASE = '/api';
+
+export class AuthExpiredError extends Error {
+  constructor(message = 'Session expired. Please sign in again.') {
+    super(message);
+    this.name = 'AuthExpiredError';
+  }
+}
 
 export const fallbackPortfolioData: PortfolioData = {
   home_heading: "Hi, I'm {{ACCENT}}MD. Kaium Hasan{{/ACCENT}}. A Network Engineer.",
   home_subheading: "I'm a Network Engineer. I love to build functional and resilient networks. Networks are digital roads for deploying applications like Twitter and Google Maps.",
-  home_cv_link: "#",
+  home_cv_link: "https://files.catbox.moe/0juxap.pdf",
   home_profile_image: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035635/portfolio/profile/kaium_profile_portrait.jpg",
   about_info_heading: "INFORMATION ABOUT ME",
   about_info_text: "I am a highly motivated, skilled and qualified Network Engineer with over 1 years commercial experience working within various private sector and public sector fast paced dynamic environments. My experience includes (but not limited to) Design, Security, Wireless, Project and BAU work.",
   about_cv_link: "https://files.catbox.moe/0juxap.pdf",
+  software_cv_link: "",
+  network_cv_link: "",
+  available_for_work: true,
   stats: [
     { heading: "CCNA", description: "CISCO CERTIFIED NETWORK ASSOCIATE" },
     { heading: "MIKROTIK", description: "MIKROTIK ROUTER CONFIGURE & MANAGEMENT" },
@@ -42,14 +52,13 @@ export const fallbackPortfolioData: PortfolioData = {
   project_categories: [
     "Networking & Security",
     "Mobile & Realtime",
-    "Robotics & Hardware",
-    "AI & Machine Learning"
+    "Robotics & Hardware"
   ],
-  portfolio_cv_link: "#",
-  portfolio__showConstructionMessage: true,
+  portfolio_cv_link: "https://files.catbox.moe/0juxap.pdf",
+  portfolio__showConstructionMessage: false,
   projects: [
     {
-      category: "AI & Machine Learning",
+      category: "Mobile & Realtime",
       title: "Mess Management APP (EasyMess)",
       role: "Android & Fullstack Developer",
       technology: "JavaScript, CSS, HTML, Firebase, Android Studio, Kotlin",
@@ -57,7 +66,7 @@ export const fallbackPortfolioData: PortfolioData = {
       live: "https://www.mdkaiumhasan.site",
       github: "https://github.com/mdkaiumhasan",
       shortDesc: "Automated bachelor mess & meal expense tracker for Manager and Members with live meal rates, member balances, and bazaar requests.",
-      fullDetails: "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p><p><a href=\"https://files.catbox.moe/zrgptp.zip\" target=\"_blank\">Download App ZIP</a></p>"
+      fullDetails: "<h3>EasyMess - Bachelor Mess & Meal Expense Tracker</h3><p>This app is an account management tool for mess Managers & Members. Easily track deposits, expenses, dues, and monthly reports with real-time automatic meal rate computation and bilingual (Bangla & English) localization.</p>"
     },
     {
       category: "Networking & Security",
@@ -93,7 +102,7 @@ export const fallbackPortfolioData: PortfolioData = {
       fullDetails: "<h3>Autonomous Line Follower Robot (LFR)</h3><p>Designed and wired an autonomous ground vehicle capable of high-speed path tracking along complex black-and-white grid courses. Presented and awarded at the District Science Exhibition 2024.</p>"
     }
   ],
-  timeline_cv_link: "#",
+  timeline_cv_link: "https://files.catbox.moe/0juxap.pdf",
   timeline__showConstructionMessage: false,
   experiences: [
     {
@@ -121,39 +130,34 @@ export const fallbackPortfolioData: PortfolioData = {
       imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp"
     }
   ],
-  blogs_cv_link: "#",
-  blogs__showConstructionMessage: true,
+  blogs_cv_link: "https://files.catbox.moe/0juxap.pdf",
+  blogs__showConstructionMessage: false,
+  blog_categories: ["Tutorial", "Networking Guide", "Network Architecture", "Career & Certification"],
   posts: [
     {
       imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg",
       date: "Oct 26, 2025",
-      category: "Tutorial",
+      category: "Networking Guide",
       title: "Access Control List (ACL) – Complete Implementation Guide",
       shortDesc: "Understanding standard and extended Access Control Lists in enterprise Cisco networks with Packet Tracer walkthroughs.",
       fullContent: "<p>Access Control Lists (ACLs) are network traffic filters applied on routers and layer 3 switches. Learn how to secure your network topology and prevent unauthorized access.</p>"
-    },
-    {
-      imageUrl: "https://res.cloudinary.com/dgomoujlo/image/upload/v1791035650/portfolio/blogs/pmao25kvzdb72jnhzjda.svg",
-      date: "Oct 25, 2025",
-      category: "Web Design",
-      title: "Why Cisco CCNA (200-301) is the Ultimate Foundation",
-      shortDesc: "Exploring why deep routing, switching, and network automation fundamentals are crucial for any modern systems architect.",
-      fullContent: "<p>The CCNA 200-301 curriculum validates essential knowledge in routing, switching, wireless, and network programmability. Here is how it translates into enterprise engineering.</p>"
     }
   ],
   contact_info_heading: "CONTACT ME HERE",
-  contact_info_text: "For Network consultancy services, please get in touch.",
+  contact_info_text: "For Network consultancy services, fullstack software architecture, or collaboration, please get in touch.",
   contact_cv_link: "https://files.catbox.moe/0juxap.pdf",
   contactDetails: [
     { type: "Location", value: "Dhanmondi 27, Dhaka" },
     { type: "Email", value: "mdkaiumhasan2005@gmail.com" },
     { type: "Contact Number", value: "+880 1560-014339" },
-    { type: "Languages", value: "Bengali, English, Hindi" }
+    { type: "Languages", value: "Bangla, English, Hindi" }
   ],
   socialLinks: [
     { platform: "github", url: "https://github.com/mdkaiumhasan" },
-    { platform: "linkedin", url: "https://linkedin.com/in/mdkaiumhasan" },
-    { platform: "facebook", url: "https://facebook.com/mdkaiumhasan" }
+    { platform: "linkedin", url: "https://www.linkedin.com/in/md-kaium-hasan-bb6009372/" },
+    { platform: "twitter", url: "https://x.com/mdkaium2005?s=11" },
+    { platform: "facebook", url: "https://www.facebook.com/share/16NRG5WKLP/?mibextid=wwXIfr" },
+    { platform: "instagram", url: "https://www.instagram.com/kafi_ahmed2.0?igsh=NTZkdmR5ODFlaWto" }
   ]
 };
 
@@ -169,6 +173,44 @@ export function setAdminToken(token: string): void {
 
 export function removeAdminToken(): void {
   localStorage.removeItem(authStorageKey);
+}
+
+function broadcastPortfolioSync() {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    try {
+      const channel = new BroadcastChannel('portfolio_data_updated');
+      channel.postMessage({ updatedAt: Date.now() });
+      channel.close();
+    } catch {
+      // Ignore restricted environments
+    }
+  }
+}
+
+function checkAuthResponse(res: Response, body?: any) {
+  if (res.status === 401) {
+    removeAdminToken();
+    throw new AuthExpiredError(body?.error || 'Admin session expired. Please sign in again.');
+  }
+}
+
+export async function verifyAdminSession(): Promise<boolean> {
+  const token = getAdminToken();
+  if (!token) return false;
+  try {
+    const res = await fetch(`${API_BASE}/auth`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (!res.ok) {
+      if (res.status === 401) removeAdminToken();
+      return false;
+    }
+    const data = await res.json();
+    return Boolean(data.valid);
+  } catch {
+    return false;
+  }
 }
 
 export async function loginWithPassword(password: string): Promise<string> {
@@ -187,12 +229,13 @@ export async function loginWithPassword(password: string): Promise<string> {
 
 export async function fetchPortfolio(): Promise<PortfolioData> {
   try {
-    const res = await fetch(`${API_BASE}/portfolio`);
+    const res = await fetch(`${API_BASE}/portfolio`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       return {
         ...fallbackPortfolioData,
         ...data,
+        available_for_work: typeof data.available_for_work === 'boolean' ? data.available_for_work : true,
         stats: Array.isArray(data.stats) ? data.stats : fallbackPortfolioData.stats,
         skills: Array.isArray(data.skills) ? data.skills : fallbackPortfolioData.skills,
         skill_categories: Array.isArray(data.skill_categories) && data.skill_categories.length > 0
@@ -205,6 +248,9 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
         experiences: Array.isArray(data.experiences) ? data.experiences : fallbackPortfolioData.experiences,
         activities: Array.isArray(data.activities) ? data.activities : fallbackPortfolioData.activities,
         posts: Array.isArray(data.posts) ? data.posts : fallbackPortfolioData.posts,
+        blog_categories: Array.isArray(data.blog_categories) && data.blog_categories.length > 0
+          ? data.blog_categories
+          : fallbackPortfolioData.blog_categories,
         contactDetails: Array.isArray(data.contactDetails) ? data.contactDetails : fallbackPortfolioData.contactDetails,
         socialLinks: Array.isArray(data.socialLinks) ? data.socialLinks : fallbackPortfolioData.socialLinks
       };
@@ -218,21 +264,23 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
 export async function savePortfolio(data: PortfolioData): Promise<{ success: boolean; message: string }> {
   const token = getAdminToken();
   const res = await fetch(`${API_BASE}/portfolio`, {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token || ''}`
     },
     body: JSON.stringify(data)
   });
-  const result = await res.json();
+  const result = await res.json().catch(() => ({}));
+  checkAuthResponse(res, result);
   if (!res.ok || !result.success) {
     throw new Error(result.error || 'Failed to save portfolio data');
   }
+  broadcastPortfolioSync();
   return { success: true, message: result.message || 'Saved to MongoDB successfully' };
 }
 
-export async function uploadImageToCloudinary(file: File): Promise<string> {
+export async function uploadImageToCloudinary(file: File, folder = 'portfolio_uploads'): Promise<string> {
   const token = getAdminToken();
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -246,10 +294,11 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
           },
           body: JSON.stringify({
             image: reader.result,
-            folder: 'portfolio_uploads'
+            folder
           })
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        checkAuthResponse(res, data);
         if (res.ok && data.url) {
           resolve(data.url);
         } else {
@@ -262,4 +311,79 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
     reader.onerror = () => reject(new Error('Failed to read image file'));
     reader.readAsDataURL(file);
   });
+}
+
+export async function generateBlogWithAI(
+  topic: string,
+  categories: string[]
+): Promise<{ title: string; category: string; shortDesc: string; fullContent: string }> {
+  const token = getAdminToken();
+  const res = await fetch(`${API_BASE}/generate-blog`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token || ''}`
+    },
+    body: JSON.stringify({ topic, categories })
+  });
+  const data = await res.json().catch(() => ({}));
+  checkAuthResponse(res, data);
+  if (!res.ok || !data.success || !data.article) {
+    throw new Error(data.error || 'AI article generation failed');
+  }
+  return data.article;
+}
+
+export async function fetchInboxMessages(): Promise<InboxMessageItem[]> {
+  const token = getAdminToken();
+  if (!token) return [];
+  const res = await fetch(`${API_BASE}/messages`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store'
+  });
+  const data = await res.json().catch(() => ({}));
+  checkAuthResponse(res, data);
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || 'Failed to load inbox messages');
+  }
+  return Array.isArray(data.messages) ? data.messages : [];
+}
+
+export async function updateInboxMessageStatus(options: {
+  id?: string;
+  read?: boolean;
+  markAllRead?: boolean;
+}): Promise<void> {
+  const token = getAdminToken();
+  const res = await fetch(`${API_BASE}/messages`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token || ''}`
+    },
+    body: JSON.stringify(options)
+  });
+  const data = await res.json().catch(() => ({}));
+  checkAuthResponse(res, data);
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || 'Failed to update message status');
+  }
+}
+
+export async function deleteInboxMessage(options: { id?: string; clearRead?: boolean }): Promise<void> {
+  const token = getAdminToken();
+  const res = await fetch(`${API_BASE}/messages`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token || ''}`
+    },
+    body: JSON.stringify(options)
+  });
+  const data = await res.json().catch(() => ({}));
+  checkAuthResponse(res, data);
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || 'Failed to delete message');
+  }
 }

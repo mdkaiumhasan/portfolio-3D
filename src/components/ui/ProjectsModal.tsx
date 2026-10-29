@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { X, ExternalLink, Github, Terminal, CheckCircle2 } from 'lucide-react';
+import { X, ExternalLink, Github, AlertTriangle } from 'lucide-react';
 import { usePortfolioData, ProjectItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { sanitizeHtml, optimizeCloudinaryUrl } from '../../utils/sanitize';
 
 export const ProjectsModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -68,11 +70,12 @@ export const ProjectsModal: React.FC = () => {
                 height: '12px',
                 borderRadius: '50%',
                 backgroundColor: '#ff007f',
-                boxShadow: '0 0 10px #ff007f'
+                boxShadow: '0 0 10px #ff007f',
+                flexShrink: 0
               }}
             />
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', color: '#ffffff' }}>
                   SOFTWARE ENGINEERING LAB
                 </h2>
@@ -91,7 +94,7 @@ export const ProjectsModal: React.FC = () => {
                 </span>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Production Architectures, High-Concurrency Backends & Mobile Applications
+                Production Architectures, High-Concurrency Backends & Network Topologies
               </p>
             </div>
           </div>
@@ -140,114 +143,192 @@ export const ProjectsModal: React.FC = () => {
 
         {/* Projects List */}
         <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {filteredProjects.map((project, idx) => {
-            const cat = getProjectCategory(project);
-            const color = getProjectColor(cat);
-            const techList = project.technology
-              ? project.technology.split(',').map((t) => t.trim())
-              : [];
-
-            return (
-              <div
-                key={idx}
-                className="glass-panel glass-panel-hover"
-                style={{
-                  padding: '22px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '14px',
-                  borderLeft: `4px solid ${color}`,
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 25, 0.95) 100%)'
-                }}
-              >
-                {/* Title & Metadata Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                      <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>
-                        {project.title}
-                      </h3>
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          padding: '2px 8px',
-                          borderRadius: '6px',
-                          background: `${color}22`,
-                          color: color,
-                          border: `1px solid ${color}66`,
-                          fontWeight: 600
-                        }}
-                      >
-                        {cat}
-                      </span>
-                    </div>
-                    {project.role && (
-                      <p style={{ color: '#38bdf8', fontSize: '13px', fontWeight: 500, marginTop: '2px' }}>
-                        {project.role}
-                      </p>
-                    )}
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-cyber"
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                      >
-                        <Github size={14} />
-                        GitHub
-                      </a>
-                    )}
-                    {project.live && (
-                      <a
-                        href={project.live}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-cyber btn-cyber-primary"
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                      >
-                        <ExternalLink size={14} />
-                        Live Demo
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#cbd5e1' }}>
-                  {project.shortDesc}
-                </p>
-
-                {/* Full Details if available */}
-                {project.fullDetails && (
-                  <div
-                    style={{
-                      fontSize: '13px',
-                      color: '#94a3b8',
-                      lineHeight: '1.6',
-                      borderLeft: '2px solid rgba(56, 189, 248, 0.3)',
-                      paddingLeft: '12px'
-                    }}
-                    dangerouslySetInnerHTML={{ __html: project.fullDetails }}
-                  />
-                )}
-
-                {/* Tech Stack Pills */}
-                {techList.length > 0 && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingTop: '4px' }}>
-                    {techList.map((tech, tIdx) => (
-                      <span key={tIdx} className="tech-tag">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
+          {data.portfolio__showConstructionMessage && (
+            <div
+              style={{
+                padding: '14px 18px',
+                borderRadius: '12px',
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#fcd34d'
+              }}
+            >
+              <AlertTriangle size={18} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <div style={{ fontSize: '13px', lineHeight: 1.5 }}>
+                <strong style={{ color: '#fde68a' }}>Section Maintenance Active:</strong> New case studies, topologies, and repository benchmarks are currently being updated via the Admin Console.
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          {filteredProjects.length === 0 ? (
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '48px 24px',
+                background: 'rgba(15, 23, 42, 0.4)',
+                borderRadius: '12px',
+                border: '1px dashed rgba(148, 163, 184, 0.2)'
+              }}
+            >
+              <p style={{ fontSize: '15px', color: '#ffffff', fontWeight: 600 }}>
+                No projects found in category "{selectedCategory}"
+              </p>
+              {selectedCategory !== 'All' && (
+                <button
+                  onClick={() => handleSelectCategory('All')}
+                  className="btn-cyber"
+                  style={{ marginTop: '14px', padding: '6px 16px', fontSize: '12px' }}
+                >
+                  Show All Projects
+                </button>
+              )}
+            </div>
+          ) : (
+            filteredProjects.map((project, idx) => {
+              const cat = getProjectCategory(project);
+              const color = getProjectColor(cat);
+              const techList = project.technology
+                ? project.technology.split(',').map((t) => t.trim()).filter(Boolean)
+                : [];
+              const hasImage = Boolean(project.imageUrl && project.imageUrl.trim().length > 0);
+              const safeFullDetails = project.fullDetails ? sanitizeHtml(project.fullDetails) : '';
+
+              return (
+                <div
+                  key={`${project.title}-${idx}`}
+                  className="glass-panel glass-panel-hover"
+                  style={{
+                    padding: '22px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '14px',
+                    borderLeft: `4px solid ${color}`,
+                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 25, 0.95) 100%)'
+                  }}
+                >
+                  {/* Optional Project Thumbnail Banner */}
+                  {hasImage && (
+                    <div
+                      style={{
+                        width: '100%',
+                        maxHeight: '220px',
+                        borderRadius: '10px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(148, 163, 184, 0.18)',
+                        background: '#090e17'
+                      }}
+                    >
+                      <img
+                        src={optimizeCloudinaryUrl(project.imageUrl, 720)}
+                        alt={project.title}
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: '200px',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                        onError={(e) => {
+                          (e.currentTarget.parentElement as HTMLElement).style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Title & Metadata Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff' }}>
+                          {project.title}
+                        </h3>
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            padding: '2px 8px',
+                            borderRadius: '6px',
+                            background: `${color}22`,
+                            color: color,
+                            border: `1px solid ${color}66`,
+                            fontWeight: 600
+                          }}
+                        >
+                          {cat}
+                        </span>
+                      </div>
+                      {project.role && (
+                        <p style={{ color: '#38bdf8', fontSize: '13px', fontWeight: 500, marginTop: '2px' }}>
+                          {project.role}
+                        </p>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-cyber"
+                          style={{ padding: '6px 12px', fontSize: '12px' }}
+                        >
+                          <Github size={14} />
+                          GitHub
+                        </a>
+                      )}
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-cyber btn-cyber-primary"
+                          style={{ padding: '6px 12px', fontSize: '12px' }}
+                        >
+                          <ExternalLink size={14} />
+                          Live Demo
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  {project.shortDesc && (
+                    <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#cbd5e1' }}>
+                      {project.shortDesc}
+                    </p>
+                  )}
+
+                  {/* Sanitized Full Details if available */}
+                  {safeFullDetails && (
+                    <div
+                      style={{
+                        fontSize: '13px',
+                        color: '#94a3b8',
+                        lineHeight: '1.65',
+                        borderLeft: '2px solid rgba(56, 189, 248, 0.3)',
+                        paddingLeft: '12px'
+                      }}
+                      dangerouslySetInnerHTML={{ __html: safeFullDetails }}
+                    />
+                  )}
+
+                  {/* Tech Stack Pills */}
+                  {techList.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingTop: '4px' }}>
+                      {techList.map((tech, tIdx) => (
+                        <span key={tIdx} className="tech-tag">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

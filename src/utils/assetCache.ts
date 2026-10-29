@@ -1,133 +1,203 @@
-// Client-side persistent cache manager for large 3D models using Cache API
-const CACHE_NAME = 'portfolio-3d-cache-v2';
+// Client-side persistent cache & single-stream ObjectURL handoff for large 3D GLB models
+export const MODEL_CACHE_NAME = 'portfolio-3d-models-v3';
+const LEGACY_MODEL_CACHES = ['portfolio-3d-cache-v1', 'portfolio-3d-cache-v2'];
 
-// In-flight download promise singleton to prevent duplicate concurrent downloads
-const activeDownloads = new Map<string, Promise<boolean>>();
+// In-memory ObjectURL cache so repeat mounts resolve in 0ms without re-reading disk
+const resolvedBlobUrls = new Map<string, string>();
+
+// In-flight download deduplication map (only one network stream per URL ever runs)
+const activeDownloads = new Map<string, Promise<string>>();
 
 /**
- * Checks if a 3D model is already saved in the browser's persistent Cache API.
+ * Checks if a 3D model is already available in memory or persistent CacheStorage.
  */
 export async function isModelInCache(url: string): Promise<boolean> {
-  if (typeof window === 'undefined' || !('caches' in window)) {
-    return false;
-  }
+  if (resolvedBlobUrls.has(url)) return true;
+  if (typeof window === 'undefined' || !('caches' in window)) return false;
+
   try {
-    const cache = await caches.open(CACHE_NAME);
+    const cache = await caches.open(MODEL_CACHE_NAME);
     const match = await cache.match(url);
-    return !!match;
+    if (match) return true;
+
+    // Migrate seamlessly if already cached in v2 so returning users don't re-download
+    for (const legacyName of LEGACY_MODEL_CACHES) {
+      const hasLegacy = await caches.has(legacyName);
+      if (!hasLegacy) continue;
+      const legacyCache = await caches.open(legacyName);
+      const legacyMatch = await legacyCache.match(url);
+      if (legacyMatch && legacyMatch.status === 200) {
+        await cache.put(url, legacyMatch.clone());
+        return true;
+      }
+    }
+    return false;
   } catch {
     return false;
   }
 }
 
 /**
- * Downloads and caches large 3D models (such as after_the_rain_2k.glb) with accurate byte progress.
- * If already cached on disk, resolves in ~10ms with 0 internet data downloaded.
+ * Streams and caches a 3D GLB model ONCE and returns an in-memory `blob:` ObjectURL
+ * (or falls back to `url` if Blob/Cache APIs are restricted) so Three.js `useGLTF`
+ * never triggers a duplicate 90 MB network download.
  */
 export async function preloadAndCacheModel(
   url: string,
-  onProgress?: (progressPercent: number, loadedMB: number, totalMB: number) => void
-): Promise<boolean> {
-  if (typeof window === 'undefined' || !('caches' in window)) {
-    if (onProgress) onProgress(100, 0, 0);
-    return true;
+  onProgress?: (progressPercent: number, loadedMB: number, totalMB: number) => void,
+  signal?: AbortSignal
+): Promise<string> {
+  const defaultEstimateBytes = url.includes('mobile') ? 8_400_000 : 93_869_428;
+
+  if (typeof window === 'undefined') {
+    onProgress?.(100, 0, 0);
+    return url;
   }
 
-  // If already being downloaded by another component, reuse promise
-  if (activeDownloads.has(url)) {
+  // 1. Instant RAM hit
+  if (resolvedBlobUrls.has(url)) {
+    const mb = defaultEstimateBytes / (1024 * 1024);
+    onProgress?.(100, mb, mb);
+    return resolvedBlobUrls.get(url)!;
+  }
+
+  // 2. Reuse active in-flight stream if another caller requested the same URL
+  if (activeDownloads.has(url) && !signal) {
     return activeDownloads.get(url)!;
   }
 
-  const downloadPromise = (async () => {
+  const downloadPromise = (async (): Promise<string> => {
     try {
-      const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match(url);
-
-      if (cached) {
-        if (onProgress) {
-          const size = Number(cached.headers.get('content-length')) || 93869428;
-          const mb = size / (1024 * 1024);
-          onProgress(100, mb, mb);
+      // Check persistent CacheStorage first
+      if ('caches' in window) {
+        try {
+          const cache = await caches.open(MODEL_CACHE_NAME);
+          const cached = await cache.match(url);
+          if (cached && cached.status === 200) {
+            const blob = await cached.blob();
+            if (blob.size > 1024) {
+              const mb = blob.size / (1024 * 1024);
+              const blobUrl = URL.createObjectURL(blob);
+              resolvedBlobUrls.set(url, blobUrl);
+              onProgress?.(100, mb, mb);
+              return blobUrl;
+            }
+          }
+        } catch {
+          // Proceed to network stream if CacheStorage read fails
         }
-        return true;
       }
 
-      // Not in cache: stream download with live byte tracking
-      const response = await fetch(url);
+      if (signal?.aborted) {
+        throw new DOMException('Model preload aborted', 'AbortError');
+      }
+
+      // 3. Single network stream with live byte progress
+      const response = await fetch(url, { signal });
       if (!response.ok) {
-        throw new Error(`Failed to fetch model: ${response.status} ${response.statusText}`);
+        throw new Error(`Model fetch failed: ${response.status}`);
       }
 
       const contentLength = response.headers.get('content-length');
-      const totalBytes = contentLength ? parseInt(contentLength, 10) : 93869428;
+      const totalBytes = contentLength ? parseInt(contentLength, 10) : defaultEstimateBytes;
       const totalMB = totalBytes / (1024 * 1024);
 
       if (!response.body) {
-        await cache.put(url, response.clone());
-        if (onProgress) onProgress(100, totalMB, totalMB);
-        return true;
+        const blob = await response.blob();
+        if ('caches' in window && blob.size > 1024) {
+          caches
+            .open(MODEL_CACHE_NAME)
+            .then((c) =>
+              c.put(
+                url,
+                new Response(blob, {
+                  headers: {
+                    'Content-Type': 'model/gltf-binary',
+                    'Content-Length': String(blob.size),
+                  },
+                })
+              )
+            )
+            .catch(() => {});
+        }
+        const blobUrl = URL.createObjectURL(blob);
+        resolvedBlobUrls.set(url, blobUrl);
+        onProgress?.(100, totalMB, totalMB);
+        return blobUrl;
       }
 
-      // Stream download with live byte tracking WITHOUT buffering 300MB in JavaScript arrays
+      const reader = response.body.getReader();
+      const chunks: BlobPart[] = [];
       let loadedBytes = 0;
-      let streamToCache: ReadableStream;
 
-      if (typeof TransformStream !== 'undefined') {
-        const ts = new TransformStream({
-          transform(chunk, controller) {
-            loadedBytes += chunk.length;
+      const onAbort = () => {
+        reader.cancel().catch(() => {});
+      };
+      signal?.addEventListener('abort', onAbort, { once: true });
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (signal?.aborted) {
+            throw new DOMException('Model preload aborted', 'AbortError');
+          }
+          if (value) {
+            chunks.push(value);
+            loadedBytes += value.byteLength;
             if (onProgress) {
               const loadedMB = loadedBytes / (1024 * 1024);
-              const percent = Math.min(99.9, (loadedBytes / totalBytes) * 100);
-              onProgress(percent, loadedMB, totalMB);
+              const denom = Math.max(totalBytes, loadedBytes);
+              const percent = Math.min(99.5, (loadedBytes / denom) * 100);
+              onProgress(percent, loadedMB, denom / (1024 * 1024));
             }
-            controller.enqueue(chunk);
-          },
-        });
-        streamToCache = response.body.pipeThrough(ts);
-      } else {
-        const reader = response.body.getReader();
-        streamToCache = new ReadableStream({
-          async pull(controller) {
-            const { done, value } = await reader.read();
-            if (done) {
-              controller.close();
-              return;
-            }
-            loadedBytes += value.length;
-            if (onProgress) {
-              const loadedMB = loadedBytes / (1024 * 1024);
-              const percent = Math.min(99.9, (loadedBytes / totalBytes) * 100);
-              onProgress(percent, loadedMB, totalMB);
-            }
-            controller.enqueue(value);
-          },
-        });
+          }
+        }
+      } finally {
+        signal?.removeEventListener('abort', onAbort);
       }
 
-      const cacheResponse = new Response(streamToCache, {
-        headers: {
-          'Content-Type': 'model/gltf-binary',
-          'Content-Length': totalBytes.toString(),
-          'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      });
+      const blob = new Blob(chunks, { type: 'model/gltf-binary' });
+      // Release chunk references immediately so GC only retains the single Blob
+      chunks.length = 0;
 
-      await cache.put(url, cacheResponse);
-
-      if (onProgress) {
-        onProgress(100, totalMB, totalMB);
+      if ('caches' in window && blob.size > 1024) {
+        caches
+          .open(MODEL_CACHE_NAME)
+          .then((cache) =>
+            cache.put(
+              url,
+              new Response(blob, {
+                headers: {
+                  'Content-Type': 'model/gltf-binary',
+                  'Content-Length': String(blob.size),
+                  'Cache-Control': 'public, max-age=31536000, immutable',
+                },
+              })
+            )
+          )
+          .catch(() => {});
       }
-      return true;
-    } catch (err) {
-      console.warn('Asset cache download error, falling back to standard fetch:', err);
-      if (onProgress) onProgress(100, 0, 0);
-      return false;
+
+      const finalMB = blob.size / (1024 * 1024);
+      const blobUrl = URL.createObjectURL(blob);
+      resolvedBlobUrls.set(url, blobUrl);
+      onProgress?.(100, finalMB, finalMB);
+      return blobUrl;
+    } catch (err: any) {
+      if (err?.name === 'AbortError' || signal?.aborted) {
+        throw err;
+      }
+      console.warn('Asset cache stream fallback to direct URL:', err);
+      onProgress?.(100, 0, 0);
+      return url;
     } finally {
       activeDownloads.delete(url);
     }
   })();
 
-  activeDownloads.set(url, downloadPromise);
+  if (!signal) {
+    activeDownloads.set(url, downloadPromise);
+  }
   return downloadPromise;
 }

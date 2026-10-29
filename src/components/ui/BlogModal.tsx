@@ -4,17 +4,26 @@ import {
   Calendar,
   Clock,
   ArrowRight,
+  ArrowLeft,
   ExternalLink,
-  BookOpen
+  BookOpen,
+  AlertTriangle
 } from 'lucide-react';
 import { usePortfolioData, PostItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { sanitizeHtml, stripHtml, optimizeCloudinaryUrl } from '../../utils/sanitize';
+
+const FALLBACK_BLOG_IMAGE =
+  'https://res.cloudinary.com/dgomoujlo/image/upload/f_auto,q_auto,w_640/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg';
+const FALLBACK_PROFILE_URL = 'https://www.linkedin.com/in/md-kaium-hasan-bb6009372/';
 
 export const BlogModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedPost, setSelectedPost] = useState<PostItem | null>(null);
 
   const posts = data.posts || [];
 
@@ -23,8 +32,12 @@ export const BlogModal: React.FC = () => {
     const raw = (data.blog_categories && data.blog_categories.length > 0)
       ? data.blog_categories
       : ['Tutorial', 'Networking Guide', 'Network Architecture', 'Career & Certification'];
-    return ['All', ...Array.from(new Set(raw))];
-  }, [data.blog_categories]);
+    const set = new Set<string>(raw.filter(Boolean));
+    posts.forEach((p) => {
+      if (p.category && p.category.trim()) set.add(p.category.trim());
+    });
+    return ['All', ...Array.from(set)];
+  }, [data.blog_categories, posts]);
 
   const filteredPosts = useMemo(() => {
     if (selectedCategory === 'All') return posts;
@@ -43,19 +56,25 @@ export const BlogModal: React.FC = () => {
   const handleSelectCategory = (cat: string) => {
     if (audioEnabled) sound.playClick();
     setSelectedCategory(cat);
+    setSelectedPost(null);
   };
 
-  const handleOpenPostLink = (post: PostItem) => {
+  const hasRichContent = (post: PostItem) => Boolean(post.fullContent && stripHtml(post.fullContent).length > 10);
+  const hasExternalLink = (post: PostItem) => Boolean(post.link && post.link.trim().length > 0 && post.link.trim() !== '#');
+
+  const handleSelectPost = (post: PostItem) => {
     if (audioEnabled) sound.playClick();
-    const url = post.link && post.link.trim().length > 0
-      ? post.link.trim()
-      : 'https://www.linkedin.com/in/mdkaiumhasan';
+    if (hasRichContent(post)) {
+      setSelectedPost(post);
+      return;
+    }
+    const url = hasExternalLink(post) ? post.link!.trim() : FALLBACK_PROFILE_URL;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const getEstimatedReadTime = (content?: string, excerpt?: string) => {
-    const text = (content || '') + ' ' + (excerpt || '');
-    const words = text.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+    const text = stripHtml((content || '') + ' ' + (excerpt || ''));
+    const words = text.split(/\s+/).filter(Boolean).length;
     const minutes = Math.max(2, Math.ceil(words / 140));
     return `${minutes} min read`;
   };
@@ -85,7 +104,8 @@ export const BlogModal: React.FC = () => {
                 borderRadius: '50%',
                 backgroundColor: '#f43f5e',
                 boxShadow: '0 0 12px #f43f5e',
-                animation: 'pulse 2s infinite'
+                animation: 'pulse 2s infinite',
+                flexShrink: 0
               }}
             />
             <div>
@@ -109,7 +129,7 @@ export const BlogModal: React.FC = () => {
                 </span>
               </div>
               <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '3px 0 0 0' }}>
-                Network Architecture, Routing Protocols & Industry Insights on LinkedIn
+                Network Architecture, Routing Protocols, Tutorials & Industry Insights
               </p>
             </div>
           </div>
@@ -118,265 +138,439 @@ export const BlogModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Dynamic Category Filter Tabs */}
-        <div
-          style={{
-            padding: '12px 24px',
-            background: 'rgba(15, 23, 42, 0.5)',
-            borderBottom: '1px solid rgba(244, 63, 94, 0.15)',
-            display: 'flex',
-            gap: '8px',
-            overflowX: 'auto'
-          }}
-        >
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => handleSelectCategory(cat)}
-                style={{
-                  background: isSelected
-                    ? 'linear-gradient(135deg, rgba(244, 63, 94, 0.35) 0%, rgba(14, 165, 233, 0.25) 100%)'
-                    : 'rgba(30, 41, 59, 0.5)',
-                  border: `1px solid ${isSelected ? '#f43f5e' : 'rgba(148, 163, 184, 0.2)'}`,
-                  color: isSelected ? '#ffffff' : '#94a3b8',
-                  padding: '6px 14px',
-                  borderRadius: '20px',
-                  fontSize: '12.5px',
-                  fontFamily: 'var(--font-hud)',
-                  fontWeight: 700,
-                  letterSpacing: '0.4px',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s ease',
-                  boxShadow: isSelected ? '0 0 12px rgba(244, 63, 94, 0.4)' : 'none'
-                }}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        {/* Category Filter Tabs OR Reader Back Navigation */}
+        {selectedPost ? (
+          <div
+            style={{
+              padding: '12px 24px',
+              background: 'rgba(15, 23, 42, 0.6)',
+              borderBottom: '1px solid rgba(244, 63, 94, 0.18)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}
+          >
+            <button
+              onClick={() => {
+                if (audioEnabled) sound.playClick();
+                setSelectedPost(null);
+              }}
+              className="btn-cyber"
+              style={{ padding: '6px 14px', fontSize: '12px' }}
+            >
+              <ArrowLeft size={14} />
+              Back to All Publications
+            </button>
 
-        {/* Articles Grid - Directly opens LinkedIn / Article Link on click */}
+            {hasExternalLink(selectedPost) && (
+              <a
+                href={selectedPost.link!.trim()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-cyber btn-cyber-primary"
+                style={{ padding: '6px 14px', fontSize: '12px' }}
+              >
+                <ExternalLink size={14} />
+                Open External Source
+              </a>
+            )}
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: '12px 24px',
+              background: 'rgba(15, 23, 42, 0.5)',
+              borderBottom: '1px solid rgba(244, 63, 94, 0.15)',
+              display: 'flex',
+              gap: '8px',
+              overflowX: 'auto'
+            }}
+          >
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleSelectCategory(cat)}
+                  style={{
+                    background: isSelected
+                      ? 'linear-gradient(135deg, rgba(244, 63, 94, 0.35) 0%, rgba(14, 165, 233, 0.25) 100%)'
+                      : 'rgba(30, 41, 59, 0.5)',
+                    border: `1px solid ${isSelected ? '#f43f5e' : 'rgba(148, 163, 184, 0.2)'}`,
+                    color: isSelected ? '#ffffff' : '#94a3b8',
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    fontSize: '12.5px',
+                    fontFamily: 'var(--font-hud)',
+                    fontWeight: 700,
+                    letterSpacing: '0.4px',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isSelected ? '0 0 12px rgba(244, 63, 94, 0.4)' : 'none'
+                  }}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Modal Body: In-Modal Reader OR Articles Grid */}
         <div
           className="modal-body"
           style={{
             padding: '24px',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '20px',
             overflowY: 'auto',
-            flex: 1
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '18px'
           }}
         >
-          {filteredPosts.map((post, idx) => {
-            const isLinkedIn = (post.link || '').toLowerCase().includes('linkedin');
+          {data.blogs__showConstructionMessage && !selectedPost && (
+            <div
+              style={{
+                padding: '14px 18px',
+                borderRadius: '12px',
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                color: '#fcd34d'
+              }}
+            >
+              <AlertTriangle size={18} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <div style={{ fontSize: '13px', lineHeight: 1.5 }}>
+                <strong style={{ color: '#fde68a' }}>Editorial Maintenance Active:</strong> New technical deep-dives and lab writeups are currently being drafted via the Admin Console.
+              </div>
+            </div>
+          )}
 
-            return (
-              <div
-                key={idx}
-                onClick={() => handleOpenPostLink(post)}
-                className="glass-panel glass-panel-hover"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  border: '1px solid rgba(244, 63, 94, 0.25)',
-                  borderTop: '3px solid #f43f5e',
-                  background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 14, 25, 0.98) 100%)',
-                  transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
-                }}
-                title="Click to read full post on LinkedIn"
-              >
-                {/* Thumbnail Banner */}
+          {selectedPost ? (
+            <article
+              className="glass-panel"
+              style={{
+                padding: '24px',
+                background: 'rgba(15, 23, 42, 0.78)',
+                border: '1px solid rgba(244, 63, 94, 0.25)',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '18px'
+              }}
+            >
+              {selectedPost.imageUrl && (
                 <div
                   style={{
-                    height: '160px',
-                    position: 'relative',
+                    width: '100%',
+                    maxHeight: '280px',
+                    borderRadius: '10px',
                     overflow: 'hidden',
-                    backgroundColor: '#0f172a'
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
                   }}
                 >
                   <img
-                    src={post.imageUrl || 'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg'}
-                    alt={post.title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      transition: 'transform 0.3s ease'
-                    }}
+                    src={optimizeCloudinaryUrl(selectedPost.imageUrl, 960)}
+                    alt={selectedPost.title}
+                    style={{ width: '100%', height: '260px', objectFit: 'cover', display: 'block' }}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg';
+                      (e.target as HTMLImageElement).src = FALLBACK_BLOG_IMAGE;
                     }}
                   />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(180deg, transparent 40%, rgba(10, 14, 25, 0.9) 100%)'
-                    }}
-                  />
-
-                  {/* Category Badge */}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      fontSize: '10.5px',
-                      fontWeight: 700,
-                      padding: '3px 8px',
-                      borderRadius: '6px',
-                      background: 'rgba(10, 14, 25, 0.85)',
-                      backdropFilter: 'blur(4px)',
-                      color: '#f43f5e',
-                      border: '1px solid rgba(244, 63, 94, 0.4)',
-                      fontFamily: 'var(--font-hud)',
-                      letterSpacing: '0.4px'
-                    }}
-                  >
-                    {post.category || 'Tutorial'}
-                  </span>
-
-                  {/* LinkedIn Indicator Badge */}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      fontSize: '10px',
-                      fontWeight: 700,
-                      padding: '3px 8px',
-                      borderRadius: '6px',
-                      background: 'rgba(10, 102, 194, 0.9)',
-                      color: '#ffffff',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontFamily: 'var(--font-hud)',
-                      letterSpacing: '0.3px',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)'
-                    }}
-                  >
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff">
-                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2z"/>
-                    </svg>
-                    LINKEDIN
-                  </span>
                 </div>
+              )}
 
-                {/* Card Content */}
-                <div
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', fontSize: '12px', color: '#94a3b8' }}>
+                <span
                   style={{
-                    padding: '18px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    justifyContent: 'space-between',
-                    gap: '12px'
+                    padding: '3px 10px',
+                    borderRadius: '12px',
+                    background: 'rgba(244, 63, 94, 0.18)',
+                    border: '1px solid rgba(244, 63, 94, 0.4)',
+                    color: '#fb7185',
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-hud)'
                   }}
                 >
-                  <div>
-                    {/* Date & Read time */}
+                  {selectedPost.category || 'Technical Guide'}
+                </span>
+                {selectedPost.date && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <Calendar size={13} color="#f43f5e" />
+                    {selectedPost.date}
+                  </span>
+                )}
+                <span>•</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Clock size={13} color="#38bdf8" />
+                  {getEstimatedReadTime(selectedPost.fullContent, selectedPost.shortDesc)}
+                </span>
+              </div>
+
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '22px',
+                  fontWeight: 800,
+                  color: '#ffffff',
+                  lineHeight: 1.35,
+                  margin: 0
+                }}
+              >
+                {selectedPost.title}
+              </h2>
+
+              <div
+                className="blog-article-reader"
+                style={{
+                  fontSize: '14.5px',
+                  lineHeight: 1.75,
+                  color: '#cbd5e1',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHtml(selectedPost.fullContent || selectedPost.shortDesc || '')
+                }}
+              />
+            </article>
+          ) : filteredPosts.length === 0 ? (
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '48px 24px',
+                background: 'rgba(15, 23, 42, 0.4)',
+                borderRadius: '12px',
+                border: '1px dashed rgba(148, 163, 184, 0.2)'
+              }}
+            >
+              <p style={{ fontSize: '15px', color: '#ffffff', fontWeight: 600 }}>
+                No articles published in category "{selectedCategory}"
+              </p>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+                gap: '20px'
+              }}
+            >
+              {filteredPosts.map((post, idx) => {
+                const isLinkedIn = (post.link || '').toLowerCase().includes('linkedin');
+                const readableInApp = hasRichContent(post);
+
+                return (
+                  <div
+                    key={`${post.title}-${idx}`}
+                    onClick={() => handleSelectPost(post)}
+                    className="glass-panel glass-panel-hover"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      cursor: 'pointer',
+                      border: '1px solid rgba(244, 63, 94, 0.25)',
+                      borderTop: '3px solid #f43f5e',
+                      background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 14, 25, 0.98) 100%)',
+                      transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+                    }}
+                    title={readableInApp ? 'Click to read full article' : 'Click to open publication'}
+                  >
+                    {/* Thumbnail Banner */}
                     <div
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        fontSize: '11px',
-                        color: '#94a3b8',
-                        marginBottom: '8px',
-                        fontFamily: 'var(--font-hud)'
+                        height: '160px',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        backgroundColor: '#0f172a'
                       }}
                     >
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Calendar size={12} color="#f43f5e" />
-                        {post.date}
+                      <img
+                        src={optimizeCloudinaryUrl(post.imageUrl, 640) || FALLBACK_BLOG_IMAGE}
+                        alt={post.title}
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                          transition: 'transform 0.3s ease'
+                        }}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = FALLBACK_BLOG_IMAGE;
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'linear-gradient(180deg, transparent 40%, rgba(10, 14, 25, 0.9) 100%)'
+                        }}
+                      />
+
+                      {/* Category Badge */}
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '12px',
+                          left: '12px',
+                          fontSize: '10.5px',
+                          fontWeight: 700,
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          background: 'rgba(10, 14, 25, 0.85)',
+                          backdropFilter: 'blur(4px)',
+                          color: '#f43f5e',
+                          border: '1px solid rgba(244, 63, 94, 0.4)',
+                          fontFamily: 'var(--font-hud)',
+                          letterSpacing: '0.4px'
+                        }}
+                      >
+                        {post.category || 'Tutorial'}
                       </span>
-                      <span>•</span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Clock size={12} color="#38bdf8" />
-                        {getEstimatedReadTime(post.fullContent, post.shortDesc)}
+
+                      {/* Source Badge */}
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '12px',
+                          right: '12px',
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          background: isLinkedIn
+                            ? 'rgba(10, 102, 194, 0.92)'
+                            : readableInApp
+                              ? 'rgba(244, 63, 94, 0.88)'
+                              : 'rgba(15, 23, 42, 0.9)',
+                          color: '#ffffff',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          fontFamily: 'var(--font-hud)',
+                          letterSpacing: '0.3px',
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)'
+                        }}
+                      >
+                        {isLinkedIn ? 'LINKEDIN' : readableInApp ? 'FULL GUIDE' : 'EXTERNAL'}
                       </span>
                     </div>
 
-                    <h3
+                    {/* Card Content */}
+                    <div
                       style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '16px',
-                        fontWeight: 700,
-                        color: '#ffffff',
-                        lineHeight: '1.4',
-                        marginBottom: '8px',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
+                        padding: '18px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                        justifyContent: 'space-between',
+                        gap: '12px'
                       }}
                     >
-                      {post.title}
-                    </h3>
+                      <div>
+                        {/* Date & Read time */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            fontSize: '11px',
+                            color: '#94a3b8',
+                            marginBottom: '8px',
+                            fontFamily: 'var(--font-hud)'
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Calendar size={12} color="#f43f5e" />
+                            {post.date}
+                          </span>
+                          <span>•</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Clock size={12} color="#38bdf8" />
+                            {getEstimatedReadTime(post.fullContent, post.shortDesc)}
+                          </span>
+                        </div>
 
-                    <p
-                      style={{
-                        fontSize: '13px',
-                        color: '#94a3b8',
-                        lineHeight: '1.5',
-                        fontFamily: 'var(--font-body)',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        margin: 0
-                      }}
-                    >
-                      {(post.shortDesc || '').replace(/<[^>]*>/g, '')}
-                    </p>
-                  </div>
+                        <h3
+                          style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: '16px',
+                            fontWeight: 700,
+                            color: '#ffffff',
+                            lineHeight: '1.4',
+                            marginBottom: '8px',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden'
+                          }}
+                        >
+                          {post.title}
+                        </h3>
 
-                  {/* Direct Action Link */}
-                  <div
-                    style={{
-                      paddingTop: '12px',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      color: '#f43f5e',
-                      fontFamily: 'var(--font-hud)',
-                      letterSpacing: '0.4px'
-                    }}
-                  >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                      {isLinkedIn ? (
-                        <>
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="#0a66c2">
-                            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2z"/>
-                          </svg>
-                          READ ON LINKEDIN
-                        </>
-                      ) : (
-                        <>
-                          <ExternalLink size={13} color="#f43f5e" />
-                          OPEN ARTICLE
-                        </>
-                      )}
-                    </span>
-                    <ArrowRight size={14} color="#f43f5e" />
+                        <p
+                          style={{
+                            fontSize: '13px',
+                            color: '#94a3b8',
+                            lineHeight: '1.5',
+                            fontFamily: 'var(--font-body)',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            margin: 0
+                          }}
+                        >
+                          {stripHtml(post.shortDesc || post.fullContent || '')}
+                        </p>
+                      </div>
+
+                      {/* Action Footer */}
+                      <div
+                        style={{
+                          paddingTop: '12px',
+                          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          color: '#f43f5e',
+                          fontFamily: 'var(--font-hud)',
+                          letterSpacing: '0.4px'
+                        }}
+                      >
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          {readableInApp ? (
+                            <>
+                              <BookOpen size={13} color="#f43f5e" />
+                              READ FULL ARTICLE
+                            </>
+                          ) : (
+                            <>
+                              <ExternalLink size={13} color="#f43f5e" />
+                              {isLinkedIn ? 'READ ON LINKEDIN' : 'OPEN ARTICLE'}
+                            </>
+                          )}
+                        </span>
+                        <ArrowRight size={14} color="#f43f5e" />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Modal Footer */}
@@ -395,7 +589,7 @@ export const BlogModal: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BookOpen size={14} color="#f43f5e" />
             <span style={{ fontSize: '12px', color: '#94a3b8' }}>
-              All technical guides & posts are linked directly to official LinkedIn publications.
+              Synchronized live with the Unified Admin Console & AI Blog Studio.
             </span>
           </div>
 

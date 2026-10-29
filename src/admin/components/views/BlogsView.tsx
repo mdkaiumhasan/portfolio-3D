@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { PortfolioData, BlogPostItem } from '../../types';
 import { ConfirmModal } from '../ConfirmModal';
-import { uploadImageToCloudinary } from '../../api';
+import { uploadImageToCloudinary, generateBlogWithAI } from '../../api';
 
 interface BlogsViewProps {
   data: PortfolioData;
@@ -148,7 +148,7 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
       shortDesc: '',
       fullContent: '<p>Technical post overview and key highlights...</p>',
       imageUrl: 'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg',
-      link: 'https://www.linkedin.com/in/md-kaium-hasan-bb6009372/'
+      link: ''
     });
   };
 
@@ -209,7 +209,7 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
     onToast('Article deleted', 'info');
   };
 
-  // Generate with Gemini AI
+  // Generate with Gemini AI (Server-Side Secured Endpoint)
   const handleGenerateAI = async () => {
     if (!geminiTopic.trim()) {
       onToast('Please enter a topic for the blog article', 'warning');
@@ -218,42 +218,17 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
 
     setIsGeneratingWithAI(true);
     try {
-      const prompt = `Write an authoritative, educational technical blog article for a certified Network Engineer & Systems Developer's portfolio. Topic: "${geminiTopic}". Generate JSON with: title (string), category (string like Tutorial, Network Security, System Design), shortDescription (string), fullContentHtml (string with HTML tags like p, h2, h3, ul, li).`;
-
-      const GEMINI_API_KEY = "AIzaSyCz4AOJl9UbVE4Zb1-W9Nw_7Hi3FkC9eEc";
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-
-      const res = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: 'application/json'
-          }
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error(`Gemini generation request error (status ${res.status})`);
-      }
-
-      const resData = await res.json();
-      const rawText = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawText) throw new Error('No content returned from AI');
-
-      const parsed = JSON.parse(rawText);
-
-      const assignedCategory = parsed.category || categories[0] || 'Tutorial';
+      const generated = await generateBlogWithAI(geminiTopic.trim(), categories);
+      const assignedCategory = generated.category || categories[0] || 'Tutorial';
 
       const newArticle: BlogPostItem = {
-        title: parsed.title || geminiTopic,
+        title: generated.title || geminiTopic,
         category: assignedCategory,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        shortDesc: parsed.shortDescription || parsed.shortDesc || '',
-        fullContent: parsed.fullContentHtml || parsed.fullContent || '<p>Content...</p>',
+        shortDesc: generated.shortDesc || '',
+        fullContent: generated.fullContent || '<p>Content...</p>',
         imageUrl: 'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035648/portfolio/blogs/vnt9j0szpfibfzqsayhl.jpg',
-        link: 'https://www.linkedin.com/in/md-kaium-hasan-bb6009372/'
+        link: ''
       };
 
       onUpdate((prev) => {
@@ -271,7 +246,7 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
 
       setIsGeminiModalOpen(false);
       setGeminiTopic('');
-      onToast(`✨ Blog article generated: "${newArticle.title}"`, 'success');
+      onToast(`Blog article generated: "${newArticle.title}"`, 'success');
     } catch (err: any) {
       console.error('Gemini error:', err);
       onToast(`AI generation failed: ${err.message}`, 'error');
@@ -527,7 +502,9 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
                 {/* Actions */}
                 <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
                   <span className="text-[11px] text-slate-500">
-                    Clicking on card in 3D/2D opens this link directly
+                    {item.fullContent && item.fullContent.replace(/<[^>]*>/g, '').trim().length > 10
+                      ? 'Opens Built-in 2D/3D Reader (+ optional external link)'
+                      : 'Opens external publication link in 2D/3D'}
                   </span>
                   <div className="flex items-center gap-2">
                     <button
@@ -619,15 +596,15 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
               </div>
             </div>
 
-            {/* LinkedIn Post URL / Article Link Input (User Requirement) */}
+            {/* External Post URL / Article Link Input (Optional) */}
             <div className="p-4 rounded-xl bg-slate-950/80 border border-[#0a66c2]/40 space-y-2">
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center justify-between flex-wrap gap-1">
                 <span className="flex items-center gap-1.5 text-sky-400">
                   <Linkedin className="w-4 h-4 text-[#0a66c2]" />
-                  <span>LinkedIn Post URL / Article Link</span>
+                  <span>External LinkedIn / Article URL (Optional)</span>
                 </span>
                 <span className="text-[11px] text-slate-400 font-normal">
-                  Redirects directly on click (No modal popup)
+                  Leave empty to open built-in 2D/3D Reader
                 </span>
               </label>
               <div className="relative">
@@ -643,7 +620,7 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
                 />
               </div>
               <p className="text-[11px] text-slate-400">
-                When visitors click on this blog card in 3D or 2D, they will immediately be taken to this LinkedIn publication.
+                If provided, visitors can jump straight to LinkedIn/external post; if Full HTML Content is also present below, they can read inside the portfolio too.
               </p>
             </div>
 
@@ -721,6 +698,24 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
                 }
                 placeholder="Brief summary shown on blog preview cards..."
                 className="admin-textarea text-xs leading-relaxed"
+              />
+            </div>
+
+            {/* Full Article Content (HTML) */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                Full Article Content (HTML for 2D & 3D Built-In Reader)
+              </label>
+              <textarea
+                rows={8}
+                value={editingDraft.fullContent || ''}
+                onChange={(e) =>
+                  setEditingDraft((prev) =>
+                    prev ? { ...prev, fullContent: e.target.value } : null
+                  )
+                }
+                placeholder="<h2>Introduction</h2><p>Write or paste HTML article content here...</p><ul><li>Key point...</li></ul>"
+                className="admin-textarea font-mono text-xs leading-relaxed"
               />
             </div>
 

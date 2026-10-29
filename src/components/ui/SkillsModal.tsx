@@ -57,7 +57,8 @@ export const getSkillCategory = (
 };
 
 export const SkillsModal: React.FC = () => {
-  const { setActivePanel, audioEnabled } = useGameStore();
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -166,8 +167,8 @@ export const SkillsModal: React.FC = () => {
               cat === 'All'
                 ? dynamicSkills.length
                 : dynamicSkills.filter(
-                    (s) => getSkillCategory(s, data.skill_categories) === cat
-                  ).length;
+                  (s) => getSkillCategory(s, data.skill_categories) === cat
+                ).length;
 
             return (
               <button
@@ -219,7 +220,7 @@ export const SkillsModal: React.FC = () => {
         <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Grid of Dynamic Skill Cards */}
           {filteredSkills.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '14px' }}>
               {filteredSkills.map((skill, idx) => {
                 return (
                   <div

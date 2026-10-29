@@ -22,6 +22,7 @@ interface SidebarProps {
   activeSection: AdminSection;
   onSelectSection: (section: AdminSection) => void;
   data: PortfolioData;
+  unreadInboxCount?: number;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
   onLogout: () => void;
@@ -31,6 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onSelectSection,
   data,
+  unreadInboxCount = 0,
   isOpenMobile,
   onCloseMobile,
   onLogout
@@ -86,9 +88,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'contact-inbox' as AdminSection,
-      label: 'Contact & Messages',
+      label: 'Contact & Inbox',
       icon: Mail,
-      badge: null
+      badge: unreadInboxCount > 0 ? unreadInboxCount : null
     }
   ];
 

@@ -15,9 +15,6 @@ interface StationTowerModelProps {
   targetHeight?: number;
 }
 
-/**
- * Procedural Hologram Ground Beacon projected on the street beneath the tower
- */
 const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = ({ color, isNearby }) => {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
@@ -35,7 +32,6 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
       innerRingRef.current.rotation.z -= 0.55 * speed * delta;
     }
     if (waveRingRef.current && waveMatRef.current) {
-      // Periodic expanding sonar wave (0 -> 1 every 2.0 seconds)
       const waveProgress = (t * 0.55 * speed) % 1.0;
       const currentScale = 0.35 + waveProgress * 1.6;
       waveRingRef.current.scale.set(currentScale, currentScale, 1);
@@ -45,7 +41,6 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
 
   return (
     <group position={[0, 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      {/* Outer segmented tech ring */}
       <mesh ref={outerRingRef}>
         <ringGeometry args={[1.35, 1.45, 48]} />
         <meshBasicMaterial
@@ -58,7 +53,6 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
         />
       </mesh>
 
-      {/* Runic radar ticks */}
       <mesh rotation={[0, 0, Math.PI / 4]}>
         <ringGeometry args={[1.48, 1.54, 4]} />
         <meshBasicMaterial
@@ -71,7 +65,6 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
         />
       </mesh>
 
-      {/* Inner counter-rotating ring */}
       <mesh ref={innerRingRef}>
         <ringGeometry args={[0.75, 0.82, 32]} />
         <meshBasicMaterial
@@ -84,7 +77,6 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
         />
       </mesh>
 
-      {/* Expanding sonar energy wave */}
       <mesh ref={waveRingRef}>
         <ringGeometry args={[0.95, 1.05, 36]} />
         <meshBasicMaterial
@@ -101,18 +93,20 @@ const HologramGroundProjector: React.FC<{ color: string; isNearby: boolean }> = 
   );
 };
 
-/**
- * Ascending cyber plasma motes drifting upwards through the tower
- */
-const AscendingEnergyMotes: React.FC<{ color: string; isNearby: boolean }> = ({ color, isNearby }) => {
-  const count = 10;
+// Shared sphere geometry across all motes to minimize GPU buffer allocations
+const sharedMoteGeo = new THREE.SphereGeometry(0.026, 6, 6);
+
+const AscendingEnergyMotes: React.FC<{ color: string; isNearby: boolean; count: number }> = ({
+  color,
+  isNearby,
+  count,
+}) => {
   const motesData = useMemo(() => {
     return Array.from({ length: count }, (_, i) => ({
       angleOffset: (i / count) * Math.PI * 2,
       radius: 0.32 + (i % 3) * 0.12,
       speedY: 0.4 + (i % 4) * 0.14,
       phaseY: i / count,
-      size: 0.022 + (i % 3) * 0.01,
     }));
   }, [count]);
 
@@ -122,15 +116,14 @@ const AscendingEnergyMotes: React.FC<{ color: string; isNearby: boolean }> = ({ 
     const t = state.clock.elapsedTime;
     const speedMult = isNearby ? 1.7 : 1.0;
 
-    motesData.forEach((mote, i) => {
+    for (let i = 0; i < motesData.length; i++) {
+      const mote = motesData[i];
       const mesh = meshesRef.current[i];
-      if (!mesh) return;
+      if (!mesh) continue;
 
-      // Vertical loop from y=0.4 to y=2.4
       const progress = ((t * mote.speedY * speedMult * 0.45) + mote.phaseY) % 1.0;
       const y = 0.4 + progress * 2.0;
 
-      // Gentle spiral orbit
       const currentAngle = mote.angleOffset + t * 0.75 * speedMult + progress * 1.8;
       const currentRadius = mote.radius * (1.0 + Math.sin(progress * Math.PI) * 0.35);
       const x = Math.cos(currentAngle) * currentRadius;
@@ -138,23 +131,24 @@ const AscendingEnergyMotes: React.FC<{ color: string; isNearby: boolean }> = ({ 
 
       mesh.position.set(x, y, z);
 
-      // Smooth opacity envelope
       const opacity = Math.sin(progress * Math.PI);
       const mat = mesh.material as THREE.MeshBasicMaterial;
       if (mat) {
         mat.opacity = opacity * (isNearby ? 0.95 : 0.65);
       }
-    });
+    }
   });
 
   return (
     <group>
-      {motesData.map((mote, i) => (
+      {motesData.map((_, i) => (
         <mesh
           key={i}
-          ref={(el) => { meshesRef.current[i] = el; }}
+          geometry={sharedMoteGeo}
+          ref={(el) => {
+            meshesRef.current[i] = el;
+          }}
         >
-          <sphereGeometry args={[mote.size, 8, 8]} />
           <meshBasicMaterial
             color={color}
             transparent
@@ -170,13 +164,11 @@ const AscendingEnergyMotes: React.FC<{ color: string; isNearby: boolean }> = ({ 
 
 const StationTowerModel: React.FC<StationTowerModelProps> = ({
   url,
-  station,
   isNearby,
   targetHeight = 2.3,
 }) => {
   const { scene } = useGLTF(url);
 
-  // Clone with SkeletonUtils so all mesh hierarchies are fully preserved
   const { clone, modelScale, modelOffset } = useMemo(() => {
     scene.updateMatrixWorld(true);
     const c = SkeletonUtils.clone(scene);
@@ -201,7 +193,6 @@ const StationTowerModel: React.FC<StationTowerModelProps> = ({
       if (isFinite(centerZ)) offZ = -centerZ;
     }
 
-    // Keep 100% authentic original model textures while enabling transparent particle sparkles
     c.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
@@ -219,7 +210,6 @@ const StationTowerModel: React.FC<StationTowerModelProps> = ({
 
             const matName = (mat.name || '').toLowerCase();
 
-            // Particle energy rings (Sphere_008, Sphere_009, flyes)
             if (
               name.includes('sphere_008') ||
               name.includes('sphere_009') ||
@@ -249,7 +239,6 @@ const StationTowerModel: React.FC<StationTowerModelProps> = ({
     };
   }, [scene, targetHeight, url]);
 
-  // Extract all animatable nodes from the model hierarchy
   const animRefs = useMemo(() => {
     const coreContainer = clone.getObjectByName('Object_12') as THREE.Object3D | null;
     const ring1 = clone.getObjectByName('Sphere_009_7_0') as THREE.Mesh | null;
@@ -269,35 +258,21 @@ const StationTowerModel: React.FC<StationTowerModelProps> = ({
     };
   }, [clone]);
 
-  // Real-time procedural animation: Core levitation, multi-axis gyroscopic spin, counter-rotating rings
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
     const speedMult = isNearby ? 1.75 : 1.0;
 
-    // 1. Smooth harmonic floating bob of the crystal core + rings
     if (animRefs.coreContainer) {
       animRefs.coreContainer.position.y =
         animRefs.initialCoreY + (Math.sin(t * 1.6 * speedMult) * 0.45 + Math.cos(t * 0.8 * speedMult) * 0.15);
     }
 
-    // 2. Gyroscopic multi-axis spinning of the central crystal orb layers
-    if (animRefs.core1) {
-      animRefs.core1.rotation.y += 1.2 * speedMult * delta;
-    }
-    if (animRefs.core2) {
-      animRefs.core2.rotation.y -= 1.6 * speedMult * delta;
-    }
-    if (animRefs.core3) {
-      animRefs.core3.rotation.y += 0.8 * speedMult * delta;
-    }
+    if (animRefs.core1) animRefs.core1.rotation.y += 1.2 * speedMult * delta;
+    if (animRefs.core2) animRefs.core2.rotation.y -= 1.6 * speedMult * delta;
+    if (animRefs.core3) animRefs.core3.rotation.y += 0.8 * speedMult * delta;
 
-    // 3. Counter-rotating gyroscopic particle energy rings
-    if (animRefs.ring1) {
-      animRefs.ring1.rotation.y += 2.6 * speedMult * delta;
-    }
-    if (animRefs.ring2) {
-      animRefs.ring2.rotation.y -= 2.0 * speedMult * delta;
-    }
+    if (animRefs.ring1) animRefs.ring1.rotation.y += 2.6 * speedMult * delta;
+    if (animRefs.ring2) animRefs.ring2.rotation.y -= 2.0 * speedMult * delta;
   });
 
   return (
@@ -311,17 +286,22 @@ interface StationPedestalProps {
   station: StationInfo;
 }
 
-export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => {
+export const StationPedestal: React.FC<StationPedestalProps> = React.memo(({ station }) => {
   const [inRange, setInRange] = useState(false);
   const inRangeRef = useRef(false);
 
-  const { nearbyStation, setActivePanel, audioEnabled, activePanel, isIntroLoading } = useGameStore();
-  const isNearby = nearbyStation?.id === station.id;
+  // Atomic Zustand selectors prevent re-rendering all 7 pedestals when playerPosition updates!
+  const isNearby = useGameStore((s) => s.nearbyStation?.id === station.id);
+  const setActivePanel = useGameStore((s) => s.setActivePanel);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
+  const hasActivePanel = useGameStore((s) => s.activePanel !== null);
+  const isIntroLoading = useGameStore((s) => s.isIntroLoading);
+  const qualityTier = useGameStore((s) => s.qualityTier);
+  const isMobile = useGameStore((s) => s.isMobile);
 
   const lightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
-    // When intro loading screen is active, completely skip range check and hide badge
     if (isIntroLoading) {
       if (inRangeRef.current) {
         inRangeRef.current = false;
@@ -330,7 +310,6 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
       return;
     }
 
-    // Dynamic distance check: Only mount DOM badge within 16m to save CPU/GPU overhead
     const dist = Math.hypot(
       playerRealtimePos.x - station.position[0],
       playerRealtimePos.z - station.position[2]
@@ -341,7 +320,6 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
       setInRange(close);
     }
 
-    // Animate point light breathing intensity
     if (lightRef.current) {
       const t = state.clock.elapsedTime;
       const speed = isNearby ? 1.75 : 1.0;
@@ -354,13 +332,17 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
     setActivePanel(station.panel);
   };
 
+  const moteCount = qualityTier === 'high' ? 10 : qualityTier === 'medium' ? 5 : 0;
+
   return (
     <group position={station.position}>
       {/* 1. Ground Holographic Projector Ring */}
       <HologramGroundProjector color={station.color} isNearby={isNearby} />
 
-      {/* 2. Ascending Cyber Plasma Motes */}
-      <AscendingEnergyMotes color={station.color} isNearby={isNearby} />
+      {/* 2. Ascending Cyber Plasma Motes (scaled by qualityTier) */}
+      {moteCount > 0 && (
+        <AscendingEnergyMotes color={station.color} isNearby={isNearby} count={moteCount} />
+      )}
 
       {/* 3. 3D Animated Tower Model */}
       <Suspense fallback={null}>
@@ -372,17 +354,19 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
         />
       </Suspense>
 
-      {/* 4. Dynamic Breathing Cyber Point Light */}
-      <pointLight
-        ref={lightRef}
-        position={[0, 1.45, 0]}
-        color={station.color}
-        distance={8.0}
-        decay={2}
-      />
+      {/* 4. Dynamic Breathing Cyber Point Light (disabled on low qualityTier to save dynamic lights) */}
+      {qualityTier !== 'low' && (
+        <pointLight
+          ref={lightRef}
+          position={[0, 1.45, 0]}
+          color={station.color}
+          distance={8.0}
+          decay={2}
+        />
+      )}
 
-      {/* 5. Floating HTML Badge & Prompt - Attached right above tower head */}
-      {!activePanel && !isIntroLoading && inRange && (
+      {/* 5. Floating HTML Badge & Prompt */}
+      {!hasActivePanel && !isIntroLoading && inRange && (
         <Html
           position={[0, 2.7, 0]}
           center
@@ -449,12 +433,11 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
                     letterSpacing: '0.5px'
                   }}
                 >
-                  ⚡ Press [E] to Inspect
+                  {isMobile ? '⚡ Tap to Inspect' : '⚡ Press [E] to Inspect'}
                 </div>
               )}
             </div>
 
-            {/* Subtle glowing anchor pin attaching card to tower head */}
             <div
               style={{
                 width: '1.5px',
@@ -467,6 +450,4 @@ export const StationPedestal: React.FC<StationPedestalProps> = ({ station }) => 
       )}
     </group>
   );
-};
-
-useGLTF.preload(PROJECT_TOWER_URL);
+});

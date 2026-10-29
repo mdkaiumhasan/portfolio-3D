@@ -4,16 +4,9 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
+import { getThroneModelUrl } from '../../utils/modelUrl';
 
-export const getThroneModelUrl = (): string => {
-  if (typeof window === 'undefined') return '/models/throne_mobile.glb';
-  const isMobile =
-    window.innerWidth <= 768 ||
-    (window.innerWidth <= 1024 && window.innerHeight <= 600) ||
-    'ontouchstart' in window;
-  return isMobile ? '/models/throne_mobile.glb' : '/models/throne_of_iron__stone.glb';
-};
-
+export { getThroneModelUrl };
 const THRONE_URL = getThroneModelUrl();
 
 export const IronThrone: React.FC = () => {
@@ -29,9 +22,10 @@ export const IronThrone: React.FC = () => {
   const vanishProgress = useRef(0);
   const soundPlayed = useRef(false);
 
-  // Clone scene so materials can be safely made transparent without affecting cached model
-  const clonedScene = useMemo(() => {
+  // Clone scene & collect flat material array once so useFrame vanish requires zero scene-graph traversals
+  const { clonedScene, clonedMaterials } = useMemo(() => {
     const clone = scene.clone(true);
+    const matsList: THREE.Material[] = [];
 
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -50,6 +44,7 @@ export const IronThrone: React.FC = () => {
             if (newMat.map) {
               newMat.map.anisotropy = 4;
             }
+            matsList.push(newMat);
             return newMat;
           });
           mesh.material = Array.isArray(mesh.material) ? newMats : newMats[0];
@@ -57,7 +52,7 @@ export const IronThrone: React.FC = () => {
       }
     });
 
-    return clone;
+    return { clonedScene: clone, clonedMaterials: matsList };
   }, [scene]);
 
   // Ethereal royal ember sparkles around the throne
@@ -100,13 +95,10 @@ export const IronThrone: React.FC = () => {
     }
   }, [isSeatedOnThrone, hasStartedVanishing, audioEnabled]);
 
-  // Smooth dissipation and vanishing animation
   useFrame((_, delta) => {
     if (vanished) return;
 
-    // Ambient floating particles while seated
     if (!hasStartedVanishing) {
-
       if (particlesRef.current) {
         const posAttr = particlesRef.current.geometry.attributes.position;
         const arr = posAttr.array as Float32Array;
@@ -123,47 +115,30 @@ export const IronThrone: React.FC = () => {
       return;
     }
 
-    // Vanish progress interpolation (completed in ~0.65 seconds)
     vanishProgress.current = Math.min(1.0, vanishProgress.current + delta * 1.55);
     const p = vanishProgress.current;
 
-    // Smooth ease-out dissipation curve
     const scaleFactor = Math.max(0, 1 - Math.pow(p, 1.8));
     const opacityFactor = Math.max(0, 1 - p * 1.15);
 
     if (groupRef.current) {
-      // Scale down rapidly towards zero
       const baseScale = 0.72;
       groupRef.current.scale.set(
         baseScale * scaleFactor,
         baseScale * scaleFactor,
         baseScale * scaleFactor
       );
-
-      // Sink gracefully into the ground as it dissipates
       groupRef.current.position.y = 0.48 - p * 0.35;
     }
 
-    // Fade materials
-    clonedScene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        if (mesh.material) {
-          const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-          mats.forEach((m) => {
-            (m as THREE.Material).opacity = opacityFactor;
-          });
-        }
-      }
-    });
+    for (let i = 0; i < clonedMaterials.length; i++) {
+      clonedMaterials[i].opacity = opacityFactor;
+    }
 
-
-    // Fade sparkles
     if (particlesRef.current) {
       particleMat.opacity = Math.max(0, 0.8 * (1 - p));
     }
 
-    // Complete disappearance: unmount entirely to preserve 100% framerate
     if (p >= 1.0) {
       setVanished(true);
     }
@@ -178,11 +153,7 @@ export const IronThrone: React.FC = () => {
       rotation={[0, Math.PI, 0]}
       scale={[0.72, 0.72, 0.72]}
     >
-      {/* 3D Photorealistic Iron & Stone Throne */}
       <primitive object={clonedScene} />
-
-
-      {/* Floating Mystic Embers */}
       <points
         ref={particlesRef}
         geometry={particleGeo}
@@ -192,5 +163,3 @@ export const IronThrone: React.FC = () => {
     </group>
   );
 };
-
-useGLTF.preload(THRONE_URL, '/draco/');

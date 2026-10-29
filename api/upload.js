@@ -1,11 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dgomoujlo',
-  api_key: process.env.CLOUDINARY_API_KEY || '428366322884523',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'WgHT2u__EILrXjPMcrRRGq078fE',
-  secure: true
-});
+import { verifyAdminRequest } from './_auth.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,30 +14,43 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
-  // Admin authentication check
-  const authHeader = req.headers.authorization || '';
-  const token = authHeader.replace(/^Bearer\s+/i, '');
-  const validPassword = process.env.ADMIN_PASSWORD || '225387@Km';
-  const expectedToken = 'admin_session_' + Buffer.from(validPassword).toString('base64');
-
-  if (token !== expectedToken && token !== validPassword) {
-    return res.status(401).json({ success: false, error: 'Unauthorized: Admin authentication required' });
+  const authCheck = verifyAdminRequest(req);
+  if (!authCheck.authorized) {
+    return res.status(authCheck.status).json({ success: false, error: authCheck.error });
   }
+
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloudName || !apiKey || !apiSecret) {
+    return res.status(503).json({
+      success: false,
+      error: 'Cloudinary environment variables (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET) are not configured.'
+    });
+  }
+
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+    secure: true
+  });
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { image, folder = 'portfolio_assets' } = body;
 
-    if (!image) {
-      return res.status(400).json({ success: false, error: 'No image data provided' });
+    if (!image || typeof image !== 'string') {
+      return res.status(400).json({ success: false, error: 'No valid image data provided' });
     }
 
+    const safeFolder = /^[a-zA-Z0-9_/-]+$/.test(folder) ? folder : 'portfolio_assets';
+
     const uploadRes = await cloudinary.uploader.upload(image, {
-      folder: folder,
+      folder: safeFolder,
       resource_type: 'auto',
-      transformation: [
-        { quality: 'auto', fetch_format: 'auto' }
-      ]
+      transformation: [{ quality: 'auto', fetch_format: 'auto' }]
     });
 
     return res.status(200).json({

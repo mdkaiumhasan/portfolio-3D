@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
-import { Sparkles, Layout } from 'lucide-react';
-import { useProgress } from '@react-three/drei';
+import { Sparkles, Layout, Loader2 } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
-import { preloadAndCacheModel, isModelInCache } from '../../utils/assetCache';
-import { RAIN_STREET_MODEL_URL } from '../world/RainStreet';
+import { preloadAndCacheModel } from '../../utils/assetCache';
+import { getRainStreetModelUrl } from '../../utils/modelUrl';
+import { isMobileDevice } from '../../utils/orientation';
+import { usePortfolioData, extractAuthorName, extractAuthorRole } from '../../hooks/usePortfolioData';
 import '../../styles/introLoader.css';
 
 interface LoadingScreenProps {
@@ -16,14 +17,22 @@ const LOG_MILESTONES = [
   { at: 0, msg: 'resolving host [mdkaiumhasan.dev] ... <b>ok</b>' },
   { at: 20, msg: 'tcp handshake [tls 1.3 / quic] ... <b>established</b>' },
   { at: 45, msg: 'streaming 3D cyberpunk scene ...' },
-  { at: 75, msg: 'compiling webgl2 shaders ... <b>done</b>' },
+  { at: 75, msg: 'compiling webgl2 engine chunks ... <b>done</b>' },
   { at: 92, msg: 'calibrating rain & audio engine ... <b>ready</b>' },
   { at: 100, msg: 'all systems operational // scene <b>ready</b>' },
 ];
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
-  const { progress: threeProgress, active: threeActive } = useProgress();
-  const { setMode, setAudioEnabled } = useGameStore();
+  const setMode = useGameStore((s) => s.setMode);
+  const setAudioEnabled = useGameStore((s) => s.setAudioEnabled);
+  const setResolvedEnvModelUrl = useGameStore((s) => s.setResolvedEnvModelUrl);
+
+  const { data } = usePortfolioData();
+  const authorName = useMemo(() => extractAuthorName(data.home_heading), [data.home_heading]);
+  const authorRole = useMemo(
+    () => extractAuthorRole(data.home_subheading, data.home_heading),
+    [data.home_subheading, data.home_heading]
+  );
 
   const [isReadyToEnter, setIsReadyToEnter] = useState(false);
 
@@ -34,66 +43,60 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const fillRef = useRef<HTMLDivElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const downloadStatusRef = useRef<HTMLDivElement>(null);
-  const enterWrapRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Download & Animation tracking refs
   const targetPercentRef = useRef(0);
   const displayedPercentRef = useRef(0);
-  const downloadStatsRef = useRef({ loadedMB: 0, totalMB: 89.5 });
+  const modelUrl = useMemo(() => getRainStreetModelUrl(), []);
+  const downloadStatsRef = useRef({
+    loadedMB: 0,
+    totalMB: modelUrl.includes('mobile') ? 8.0 : 89.5,
+  });
   const modelReadyRef = useRef(false);
   const isReadyRef = useRef(false);
   const shownLogIndexRef = useRef(-1);
   const animStateRef = useRef({ dead: false, exiting: false, raf: 0 });
 
-  // 1. Download tracking directly connected to CacheStorage & network stream
+  // 1. Single-stream download + Three.js engine chunk prefetch in parallel
   useEffect(() => {
     let isMounted = true;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-    isModelInCache(RAIN_STREET_MODEL_URL).then((cached) => {
-      if (!isMounted) return;
-      if (cached) {
-        const estMB = RAIN_STREET_MODEL_URL.includes('mobile') ? 8.0 : 89.5;
-        downloadStatsRef.current = { loadedMB: estMB, totalMB: estMB };
-        targetPercentRef.current = 100;
+    // Preload the lazy Three.js / World code chunk while the GLB streams
+    const worldChunkPromise = import('../world/World').catch(() => null);
+
+    const modelStreamPromise = preloadAndCacheModel(
+      modelUrl,
+      (percent, loadedMB, totalMB) => {
+        if (!isMounted) return;
+        downloadStatsRef.current = { loadedMB, totalMB };
+        targetPercentRef.current = Math.min(99.5, Math.max(targetPercentRef.current, percent));
+      },
+      controller.signal
+    );
+
+    Promise.all([modelStreamPromise, worldChunkPromise])
+      .then(([resolvedBlobUrl]) => {
+        if (!isMounted || controller.signal.aborted) return;
+        setResolvedEnvModelUrl(resolvedBlobUrl);
         modelReadyRef.current = true;
-      } else {
-        preloadAndCacheModel(RAIN_STREET_MODEL_URL, (percent, loadedMB, totalMB) => {
-          if (!isMounted) return;
-          downloadStatsRef.current = { loadedMB, totalMB };
-          targetPercentRef.current = Math.min(99.5, Math.max(targetPercentRef.current, percent));
-          if (percent >= 100) {
-            modelReadyRef.current = true;
-          }
-        }).then(() => {
-          if (isMounted) {
-            modelReadyRef.current = true;
-            targetPercentRef.current = 100;
-          }
-        }).catch((err) => {
-          console.warn('Preload fallback:', err);
-          if (isMounted) {
-            modelReadyRef.current = true;
-            targetPercentRef.current = 100;
-          }
-        });
-      }
-    });
+        targetPercentRef.current = 100;
+      })
+      .catch((err) => {
+        if (!isMounted || controller.signal.aborted) return;
+        console.warn('Preload fallback to direct model URL:', err);
+        setResolvedEnvModelUrl(modelUrl);
+        modelReadyRef.current = true;
+        targetPercentRef.current = 100;
+      });
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
-  }, []);
-
-  // Sync Three.js asset compilation into progress
-  useEffect(() => {
-    if (modelReadyRef.current) {
-      if (!threeActive || threeProgress >= 90) {
-        targetPercentRef.current = 100;
-      } else {
-        targetPercentRef.current = Math.max(targetPercentRef.current, Math.min(99, threeProgress));
-      }
-    }
-  }, [threeProgress, threeActive]);
+  }, [modelUrl, setResolvedEnvModelUrl]);
 
   // 2. Cinematic Shutter Exit Animation
   const triggerExit = useCallback(() => {
@@ -137,14 +140,16 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
 
   // Handle entering 3D Experience (with rain and ambient audio)
   const handleEnter3D = useCallback(() => {
+    if (!isReadyToEnter) return;
     setAudioEnabled(true);
     sound.startRain();
     sound.playChime();
     triggerExit();
-  }, [setAudioEnabled, triggerExit]);
+  }, [isReadyToEnter, setAudioEnabled, triggerExit]);
 
-  // Handle entering 2D Portfolio View
+  // Handle entering 2D Portfolio View immediately (cancels any in-flight 3D download!)
   const handleEnter2D = useCallback(() => {
+    abortControllerRef.current?.abort();
     animStateRef.current.dead = true;
     cancelAnimationFrame(animStateRef.current.raf);
     setMode('2d');
@@ -166,16 +171,15 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     };
   }, []);
 
-  // Keyboard shortcut listener: Enter for 3D, '2' for 2D
+  // Keyboard shortcut listener: '2' always switches to 2D immediately; Enter opens 3D once ready
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!isReadyToEnter) return;
-      if (e.code === 'Enter') {
-        e.preventDefault();
-        handleEnter3D();
-      } else if (e.key === '2') {
+      if (e.key === '2') {
         e.preventDefault();
         handleEnter2D();
+      } else if (e.code === 'Enter' && isReadyToEnter) {
+        e.preventDefault();
+        handleEnter3D();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -219,7 +223,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     let packets: Packet[] = [];
 
     const size = () => {
-      const isMob = window.innerWidth <= 768 || window.innerHeight <= 600 || 'ontouchstart' in window;
+      const isMob = isMobileDevice();
       D = isMob ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       W = window.innerWidth;
       H = window.innerHeight;
@@ -245,16 +249,15 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     const near = (a: Node, L: number, skip?: Node) =>
       nodes.filter((b) => b !== a && b !== skip && Math.hypot(a.x - b.x, a.y - b.y) < L);
 
-    // High-performance render loop: Mesh moves autonomously even if download is at 0%
     const frame = () => {
       if (s.dead || s.exiting) return;
 
-      // ---- 1. Progress Bar & Counter strictly bound to download ----
       const target = targetPercentRef.current;
       const current = displayedPercentRef.current;
 
-      // Smooth approach towards target download
-      let nextProgress = current + (target - current) * 0.085;
+      // Fast catch-up when cached (jumps smoothly in ~0.4s instead of dragging)
+      const smoothing = target >= 100 ? 0.16 : 0.095;
+      let nextProgress = current + (target - current) * smoothing;
       if (target >= 100 && nextProgress >= 99) {
         nextProgress = 100;
       }
@@ -263,7 +266,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
       const rounded = Math.min(100, Math.round(nextProgress));
       const progFraction = Math.min(1, Math.max(0, nextProgress / 100));
 
-      // Direct DOM mutation for 60/120 FPS counter & bar
       if (countRef.current) {
         countRef.current.innerHTML = `${rounded}<small>%</small>`;
       }
@@ -271,7 +273,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         fillRef.current.style.transform = `scaleX(${progFraction})`;
       }
 
-      // Download status message
       if (downloadStatusRef.current) {
         const stats = downloadStatsRef.current;
         if (rounded >= 100 && modelReadyRef.current) {
@@ -279,11 +280,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         } else if (stats.loadedMB > 0) {
           downloadStatusRef.current.innerHTML = `STREAMING 3D ASSETS: <b>${stats.loadedMB.toFixed(1)}</b> / ${stats.totalMB.toFixed(1)} MB (${rounded}%)`;
         } else {
-          downloadStatusRef.current.innerHTML = `CONNECTING TO ASSET CDN // INITIALIZING`;
+          downloadStatusRef.current.innerHTML = `CONNECTING TO ASSET CACHE // INITIALIZING`;
         }
       }
 
-      // Terminal logs milestone updates
       LOG_MILESTONES.forEach((m, idx) => {
         if (nextProgress >= m.at && idx > shownLogIndexRef.current) {
           shownLogIndexRef.current = idx;
@@ -298,18 +298,16 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         }
       });
 
-      // Ready state trigger once resource download reaches 100%
       if (rounded >= 100 && target >= 100 && modelReadyRef.current && !isReadyRef.current) {
         isReadyRef.current = true;
         setIsReadyToEnter(true);
       }
 
-      // ---- 2. Autonomous Network Canvas Rendering (Continuous 60FPS) ----
+      // Autonomous Network Canvas Rendering
       const L = Math.min(W, H) * 0.22 + 55;
       const L2 = L * L;
       cx.clearRect(0, 0, W, H);
 
-      // Node physics: Always drifting continuously
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         n.x += n.vx;
@@ -318,7 +316,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         if (n.y < 0 || n.y > H) n.vy *= -1;
       }
 
-      // Batched interconnecting lines (single GPU stroke)
       cx.beginPath();
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
@@ -338,7 +335,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
       cx.lineWidth = 1;
       cx.stroke();
 
-      // Batched node points (single GPU fill)
       cx.fillStyle = '#4a5ca8';
       cx.beginPath();
       for (let i = 0; i < nodes.length; i++) {
@@ -348,7 +344,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
       }
       cx.fill();
 
-      // Packets hopping: Continuously active regardless of download progress!
       if (!reduce && packets.length < 18 && Math.random() < 0.055) {
         const a = nodes[(Math.random() * nodes.length) | 0];
         const nb = near(a, L);
@@ -393,9 +388,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
     };
   }, []);
 
-  const authorName = 'MD. Kaium Hasan';
-  const authorRole = 'Network Engineer & Software Developer';
-
   return (
     <div
       ref={rootRef}
@@ -411,16 +403,13 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
 
       {/* Main Interactive Stage */}
       <div className="stage">
-        {/* Continuous Dynamic Network Mesh Canvas */}
         <canvas ref={canvasRef} id="mesh" aria-hidden="true" />
 
-        {/* Tactical Corner Brackets */}
         <div className="loader-bracket tl" />
         <div className="loader-bracket tr" />
         <div className="loader-bracket bl" />
         <div className="loader-bracket br" />
 
-        {/* Top Telemetry HUD (Clean header without top-right buttons) */}
         <div className="top-hud">
           <div className="top-badge">
             <span className="top-dot" />
@@ -430,7 +419,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
 
         {/* Center Identity */}
         <div className="stage-center">
-          {/* Hardware-accelerated CSS staggered reveal: cannot freeze */}
           <h1 id="name" aria-label={authorName}>
             {[...authorName].map((c, i) =>
               c === ' ' ? (
@@ -443,40 +431,39 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
             )}
           </h1>
 
-          <p id="role">
-            {authorRole}
-          </p>
+          <p id="role">{authorRole}</p>
 
-          {/* Connected Resource Progress Bar */}
           <div id="bar">
             <div ref={fillRef} id="fill" />
           </div>
 
-          {/* Live Download Telemetry */}
           <div ref={downloadStatusRef} id="download-status">
-            CONNECTING TO ASSET CDN // INITIALIZING
+            CONNECTING TO ASSET CACHE // INITIALIZING
           </div>
 
-          {/* Interactive Enter Controls: Enter 3D or Enter 2D */}
-          <div
-            ref={enterWrapRef}
-            className={`enter-wrap ${isReadyToEnter ? 'visible' : ''}`}
-          >
+          {/* Always-visible Enter Controls: Instant 2D at 0%, 3D unlocks at 100% */}
+          <div className="enter-wrap visible">
             <div className="enter-btns">
               <button
                 type="button"
                 onClick={handleEnter3D}
+                disabled={!isReadyToEnter}
                 className="btn-enter enter-3d"
-                autoFocus
+                style={{
+                  opacity: isReadyToEnter ? 1 : 0.45,
+                  cursor: isReadyToEnter ? 'pointer' : 'wait',
+                  boxShadow: isReadyToEnter ? undefined : 'none',
+                }}
               >
-                <Sparkles size={16} />
-                <span>Enter 3D</span>
+                {isReadyToEnter ? <Sparkles size={16} /> : <Loader2 size={15} className="spin" />}
+                <span>{isReadyToEnter ? 'Enter 3D' : 'Streaming 3D...'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleEnter2D}
                 className="btn-enter enter-2d"
+                title="Open Instant 2D Portfolio without waiting for 3D assets"
               >
                 <Layout size={15} />
                 <span>Enter 2D</span>

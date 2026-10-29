@@ -3,10 +3,19 @@ import type { ProjectItem } from '../hooks/usePortfolioData';
 export type Project = ProjectItem;
 
 import type { Octree } from 'three/examples/jsm/math/Octree.js';
+import { isMobileDevice } from '../utils/orientation';
 
-// Zero-latency 60FPS shared position reference for camera & particle tracking
+// Zero-latency 60/120FPS shared position & heading references for camera & particle tracking
 export const playerRealtimePos = { x: 1.35, y: 0, z: 41 };
 export const playerRealtimeHeading = { current: Math.PI };
+
+// Zero-re-render 60/120Hz mobile touch input buffer read directly inside Player.tsx useFrame
+export const mobileInputState = {
+  joystickX: 0,
+  joystickY: 0,
+  sprint: false,
+  jump: false,
+};
 
 export type ActivePanel =
   | 'about'
@@ -46,6 +55,10 @@ interface GameState {
   setMode: (mode: '3d' | '2d') => void;
   isIntroLoading: boolean;
   setIsIntroLoading: (loading: boolean) => void;
+
+  // Single-stream resolved ObjectURL for the 3D street model (prevents duplicate downloads)
+  resolvedEnvModelUrl: string | null;
+  setResolvedEnvModelUrl: (url: string | null) => void;
 
   // Active UI Panel
   activePanel: ActivePanel;
@@ -114,7 +127,7 @@ export const STATIONS: StationInfo[] = [
   {
     id: 'station-about',
     title: 'Welcome Plaza',
-    subtitle: 'Home & About Profile (Dark Theme)',
+    subtitle: 'Home & About Profile',
     panel: 'about',
     position: [-4.0, 0, 26.5],
     color: '#28a745',
@@ -132,7 +145,7 @@ export const STATIONS: StationInfo[] = [
   {
     id: 'station-skills',
     title: 'Tech Matrix',
-    subtitle: 'Fullstack, Android & AI Tools',
+    subtitle: 'Fullstack, Networking & AI Tools',
     panel: 'skills',
     position: [-4.0, 0, 1.0],
     color: '#39ff14',
@@ -180,7 +193,7 @@ const INITIAL_ACHIEVEMENTS: Achievement[] = [
   { id: 'first_steps', title: 'First Steps', description: 'Spawned into the rain-slicked 3D world', unlocked: false, icon: 'Footprints' },
   { id: 'code_explorer', title: 'Code Explorer', description: 'Inspected the Software Engineering Lab', unlocked: false, icon: 'Code' },
   { id: 'network_architect', title: 'Network Architect', description: 'Visited the Network Operations Center (NOC)', unlocked: false, icon: 'Network' },
-  { id: 'credential_hunter', title: 'Credential Hunter', description: 'Examined Kaium\'s dual-track resumes', unlocked: false, icon: 'Award' },
+  { id: 'credential_hunter', title: 'Credential Hunter', description: "Examined Kaium's dual-track resumes", unlocked: false, icon: 'Award' },
   { id: 'transmission_sent', title: 'Frequency Locked', description: 'Reached the Transmission Tower', unlocked: false, icon: 'Radio' },
   { id: 'chronicler', title: 'Cyber Chronicler', description: 'Accessed the Cyber Chronicles blog tower', unlocked: false, icon: 'BookOpen' },
   { id: 'grand_tourist', title: 'Grand Tour Master', description: 'Discovered all 7 world stations', unlocked: false, icon: 'Sparkles' }
@@ -193,6 +206,17 @@ const getInitialMode = (): '3d' | '2d' => {
     return '2d';
   }
   return '3d';
+};
+
+const getInitialQualityTier = (): QualityTier => {
+  if (typeof window === 'undefined') return 'high';
+  try {
+    const saved = localStorage.getItem('quality_tier');
+    if (saved === 'low' || saved === 'medium' || saved === 'high') return saved;
+  } catch {
+    // ignore storage errors
+  }
+  return isMobileDevice() ? 'medium' : 'high';
 };
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -212,6 +236,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
   isIntroLoading: true,
   setIsIntroLoading: (isIntroLoading) => set({ isIntroLoading }),
+
+  resolvedEnvModelUrl: null,
+  setResolvedEnvModelUrl: (resolvedEnvModelUrl) => set({ resolvedEnvModelUrl }),
 
   activePanel: null,
   setActivePanel: (panel) => {
@@ -239,7 +266,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ audioEnabled: next });
     try {
       localStorage.setItem('audio_enabled', String(next));
-    } catch (e) {
+    } catch {
       // ignore
     }
   },
@@ -250,8 +277,15 @@ export const useGameStore = create<GameState>((set, get) => ({
   worldOctree: null,
   setWorldOctree: (worldOctree) => set({ worldOctree }),
 
-  qualityTier: 'high',
-  setQualityTier: (tier) => set({ qualityTier: tier }),
+  qualityTier: getInitialQualityTier(),
+  setQualityTier: (tier) => {
+    set({ qualityTier: tier });
+    try {
+      localStorage.setItem('quality_tier', tier);
+    } catch {
+      // ignore
+    }
+  },
 
   playerPosition: [1.35, 0, 41],
   setPlayerPosition: (playerPosition) => set({ playerPosition }),
@@ -273,16 +307,26 @@ export const useGameStore = create<GameState>((set, get) => ({
   isSeatedOnThrone: true,
   setIsSeatedOnThrone: (isSeatedOnThrone) => set({ isSeatedOnThrone }),
 
-  isMobile: false,
+  isMobile: typeof window !== 'undefined' ? isMobileDevice() : false,
   setIsMobile: (isMobile) => set({ isMobile }),
-  isPortrait: false,
+  isPortrait: typeof window !== 'undefined' ? window.innerHeight > window.innerWidth : false,
   setIsPortrait: (isPortrait) => set({ isPortrait }),
   joystickVector: { x: 0, y: 0 },
-  setJoystickVector: (joystickVector) => set({ joystickVector }),
+  setJoystickVector: (joystickVector) => {
+    mobileInputState.joystickX = joystickVector.x;
+    mobileInputState.joystickY = joystickVector.y;
+    set({ joystickVector });
+  },
   mobileActionSprint: false,
-  setMobileActionSprint: (mobileActionSprint) => set({ mobileActionSprint }),
+  setMobileActionSprint: (mobileActionSprint) => {
+    mobileInputState.sprint = mobileActionSprint;
+    set({ mobileActionSprint });
+  },
   mobileActionJump: false,
-  setMobileActionJump: (mobileActionJump) => set({ mobileActionJump }),
+  setMobileActionJump: (mobileActionJump) => {
+    mobileInputState.jump = mobileActionJump;
+    set({ mobileActionJump });
+  },
 
   discoveredStations: [],
   markStationDiscovered: (id) => {
@@ -299,12 +343,12 @@ export const useGameStore = create<GameState>((set, get) => ({
   achievements: INITIAL_ACHIEVEMENTS,
   unlockAchievement: (id) => {
     const { achievements, showNotification } = get();
-    const achievement = achievements.find(a => a.id === id);
+    const achievement = achievements.find((a) => a.id === id);
     if (achievement && !achievement.unlocked) {
       set({
-        achievements: achievements.map(a => a.id === id ? { ...a, unlocked: true } : a)
+        achievements: achievements.map((a) => (a.id === id ? { ...a, unlocked: true } : a))
       });
-      showNotification(`🏆 Achievement Unlocked!`, achievement.title, achievement.icon);
+      showNotification('🏆 Achievement Unlocked!', achievement.title, achievement.icon);
     }
   },
 

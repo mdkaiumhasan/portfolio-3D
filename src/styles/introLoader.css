@@ -4,7 +4,7 @@
    Adapted & Customised for 3D Portfolio
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+/* Fonts loaded via <link> in index.html to eliminate CSS @import waterfall */
 
 :root {
   --ink: #0c1330;

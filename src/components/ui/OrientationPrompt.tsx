@@ -3,23 +3,15 @@ import { Smartphone, Layout, X } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 
-export const OrientationPrompt: React.FC = () => {
-  const {
-    mode,
-    setMode,
-    isMobile,
-    isPortrait,
-    audioEnabled,
-    isIntroLoading
-  } = useGameStore();
+export const OrientationPrompt: React.FC = React.memo(() => {
+  const mode = useGameStore((s) => s.mode);
+  const setMode = useGameStore((s) => s.setMode);
+  const isMobile = useGameStore((s) => s.isMobile);
+  const isPortrait = useGameStore((s) => s.isPortrait);
+  const audioEnabled = useGameStore((s) => s.audioEnabled);
+  const isIntroLoading = useGameStore((s) => s.isIntroLoading);
 
-  // Strictly block 3D world on mobile portrait - user MUST rotate to landscape or switch to 2D
-  if (
-    mode !== '3d' ||
-    !isMobile ||
-    !isPortrait ||
-    isIntroLoading
-  ) {
+  if (mode !== '3d' || !isMobile || !isPortrait || isIntroLoading) {
     return null;
   }
 
@@ -47,13 +39,13 @@ export const OrientationPrompt: React.FC = () => {
         animation: 'modalFadeIn 0.3s ease-out'
       }}
     >
-      {/* Exit Button in top corner - switches to 2D View */}
       <button
+        type="button"
         onClick={handleSwitch2D}
         style={{
           position: 'absolute',
-          top: '20px',
-          right: '20px',
+          top: 'max(20px, env(safe-area-inset-top, 20px))',
+          right: 'max(20px, env(safe-area-inset-right, 20px))',
           background: 'rgba(255, 255, 255, 0.08)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           color: '#94a3b8',
@@ -71,7 +63,6 @@ export const OrientationPrompt: React.FC = () => {
         <X size={18} />
       </button>
 
-      {/* Futuristic Cyber Badge Container */}
       <div
         className="glass-panel"
         style={{
@@ -88,7 +79,6 @@ export const OrientationPrompt: React.FC = () => {
           borderRadius: '20px'
         }}
       >
-        {/* Animated Rotating Smartphone Graphic */}
         <div
           style={{
             position: 'relative',
@@ -100,7 +90,6 @@ export const OrientationPrompt: React.FC = () => {
             justifyContent: 'center'
           }}
         >
-          {/* Neon Ring Glow */}
           <div
             style={{
               position: 'absolute',
@@ -111,7 +100,6 @@ export const OrientationPrompt: React.FC = () => {
             }}
           />
 
-          {/* Phone Icon with smooth 90-degree continuous rotation keyframe */}
           <div
             style={{
               animation: 'phoneRotateCycle 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite',
@@ -124,7 +112,6 @@ export const OrientationPrompt: React.FC = () => {
           </div>
         </div>
 
-        {/* Heading */}
         <div
           style={{
             fontFamily: 'var(--font-hud)',
@@ -139,7 +126,6 @@ export const OrientationPrompt: React.FC = () => {
           Rotate For 3D World
         </div>
 
-        {/* Subtitle in Bengali & English */}
         <div
           style={{
             fontFamily: 'var(--font-body)',
@@ -164,7 +150,6 @@ export const OrientationPrompt: React.FC = () => {
           3D Cyberpunk শহরটি সম্পূর্ণ Landscape ওয়াইডস্ক্রিনের জন্য অপ্টিমাইজড। গেমপ্যাড কন্ট্রোল ও ৩ডি এক্সপেরিয়েন্সের জন্য ফোনটি ঘুরিয়ে নিন।
         </p>
 
-        {/* Visual Rotation Instruction Badge */}
         <div
           style={{
             display: 'flex',
@@ -190,9 +175,9 @@ export const OrientationPrompt: React.FC = () => {
           <span>ফোনটি আড়াআড়ি ঘুরিয়ে ধরুন</span>
         </div>
 
-        {/* Action Button: Switch to 2D Mode */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
           <button
+            type="button"
             onClick={handleSwitch2D}
             style={{
               background: 'rgba(15, 23, 42, 0.75)',
@@ -216,10 +201,8 @@ export const OrientationPrompt: React.FC = () => {
             <span>Switch to 2D Mode (Vertical)</span>
           </button>
         </div>
-
       </div>
 
-      {/* Animation Styles */}
       <style>{`
         @keyframes phoneRotateCycle {
           0%, 15% {
@@ -234,9 +217,9 @@ export const OrientationPrompt: React.FC = () => {
         }
         @keyframes spinOrbit {
           from { transform: rotate(0deg); }
-          to { rotate: 360deg; }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </div>
   );
-};
+});

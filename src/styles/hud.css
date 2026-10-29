@@ -211,14 +211,84 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-body);
 }
 
-/* Pulse animation */
+/* Pulse & Spin animations */
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 1; }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
 .pulse-indicator {
   animation: pulseGlow 2s infinite ease-in-out;
+}
+
+/* Rich Blog Article Reader Styling inside 3D Modal */
+.blog-article-reader h2,
+.blog-article-reader h3,
+.blog-article-reader h4 {
+  color: #ffffff;
+  font-family: var(--font-heading);
+  margin-top: 14px;
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.blog-article-reader p {
+  margin-bottom: 10px;
+}
+
+.blog-article-reader ul,
+.blog-article-reader ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.blog-article-reader li {
+  margin-bottom: 5px;
+}
+
+.blog-article-reader code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(15, 23, 42, 0.95);
+  color: #7dd3fc;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.blog-article-reader pre {
+  background: #060913;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 10px;
+  padding: 14px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.blog-article-reader pre code {
+  background: transparent;
+  padding: 0;
+  color: #e2e8f0;
+}
+
+.blog-article-reader a {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.blog-article-reader blockquote {
+  border-left: 3px solid #f43f5e;
+  padding-left: 14px;
+  color: #e2e8f0;
+  font-style: italic;
 }
 
 /* ==========================================================================
@@ -272,17 +342,31 @@ h1, h2, h3, h4, h5, h6 {
 
   .hud-radar-mobile {
     top: 60px !important;
-    right: 10px !important;
+    right: max(10px, env(safe-area-inset-right, 10px)) !important;
     width: 82px !important;
     height: 82px !important;
-    padding: 6px !important;
+    padding: 5px !important;
+  }
+
+  .hud-radar-label {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .hud-radar-circle {
+    width: 56px !important;
+    height: 56px !important;
   }
 
   .hud-quests-mobile {
     top: 60px !important;
-    left: 10px !important;
+    left: max(10px, env(safe-area-inset-left, 10px)) !important;
     padding: 6px 10px !important;
     font-size: 10px !important;
+  }
+
+  .hud-quests-label {
+    display: none !important;
   }
 
   .btn-cyber {
@@ -310,15 +394,55 @@ h1, h2, h3, h4, h5, h6 {
     padding: 12px 16px !important;
   }
 
+  .hud-header {
+    top: max(8px, env(safe-area-inset-top, 8px)) !important;
+  }
+
+  .hud-brand {
+    height: 36px !important;
+    padding: 4px 10px !important;
+  }
+
+  .hud-brand-subtitle {
+    display: none !important;
+  }
+
   .hud-radar-mobile {
-    top: 50px !important;
-    right: 12px !important;
-    width: 80px !important;
-    height: 80px !important;
+    top: 52px !important;
+    right: max(12px, env(safe-area-inset-right, 12px)) !important;
+    width: 78px !important;
+    height: 78px !important;
+    padding: 4px !important;
+  }
+
+  .hud-radar-label {
+    font-size: 8.5px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .hud-radar-circle {
+    width: 54px !important;
+    height: 54px !important;
   }
 
   .hud-quests-mobile {
-    top: 50px !important;
-    left: 12px !important;
+    top: 52px !important;
+    left: max(12px, env(safe-area-inset-left, 12px)) !important;
+    padding: 5px 10px !important;
+  }
+
+  .hud-quests-label {
+    display: none !important;
+  }
+
+  .mobile-joystick-base {
+    width: 90px !important;
+    height: 90px !important;
+  }
+
+  .hud-interact-banner {
+    padding: 8px 14px !important;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
+    max-width: min(320px, 46vw) !important;
   }
 }

@@ -1,15 +1,23 @@
 import dns from 'dns';
-dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || "mongodb+srv://mdkaiumhasan2005_db_user:" + encodeURIComponent("225387@Km") + "@careguide.sx7qdrf.mongodb.net/portfolio_db?retryWrites=true&w=majority&appName=CareGuide";
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (_) {
+  // Ignore in restricted serverless environments where custom DNS servers are locked
+}
 
 let cachedClient = null;
 let cachedDb = null;
+let cachedUri = null;
 
 export async function connectToDatabase() {
-  if (cachedClient && cachedDb) {
+  const uri = process.env.MONGODB_URI;
+  if (!uri || uri.trim().length === 0) {
+    throw new Error('MONGODB_URI environment variable is not configured');
+  }
+
+  if (cachedClient && cachedDb && cachedUri === uri) {
     return { client: cachedClient, db: cachedDb };
   }
 
@@ -19,10 +27,12 @@ export async function connectToDatabase() {
   });
 
   await client.connect();
-  const db = client.db('portfolio_db');
+  const dbName = process.env.MONGODB_DB_NAME || 'portfolio_db';
+  const db = client.db(dbName);
 
   cachedClient = client;
   cachedDb = db;
+  cachedUri = uri;
 
   return { client, db };
 }
