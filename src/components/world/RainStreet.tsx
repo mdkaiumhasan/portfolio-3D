@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { Octree } from 'three/examples/jsm/math/Octree.js';
@@ -285,10 +285,8 @@ export const RainStreet: React.FC = () => {
       <EastPerimeterGate />
       <CorridorClosureGate />
 
-      {/* Royal Iron & Stone Throne at Welcome Spawn Point */}
-      <Suspense fallback={null}>
-        <IronThrone />
-      </Suspense>
+      {/* Royal Iron & Stone Throne at Welcome Spawn Point (shares outer Suspense with Map & Player) */}
+      <IronThrone />
     </group>
   );
 };

@@ -17,6 +17,10 @@ export const Classic2DView: React.FC = () => {
         } catch {
           // Ignore URL history update errors
         }
+        const state = useGameStore.getState();
+        if (!state.isWorldSceneReady) {
+          state.setIsIntroLoading(true);
+        }
         setMode('3d');
       }
     };

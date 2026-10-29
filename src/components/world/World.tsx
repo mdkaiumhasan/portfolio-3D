@@ -46,6 +46,40 @@ const WebGLContextGuard: React.FC = () => {
   return null;
 };
 
+// Signals LoadingScreen only AFTER Map, Iron Throne, Pedestal Towers & Seated Player
+// have ALL resolved useGLTF, committed to the scene graph, and compiled WebGL shaders!
+const SceneReadyNotifier: React.FC = () => {
+  const { gl, scene, camera } = useThree();
+  const setIsWorldSceneReady = useGameStore((s) => s.setIsWorldSceneReady);
+  const notifiedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    try {
+      gl.compile(scene, camera);
+    } catch {
+      // Ignore shader pre-compile warnings on older GPU drivers
+    }
+
+    const fallbackTimer = setTimeout(() => {
+      if (!notifiedRef.current) {
+        notifiedRef.current = true;
+        setIsWorldSceneReady(true);
+      }
+    }, 650);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [gl, scene, camera, setIsWorldSceneReady]);
+
+  useFrame(() => {
+    if (!notifiedRef.current) {
+      notifiedRef.current = true;
+      setIsWorldSceneReady(true);
+    }
+  });
+
+  return null;
+};
+
 const GL_CONFIG = {
   antialias: false, // Prevents GPU VRAM exhaustion on mobile during resize
   powerPreference: 'high-performance' as const,
@@ -106,10 +140,11 @@ export const World: React.FC = React.memo(() => {
         {/* Smooth Following Third-Person Camera */}
         <ThirdPersonCamera />
 
-        {/* Street & Stations */}
+        {/* Street, Iron Throne, Pedestal Stations & Seated Player (mount atomically) */}
         <Suspense fallback={null}>
           <RainStreet />
           <Player />
+          <SceneReadyNotifier />
         </Suspense>
       </Canvas>
     </div>

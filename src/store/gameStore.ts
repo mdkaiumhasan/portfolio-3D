@@ -56,9 +56,15 @@ interface GameState {
   isIntroLoading: boolean;
   setIsIntroLoading: (loading: boolean) => void;
 
-  // Single-stream resolved ObjectURL for the 3D street model (prevents duplicate downloads)
+  // Single-stream resolved ObjectURLs for all 3D scene models (prevents duplicate downloads & delayed pop-in)
   resolvedEnvModelUrl: string | null;
+  resolvedThroneModelUrl: string | null;
+  resolvedPlayerModelUrl: string | null;
+  resolvedTowerModelUrl: string | null;
   setResolvedEnvModelUrl: (url: string | null) => void;
+  setResolvedModelUrls: (urls: { env: string; throne: string; player: string; tower: string }) => void;
+  isWorldSceneReady: boolean;
+  setIsWorldSceneReady: (ready: boolean) => void;
 
   // Active UI Panel
   activePanel: ActivePanel;
@@ -238,7 +244,19 @@ export const useGameStore = create<GameState>((set, get) => ({
   setIsIntroLoading: (isIntroLoading) => set({ isIntroLoading }),
 
   resolvedEnvModelUrl: null,
+  resolvedThroneModelUrl: null,
+  resolvedPlayerModelUrl: null,
+  resolvedTowerModelUrl: null,
   setResolvedEnvModelUrl: (resolvedEnvModelUrl) => set({ resolvedEnvModelUrl }),
+  setResolvedModelUrls: ({ env, throne, player, tower }) =>
+    set({
+      resolvedEnvModelUrl: env,
+      resolvedThroneModelUrl: throne,
+      resolvedPlayerModelUrl: player,
+      resolvedTowerModelUrl: tower,
+    }),
+  isWorldSceneReady: false,
+  setIsWorldSceneReady: (isWorldSceneReady) => set({ isWorldSceneReady }),
 
   activePanel: null,
   setActivePanel: (panel) => {

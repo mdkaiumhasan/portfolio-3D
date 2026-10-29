@@ -3,8 +3,13 @@ import gsap from 'gsap';
 import { Sparkles, Layout, Loader2 } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
-import { preloadAndCacheModel } from '../../utils/assetCache';
-import { getRainStreetModelUrl } from '../../utils/modelUrl';
+import { preloadAllSceneModels, estimateModelBytes } from '../../utils/assetCache';
+import {
+  getRainStreetModelUrl,
+  getThroneModelUrl,
+  getPlayerModelUrl,
+  getStationTowerModelUrl,
+} from '../../utils/modelUrl';
 import { isMobileDevice } from '../../utils/orientation';
 import { usePortfolioData, extractAuthorName, extractAuthorRole } from '../../hooks/usePortfolioData';
 import '../../styles/introLoader.css';
@@ -25,7 +30,8 @@ const LOG_MILESTONES = [
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   const setMode = useGameStore((s) => s.setMode);
   const setAudioEnabled = useGameStore((s) => s.setAudioEnabled);
-  const setResolvedEnvModelUrl = useGameStore((s) => s.setResolvedEnvModelUrl);
+  const setResolvedModelUrls = useGameStore((s) => s.setResolvedModelUrls);
+  const isWorldSceneReady = useGameStore((s) => s.isWorldSceneReady);
 
   const { data } = usePortfolioData();
   const authorName = useMemo(() => extractAuthorName(data.home_heading), [data.home_heading]);
@@ -48,55 +54,106 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
   // Download & Animation tracking refs
   const targetPercentRef = useRef(0);
   const displayedPercentRef = useRef(0);
-  const modelUrl = useMemo(() => getRainStreetModelUrl(), []);
+  const sceneUrls = useMemo(
+    () => ({
+      env: getRainStreetModelUrl(),
+      throne: getThroneModelUrl(),
+      player: getPlayerModelUrl(),
+      tower: getStationTowerModelUrl(),
+    }),
+    []
+  );
   const downloadStatsRef = useRef({
     loadedMB: 0,
-    totalMB: modelUrl.includes('mobile') ? 8.0 : 89.5,
+    totalMB:
+      (estimateModelBytes(sceneUrls.env) +
+        estimateModelBytes(sceneUrls.throne) +
+        estimateModelBytes(sceneUrls.player) +
+        estimateModelBytes(sceneUrls.tower)) /
+      (1024 * 1024),
   });
+  const blobsResolvedRef = useRef(false);
   const modelReadyRef = useRef(false);
   const isReadyRef = useRef(false);
   const shownLogIndexRef = useRef(-1);
   const animStateRef = useRef({ dead: false, exiting: false, raf: 0 });
 
-  // 1. Single-stream download + Three.js engine chunk prefetch in parallel
+  // 1. Concurrent stream of ALL 3D assets (Street + Iron Throne + Player + Towers) + Engine prefetch
   useEffect(() => {
     let isMounted = true;
+    let sceneFallbackTimer: ReturnType<typeof setTimeout> | null = null;
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    // Preload the lazy Three.js / World code chunk while the GLB streams
+    // Preload the lazy Three.js / World code chunk while the GLBs stream
     const worldChunkPromise = import('../world/World').catch(() => null);
 
-    const modelStreamPromise = preloadAndCacheModel(
-      modelUrl,
+    const modelsStreamPromise = preloadAllSceneModels(
+      sceneUrls,
       (percent, loadedMB, totalMB) => {
         if (!isMounted) return;
         downloadStatsRef.current = { loadedMB, totalMB };
-        targetPercentRef.current = Math.min(99.5, Math.max(targetPercentRef.current, percent));
+        // 0% -> 92% tracks network/cache streaming; 92% -> 100% tracks GLTF parse + GPU shader warm-up
+        const scaledPct = Math.min(92, percent * 0.92);
+        targetPercentRef.current = Math.max(targetPercentRef.current, scaledPct);
       },
       controller.signal
     );
 
-    Promise.all([modelStreamPromise, worldChunkPromise])
-      .then(([resolvedBlobUrl]) => {
+    Promise.all([modelsStreamPromise, worldChunkPromise])
+      .then(([resolvedUrls]) => {
         if (!isMounted || controller.signal.aborted) return;
-        setResolvedEnvModelUrl(resolvedBlobUrl);
-        modelReadyRef.current = true;
-        targetPercentRef.current = 100;
+
+        // Kick off GLTFLoader + Draco parse immediately into Drei's cache
+        import('@react-three/drei')
+          .then(({ useGLTF }) => {
+            useGLTF.setDecoderPath('/draco/');
+            useGLTF.preload(resolvedUrls.env, '/draco/');
+            useGLTF.preload(resolvedUrls.throne, '/draco/');
+            useGLTF.preload(resolvedUrls.player, '/draco/');
+            useGLTF.preload(resolvedUrls.tower, '/draco/');
+          })
+          .catch(() => {});
+
+        setResolvedModelUrls(resolvedUrls);
+        blobsResolvedRef.current = true;
+        targetPercentRef.current = Math.max(targetPercentRef.current, 96);
+
+        if (useGameStore.getState().isWorldSceneReady) {
+          modelReadyRef.current = true;
+          targetPercentRef.current = 100;
+        } else {
+          // Safety fallback if WebGL frame loop is throttled in a background tab
+          sceneFallbackTimer = setTimeout(() => {
+            if (!isMounted || controller.signal.aborted) return;
+            modelReadyRef.current = true;
+            targetPercentRef.current = 100;
+          }, 3500);
+        }
       })
       .catch((err) => {
         if (!isMounted || controller.signal.aborted) return;
-        console.warn('Preload fallback to direct model URL:', err);
-        setResolvedEnvModelUrl(modelUrl);
+        console.warn('Preload fallback to direct model URLs:', err);
+        setResolvedModelUrls(sceneUrls);
+        blobsResolvedRef.current = true;
         modelReadyRef.current = true;
         targetPercentRef.current = 100;
       });
 
     return () => {
       isMounted = false;
+      if (sceneFallbackTimer) clearTimeout(sceneFallbackTimer);
       controller.abort();
     };
-  }, [modelUrl, setResolvedEnvModelUrl]);
+  }, [sceneUrls, setResolvedModelUrls]);
+
+  // Unlock 100% the instant World.tsx finishes mounting Map + Iron Throne + Seated Player on GPU
+  useEffect(() => {
+    if (isWorldSceneReady && blobsResolvedRef.current) {
+      modelReadyRef.current = true;
+      targetPercentRef.current = 100;
+    }
+  }, [isWorldSceneReady]);
 
   // 2. Cinematic Shutter Exit Animation
   const triggerExit = useCallback(() => {
@@ -277,6 +334,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoaded }) => {
         const stats = downloadStatsRef.current;
         if (rounded >= 100 && modelReadyRef.current) {
           downloadStatusRef.current.innerHTML = `ALL 3D ASSETS SYNCHRONIZED // <b>READY</b>`;
+        } else if (blobsResolvedRef.current) {
+          downloadStatusRef.current.innerHTML = `MOUNTING IRON THRONE &amp; COMPILING SHADERS // <b>${rounded}%</b>`;
         } else if (stats.loadedMB > 0) {
           downloadStatusRef.current.innerHTML = `STREAMING 3D ASSETS: <b>${stats.loadedMB.toFixed(1)}</b> / ${stats.totalMB.toFixed(1)} MB (${rounded}%)`;
         } else {

@@ -37,17 +37,34 @@ export async function isModelInCache(url: string): Promise<boolean> {
   }
 }
 
+export interface SceneModelUrls {
+  env: string;
+  throne: string;
+  player: string;
+  tower: string;
+}
+
+export function estimateModelBytes(url: string): number {
+  if (url.includes('after_the_rain_mobile')) return 8_070_000;
+  if (url.includes('after_the_rain_2k')) return 93_869_428;
+  if (url.includes('throne_mobile')) return 1_575_000;
+  if (url.includes('throne_of_iron__stone')) return 5_360_000;
+  if (url.includes('cool_man')) return 7_970_000;
+  if (url.includes('Project_tower')) return 1_240_000;
+  return url.includes('mobile') ? 8_070_000 : 10_000_000;
+}
+
 /**
  * Streams and caches a 3D GLB model ONCE and returns an in-memory `blob:` ObjectURL
  * (or falls back to `url` if Blob/Cache APIs are restricted) so Three.js `useGLTF`
- * never triggers a duplicate 90 MB network download.
+ * never triggers a duplicate network download.
  */
 export async function preloadAndCacheModel(
   url: string,
   onProgress?: (progressPercent: number, loadedMB: number, totalMB: number) => void,
   signal?: AbortSignal
 ): Promise<string> {
-  const defaultEstimateBytes = url.includes('mobile') ? 8_400_000 : 93_869_428;
+  const defaultEstimateBytes = estimateModelBytes(url);
 
   if (typeof window === 'undefined') {
     onProgress?.(100, 0, 0);
@@ -200,4 +217,53 @@ export async function preloadAndCacheModel(
     activeDownloads.set(url, downloadPromise);
   }
   return downloadPromise;
+}
+
+/**
+ * Streams and caches ALL required 3D spawn assets (Environment, Iron Throne, Player Avatar,
+ * and Pedestal Tower) concurrently over HTTP/2-3 and returns in-memory `blob:` ObjectURLs
+ * so every mesh mounts atomically on Frame 1 with zero delayed pop-in.
+ */
+export async function preloadAllSceneModels(
+  urls: SceneModelUrls,
+  onProgress?: (progressPercent: number, loadedMB: number, totalMB: number) => void,
+  signal?: AbortSignal
+): Promise<SceneModelUrls> {
+  const keys: (keyof SceneModelUrls)[] = ['env', 'throne', 'player', 'tower'];
+  const slotStats: Record<keyof SceneModelUrls, { loaded: number; total: number }> = {
+    env: { loaded: 0, total: estimateModelBytes(urls.env) / (1024 * 1024) },
+    throne: { loaded: 0, total: estimateModelBytes(urls.throne) / (1024 * 1024) },
+    player: { loaded: 0, total: estimateModelBytes(urls.player) / (1024 * 1024) },
+    tower: { loaded: 0, total: estimateModelBytes(urls.tower) / (1024 * 1024) },
+  };
+
+  const reportCombined = () => {
+    if (!onProgress) return;
+    let sumLoaded = 0;
+    let sumTotal = 0;
+    for (const k of keys) {
+      sumLoaded += slotStats[k].loaded;
+      sumTotal += Math.max(slotStats[k].total, slotStats[k].loaded);
+    }
+    const pct = sumTotal > 0 ? Math.min(99.5, (sumLoaded / sumTotal) * 100) : 100;
+    onProgress(pct, sumLoaded, sumTotal);
+  };
+
+  const [env, throne, player, tower] = await Promise.all(
+    keys.map((key) =>
+      preloadAndCacheModel(
+        urls[key],
+        (_pct, loadedMB, totalMB) => {
+          slotStats[key].loaded = loadedMB;
+          if (totalMB > 0) {
+            slotStats[key].total = totalMB;
+          }
+          reportCombined();
+        },
+        signal
+      )
+    )
+  );
+
+  return { env, throne, player, tower };
 }

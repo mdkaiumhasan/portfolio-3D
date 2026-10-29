@@ -53,6 +53,7 @@ export const App: React.FC = () => {
   const isIntroLoading = useGameStore((s) => s.isIntroLoading);
   const setIsIntroLoading = useGameStore((s) => s.setIsIntroLoading);
   const resolvedEnvModelUrl = useGameStore((s) => s.resolvedEnvModelUrl);
+  const resolvedThroneModelUrl = useGameStore((s) => s.resolvedThroneModelUrl);
 
   const webglSupported = useMemo(() => isWebGLAvailable(), []);
 
@@ -111,9 +112,12 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activePanel, setActivePanel, audioEnabled]);
 
-  // Only mount <World /> once LoadingScreen has resolved the single-stream model URL
-  // (or after intro loading completes), guaranteeing zero duplicate 90 MB network streams!
-  const shouldMountWorld = mode === '3d' && webglSupported && (resolvedEnvModelUrl !== null || !isIntroLoading);
+  // Only mount <World /> once LoadingScreen has resolved all single-stream model URLs
+  // (env + throne + player + tower), guaranteeing atomic Frame-1 mount & zero duplicate streams!
+  const shouldMountWorld =
+    mode === '3d' &&
+    webglSupported &&
+    ((resolvedEnvModelUrl !== null && resolvedThroneModelUrl !== null) || !isIntroLoading);
 
   return (
     <ErrorBoundary>

@@ -10,7 +10,9 @@ export { getThroneModelUrl };
 const THRONE_URL = getThroneModelUrl();
 
 export const IronThrone: React.FC = () => {
-  const { scene } = useGLTF(THRONE_URL, '/draco/');
+  const resolvedThroneModelUrl = useGameStore((state) => state.resolvedThroneModelUrl);
+  const activeThroneUrl = resolvedThroneModelUrl || THRONE_URL;
+  const { scene } = useGLTF(activeThroneUrl, '/draco/');
   const isSeatedOnThrone = useGameStore((state) => state.isSeatedOnThrone);
   const audioEnabled = useGameStore((state) => state.audioEnabled);
 
@@ -30,7 +32,7 @@ export const IronThrone: React.FC = () => {
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        mesh.frustumCulled = true;
+        mesh.frustumCulled = false;
         mesh.castShadow = false;
         mesh.receiveShadow = false;
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, Suspense } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -168,7 +168,7 @@ const StationTowerModel: React.FC<StationTowerModelProps> = ({
   isNearby,
   targetHeight = 2.3,
 }) => {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url, '/draco/');
 
   const { clone, modelScale, modelOffset } = useMemo(() => {
     scene.updateMatrixWorld(true);
@@ -299,6 +299,8 @@ export const StationPedestal: React.FC<StationPedestalProps> = React.memo(({ sta
   const isIntroLoading = useGameStore((s) => s.isIntroLoading);
   const qualityTier = useGameStore((s) => s.qualityTier);
   const isMobile = useGameStore((s) => s.isMobile);
+  const resolvedTowerModelUrl = useGameStore((s) => s.resolvedTowerModelUrl);
+  const activeTowerUrl = resolvedTowerModelUrl || PROJECT_TOWER_URL;
 
   const lightRef = useRef<THREE.PointLight>(null);
 
@@ -346,14 +348,12 @@ export const StationPedestal: React.FC<StationPedestalProps> = React.memo(({ sta
       )}
 
       {/* 3. 3D Animated Tower Model */}
-      <Suspense fallback={null}>
-        <StationTowerModel
-          url={PROJECT_TOWER_URL}
-          station={station}
-          isNearby={isNearby}
-          targetHeight={2.3}
-        />
-      </Suspense>
+      <StationTowerModel
+        url={activeTowerUrl}
+        station={station}
+        isNearby={isNearby}
+        targetHeight={2.3}
+      />
 
       {/* 4. Dynamic Breathing Cyber Point Light (disabled on low qualityTier to save dynamic lights) */}
       {qualityTier !== 'low' && (

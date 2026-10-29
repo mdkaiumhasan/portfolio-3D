@@ -31,7 +31,9 @@ const _pushVec = new THREE.Vector3();
 export const Player: React.FC<PlayerProps> = React.memo(() => {
   const groupRef = useRef<THREE.Group>(null);
   const { camera } = useThree();
-  const { scene, animations } = useGLTF(PLAYER_MODEL_URL);
+  const resolvedPlayerModelUrl = useGameStore((s) => s.resolvedPlayerModelUrl);
+  const activePlayerUrl = resolvedPlayerModelUrl || PLAYER_MODEL_URL;
+  const { scene, animations } = useGLTF(activePlayerUrl, '/draco/');
 
   const processedAnimations = useMemo(() => {
     return preparePlayerAnimations(animations);

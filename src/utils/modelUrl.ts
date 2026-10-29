@@ -20,7 +20,7 @@ export const getThroneModelUrl = (): string => {
   if (typeof window === 'undefined') return `${MODEL_BASE_URL}/throne_mobile.glb`;
   return isMobileDevice()
     ? `${MODEL_BASE_URL}/throne_mobile.glb`
-    : `${MODEL_BASE_URL}/throne_of_iron__stone.glb`;
+    : `${MODEL_BASE_URL}/throne_of_iron__stone.glb?v=v2_webp`;
 };
 
 export const getPlayerModelUrl = (): string => {
