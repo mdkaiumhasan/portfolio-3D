@@ -219,7 +219,7 @@ export const SettingsModal: React.FC = () => {
             }}
           >
             <span>
-              ⚡ 3D/2D Engine Crafted by <strong style={{ color: '#f8fafc' }}>{CREATOR_SIGNATURE.author}</strong>
+              ⚡ 3D/2D Engine Developed by <strong style={{ color: '#f8fafc' }}>{CREATOR_SIGNATURE.author}</strong>
             </span>
             <a
               href={CREATOR_SIGNATURE.repoUrl}

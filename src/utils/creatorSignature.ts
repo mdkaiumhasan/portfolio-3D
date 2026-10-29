@@ -27,7 +27,7 @@ export function printCreatorSignature(
       'background: #0f172a; color: #38bdf8; font-weight: 700; padding: 5px 10px; border: 1px solid #1e293b; border-radius: 0 6px 6px 0; font-family: monospace;'
     );
     console.log(
-      `%cCrafted & Open-Sourced by ${CREATOR_SIGNATURE.author} • ${CREATOR_SIGNATURE.repoUrl}`,
+      `%cDeveloped & Open-Sourced by ${CREATOR_SIGNATURE.author} • ${CREATOR_SIGNATURE.repoUrl}`,
       'color: #94a3b8; font-family: monospace; font-size: 11px; padding-top: 2px;'
     );
   } catch {
