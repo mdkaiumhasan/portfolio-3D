@@ -1,4 +1,4 @@
-# 🌧️ MD. Kaium Hasan — Open-Source 3D + 2D Hybrid Portfolio Engine
+# 🌧️ MD. Kaium Hasan - Open-Source 3D + 2D Hybrid Portfolio Engine
 
 <div align="center">
 
