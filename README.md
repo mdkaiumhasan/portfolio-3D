@@ -9,7 +9,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-10b981.svg?style=for-the-badge)
 
-**An AAA-inspired 3D Cyberpunk Interactive World + Ultra-Fast 2D Classic Portfolio — managed simultaneously from a single Unified Executive Admin Console (`/admin`).**
+**An AAA-inspired 3D Cyberpunk Interactive World + Ultra-Fast 2D Classic Portfolio - managed simultaneously from a single Unified Executive Admin Console (`/admin`).**
 
 [🌐 Live Portfolio](https://www.mdkaiumhasan.site) • [📘 **Complete Setup & Deploy Guide (`GUIDELINE.md`)**](GUIDELINE.md) • [📦 3D `.glb` Releases](https://github.com/mdkaiumhasan/portfolio-3D/releases/tag/1.0.0) • [💼 LinkedIn](https://www.linkedin.com/in/md-kaium-hasan-bb6009372/)
 
