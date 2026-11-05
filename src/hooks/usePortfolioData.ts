@@ -443,7 +443,14 @@ export function fetchPortfolioDataOnce(forceRefresh = false): Promise<PortfolioD
     return inflightPromise;
   }
 
-  inflightPromise = fetch('/api/portfolio', { cache: 'no-store' })
+  const cacheBuster = `_t=${Date.now()}`;
+  inflightPromise = fetch(`/api/portfolio?${cacheBuster}`, {
+    cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache'
+    }
+  })
     .then((res) => {
       if (!res.ok) throw new Error(`API status ${res.status}`);
       return res.json();
@@ -456,7 +463,7 @@ export function fetchPortfolioDataOnce(forceRefresh = false): Promise<PortfolioD
     .catch(async (err) => {
       console.warn('Using static/local fallback data for portfolio:', err);
       try {
-        const res = await fetch('/data/legacy_data.json');
+        const res = await fetch(`/data/legacy_data.json?${cacheBuster}`);
         if (res.ok) {
           const staticData = await res.json();
           const merged = mergeWithFallback(staticData);
@@ -477,15 +484,35 @@ export function fetchPortfolioDataOnce(forceRefresh = false): Promise<PortfolioD
   return inflightPromise;
 }
 
-if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-  try {
-    const channel = new BroadcastChannel('portfolio_data_updated');
-    channel.onmessage = () => {
-      fetchPortfolioDataOnce(true).catch(() => {});
-    };
-  } catch {
-    // Ignore restricted BroadcastChannel environments
+if (typeof window !== 'undefined') {
+  // 1. BroadcastChannel (same origin multi-tab sync)
+  if ('BroadcastChannel' in window) {
+    try {
+      const channel = new BroadcastChannel('portfolio_data_updated');
+      channel.onmessage = () => {
+        fetchPortfolioDataOnce(true).catch(() => {});
+      };
+    } catch {
+      // Ignore restricted environments
+    }
   }
+
+  // 2. Storage event (100% reliable across all browser windows, tabs & private tabs)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'portfolio_data_updated_at') {
+      fetchPortfolioDataOnce(true).catch(() => {});
+    }
+  });
+
+  // 3. Window focus / visibilitychange (instant sync when user switches tabs from /admin to portfolio)
+  window.addEventListener('focus', () => {
+    fetchPortfolioDataOnce(true).catch(() => {});
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      fetchPortfolioDataOnce(true).catch(() => {});
+    }
+  });
 }
 
 export function usePortfolioData() {
@@ -502,14 +529,10 @@ export function usePortfolioData() {
     };
     subscribers.add(listener);
 
-    if (!cachedData) {
-      fetchPortfolioDataOnce().finally(() => {
-        if (mounted) setLoading(false);
-      });
-    } else {
-      setData(cachedData);
-      setLoading(false);
-    }
+    // Revalidate in background on mount so opened modal always reflects live database changes
+    fetchPortfolioDataOnce(true).finally(() => {
+      if (mounted) setLoading(false);
+    });
 
     return () => {
       mounted = false;

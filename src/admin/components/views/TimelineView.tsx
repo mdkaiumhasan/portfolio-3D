@@ -19,9 +19,10 @@ interface TimelineViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const TimelineView: React.FC<TimelineViewProps> = ({ data, onUpdate, onToast }) => {
+export const TimelineView: React.FC<TimelineViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,18 +30,23 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ data, onUpdate, onTo
 
   const experiences = data.experiences || [];
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newItem: ExperienceItem = {
       title: 'Network Operations Engineer',
       date: 'Jan 2026 – Present',
       description: 'Describe core routing, switching, ISP queues, or server administration duties...',
       imageUrl: '/data/fullstack_dev_logo.svg'
     };
-    onUpdate((prev) => ({
-      ...prev,
-      experiences: [...(prev.experiences || []), newItem]
-    }));
-    onToast('Added new experience milestone', 'success');
+    const updatedData: PortfolioData = {
+      ...data,
+      experiences: [...(data.experiences || []), newItem]
+    };
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Added new experience milestone and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Added new experience milestone', 'success');
+    }
   };
 
   const handleChange = (index: number, field: keyof ExperienceItem, value: string) => {
@@ -75,14 +81,19 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ data, onUpdate, onTo
     fileInputRef.current?.click();
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      experiences: (prev.experiences || []).filter((_, idx) => idx !== deleteIndex)
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      experiences: (data.experiences || []).filter((_, idx) => idx !== deleteIndex)
+    };
     setDeleteIndex(null);
-    onToast('Experience milestone removed', 'info');
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Experience milestone removed and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Experience milestone removed', 'info');
+    }
   };
 
   return (

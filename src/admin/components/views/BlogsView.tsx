@@ -23,9 +23,10 @@ interface BlogsViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast }) => {
+export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [newCatInput, setNewCatInput] = useState('');
@@ -69,7 +70,7 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
   }, [posts, selectedFilter, searchQuery]);
 
   // Category Management Handlers
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     const trimmed = newCatInput.trim();
     if (!trimmed) {
       onToast('Please enter a category name', 'warning');
@@ -80,38 +81,48 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
       return;
     }
 
-    onUpdate((prev) => ({
-      ...prev,
-      blog_categories: [...(prev.blog_categories || categories), trimmed]
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      blog_categories: [...(data.blog_categories || categories), trimmed]
+    };
     setNewCatInput('');
-    onToast(`Added blog category "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Added blog category "${trimmed}" to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Added blog category "${trimmed}"`, 'success');
+    }
   };
 
-  const handleRenameCategory = (oldName: string) => {
+  const handleRenameCategory = async (oldName: string) => {
     const newName = prompt(`Enter new name for category "${oldName}":`, oldName);
     if (!newName || !newName.trim() || newName.trim() === oldName) return;
     const trimmed = newName.trim();
 
-    onUpdate((prev) => {
-      const updatedCats = (prev.blog_categories || categories).map((c) =>
-        c === oldName ? trimmed : c
-      );
-      const updatedPosts = (prev.posts || []).map((p) =>
-        p.category === oldName ? { ...p, category: trimmed } : p
-      );
-      return {
-        ...prev,
-        blog_categories: updatedCats,
-        posts: updatedPosts
-      };
-    });
+    const updatedCats = (data.blog_categories || categories).map((c) =>
+      c === oldName ? trimmed : c
+    );
+    const updatedPosts = (data.posts || []).map((p) =>
+      p.category === oldName ? { ...p, category: trimmed } : p
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      blog_categories: updatedCats,
+      posts: updatedPosts
+    };
 
     if (selectedFilter === oldName) setSelectedFilter(trimmed);
-    onToast(`Renamed category to "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category renamed to "${trimmed}" and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Renamed category to "${trimmed}"`, 'success');
+    }
   };
 
-  const handleConfirmDeleteCat = () => {
+  const handleConfirmDeleteCat = async () => {
     if (!deleteCatName) return;
     if (categories.length <= 1) {
       onToast('You must keep at least one category', 'warning');
@@ -120,22 +131,25 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
     }
 
     const fallback = categories.find((c) => c !== deleteCatName) || 'Tutorial';
-
-    onUpdate((prev) => {
-      const updatedCats = (prev.blog_categories || categories).filter((c) => c !== deleteCatName);
-      const updatedPosts = (prev.posts || []).map((p) =>
-        p.category === deleteCatName ? { ...p, category: fallback } : p
-      );
-      return {
-        ...prev,
-        blog_categories: updatedCats,
-        posts: updatedPosts
-      };
-    });
+    const updatedCats = (data.blog_categories || categories).filter((c) => c !== deleteCatName);
+    const updatedPosts = (data.posts || []).map((p) =>
+      p.category === deleteCatName ? { ...p, category: fallback } : p
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      blog_categories: updatedCats,
+      posts: updatedPosts
+    };
 
     if (selectedFilter === deleteCatName) setSelectedFilter('All');
     setDeleteCatName(null);
-    onToast(`Removed category "${deleteCatName}"`, 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category "${deleteCatName}" removed and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Removed category "${deleteCatName}"`, 'info');
+    }
   };
 
   // Article Edit Handlers
@@ -160,26 +174,38 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
     setEditingDraft({ ...(targetItem || posts[index]) });
   };
 
-  const handleSaveDraft = () => {
+  const handleSaveDraft = async () => {
     if (!editingDraft) return;
     if (!editingDraft.title?.trim()) {
       onToast('Article title is required', 'warning');
       return;
     }
 
-    onUpdate((prev) => {
-      const updated = [...(prev.posts || [])];
-      if (editingIndex === -1) {
-        updated.push(editingDraft);
-      } else if (editingIndex !== null) {
-        updated[editingIndex] = editingDraft;
-      }
-      return { ...prev, posts: updated };
-    });
+    const updatedPosts = [...(data.posts || [])];
+    const isNew = editingIndex === -1;
+    if (isNew) {
+      updatedPosts.push(editingDraft);
+    } else if (editingIndex !== null) {
+      updatedPosts[editingIndex] = editingDraft;
+    }
 
-    onToast(editingIndex === -1 ? 'Article published' : 'Article updated', 'success');
+    const updatedData: PortfolioData = {
+      ...data,
+      posts: updatedPosts
+    };
+
     setEditingIndex(null);
     setEditingDraft(null);
+
+    if (onSaveDirect) {
+      await onSaveDirect(
+        updatedData,
+        isNew ? 'Article published and synced to database live!' : 'Article updated and synced to database live!'
+      );
+    } else {
+      onUpdate(() => updatedData);
+      onToast(isNew ? 'Article published' : 'Article updated', 'success');
+    }
   };
 
   const handleModalImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,14 +225,21 @@ export const BlogsView: React.FC<BlogsViewProps> = ({ data, onUpdate, onToast })
     }
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      posts: (prev.posts || []).filter((_, idx) => idx !== deleteIndex)
-    }));
+    const updatedPosts = (data.posts || []).filter((_, idx) => idx !== deleteIndex);
+    const updatedData: PortfolioData = {
+      ...data,
+      posts: updatedPosts
+    };
     setDeleteIndex(null);
-    onToast('Article deleted', 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Article deleted and synced to database live!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Article deleted', 'info');
+    }
   };
 
   // Generate with Gemini AI (Server-Side Secured Endpoint)

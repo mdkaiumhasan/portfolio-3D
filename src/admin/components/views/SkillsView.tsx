@@ -17,9 +17,10 @@ interface SkillsViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast }) => {
+export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [newCatInput, setNewCatInput] = useState<string>('');
@@ -44,7 +45,7 @@ export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast 
   });
 
   // Add Category
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     const trimmed = newCatInput.trim();
     if (!trimmed) {
       onToast('Please enter a category name', 'warning');
@@ -55,40 +56,50 @@ export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast 
       return;
     }
 
-    onUpdate((prev) => ({
-      ...prev,
-      skill_categories: [...(prev.skill_categories || []), trimmed]
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      skill_categories: [...(data.skill_categories || categories), trimmed]
+    };
     setNewCatInput('');
-    onToast(`Added skill category "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Added skill category "${trimmed}" to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Added skill category "${trimmed}"`, 'success');
+    }
   };
 
   // Rename Category
-  const handleRenameCategory = (oldName: string) => {
+  const handleRenameCategory = async (oldName: string) => {
     const newName = prompt(`Enter new name for category "${oldName}":`, oldName);
     if (!newName || !newName.trim() || newName.trim() === oldName) return;
     const trimmed = newName.trim();
 
-    onUpdate((prev) => {
-      const updatedCats = (prev.skill_categories || []).map((c) =>
-        c === oldName ? trimmed : c
-      );
-      const updatedSkills = (prev.skills || []).map((s) =>
-        s.category === oldName ? { ...s, category: trimmed } : s
-      );
-      return {
-        ...prev,
-        skill_categories: updatedCats,
-        skills: updatedSkills
-      };
-    });
+    const updatedCats = (data.skill_categories || categories).map((c) =>
+      c === oldName ? trimmed : c
+    );
+    const updatedSkills = (data.skills || []).map((s) =>
+      s.category === oldName ? { ...s, category: trimmed } : s
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      skill_categories: updatedCats,
+      skills: updatedSkills
+    };
 
     if (selectedFilter === oldName) setSelectedFilter(trimmed);
-    onToast(`Renamed category to "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category renamed to "${trimmed}" and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Renamed category to "${trimmed}"`, 'success');
+    }
   };
 
   // Delete Category
-  const handleConfirmDeleteCat = () => {
+  const handleConfirmDeleteCat = async () => {
     if (!deleteCatName) return;
     if (categories.length <= 1) {
       onToast('You must keep at least one category', 'warning');
@@ -97,26 +108,29 @@ export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast 
     }
 
     const fallback = categories.find((c) => c !== deleteCatName) || 'General';
-
-    onUpdate((prev) => {
-      const updatedCats = (prev.skill_categories || []).filter((c) => c !== deleteCatName);
-      const updatedSkills = (prev.skills || []).map((s) =>
-        s.category === deleteCatName ? { ...s, category: fallback } : s
-      );
-      return {
-        ...prev,
-        skill_categories: updatedCats,
-        skills: updatedSkills
-      };
-    });
+    const updatedCats = (data.skill_categories || categories).filter((c) => c !== deleteCatName);
+    const updatedSkills = (data.skills || []).map((s) =>
+      s.category === deleteCatName ? { ...s, category: fallback } : s
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      skill_categories: updatedCats,
+      skills: updatedSkills
+    };
 
     if (selectedFilter === deleteCatName) setSelectedFilter('All');
     setDeleteCatName(null);
-    onToast(`Removed category "${deleteCatName}"`, 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category "${deleteCatName}" removed and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Removed category "${deleteCatName}"`, 'info');
+    }
   };
 
   // Add Skill
-  const handleAddSkill = () => {
+  const handleAddSkill = async () => {
     const defaultCat =
       selectedFilter !== 'All' ? selectedFilter : categories[0] || 'Network Engineering';
     const newSkill: SkillItem = {
@@ -125,11 +139,17 @@ export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast 
       category: defaultCat
     };
 
-    onUpdate((prev) => ({
-      ...prev,
-      skills: [...(prev.skills || []), newSkill]
-    }));
-    onToast('Added new skill', 'success');
+    const updatedData: PortfolioData = {
+      ...data,
+      skills: [...(data.skills || []), newSkill]
+    };
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'New skill added and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Added new skill', 'success');
+    }
   };
 
   // Update Skill
@@ -142,14 +162,21 @@ export const SkillsView: React.FC<SkillsViewProps> = ({ data, onUpdate, onToast 
   };
 
   // Delete Skill
-  const handleConfirmDeleteSkill = () => {
+  const handleConfirmDeleteSkill = async () => {
     if (deleteSkillIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      skills: (prev.skills || []).filter((_, idx) => idx !== deleteSkillIndex)
-    }));
+    const updatedSkills = (data.skills || []).filter((_, idx) => idx !== deleteSkillIndex);
+    const updatedData: PortfolioData = {
+      ...data,
+      skills: updatedSkills
+    };
     setDeleteSkillIndex(null);
-    onToast('Skill removed', 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Skill removed and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Skill removed', 'info');
+    }
   };
 
   return (

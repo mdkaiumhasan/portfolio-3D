@@ -2122,7 +2122,11 @@ function handleEnter3D() {
                 const configuredCats = (window.portfolioCategories && Array.isArray(window.portfolioCategories) && window.portfolioCategories.length > 0)
                     ? window.portfolioCategories
                     : defaultCats;
-                const categories = ['All', ...configuredCats];
+                const dynamicCats = Array.from(new Set([
+                    ...configuredCats,
+                    ...allProjectsList.map(p => getProjectCategory(p)).filter(Boolean)
+                ]));
+                const categories = ['All', ...dynamicCats];
                 filterMenu.innerHTML = categories.map(cat => {
                     const catCount = cat === 'All' 
                         ? allProjectsList.length 
@@ -2646,10 +2650,17 @@ function handleEnter3D() {
             // setTimeout(() => errorDiv.remove(), 5000);
         }
 
-        // Dynamic initialization from MongoDB live API
+        // Dynamic initialization from MongoDB live API with strict cache-busting
         async function initPortfolio() {
             try {
-                const res = await fetch('/api/portfolio', { cache: 'no-store' });
+                const cacheBuster = `_t=${Date.now()}`;
+                const res = await fetch(`/api/portfolio?${cacheBuster}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 if (res.ok) {
                     const data = await res.json();
                     if (data && typeof data === 'object') {
@@ -2665,7 +2676,8 @@ function handleEnter3D() {
             }
 
             try {
-                const fallbackRes = await fetch('/data/legacy_data.json');
+                const cacheBuster = `_t=${Date.now()}`;
+                const fallbackRes = await fetch(`/data/legacy_data.json?${cacheBuster}`);
                 if (fallbackRes.ok) {
                     const fallbackData = await fallbackRes.json();
                     updatePortfolioContent(fallbackData);
@@ -2688,6 +2700,7 @@ function handleEnter3D() {
 
         initPortfolio();
 
+        // 1. Cross-tab BroadcastChannel listener
         if ('BroadcastChannel' in window) {
             try {
                 const syncChannel = new BroadcastChannel('portfolio_data_updated');
@@ -2696,6 +2709,30 @@ function handleEnter3D() {
                 };
             } catch (_) {}
         }
+
+        // 2. Cross-tab localStorage storage event listener
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'portfolio_data_updated_at') {
+                initPortfolio();
+            }
+        });
+
+        // 3. Tab visibility / focus revalidation
+        window.addEventListener('focus', () => {
+            initPortfolio();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                initPortfolio();
+            }
+        });
+
+        // 4. Parent window postMessage listener (when embedded in Classic2DView iframe)
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.type === 'PORTFOLIO_UPDATED') {
+                initPortfolio();
+            }
+        });
     </script>
     <script>
         // Separate script for non-module JS (Theme, Navigation, Detail Views)

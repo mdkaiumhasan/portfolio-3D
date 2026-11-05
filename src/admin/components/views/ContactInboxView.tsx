@@ -208,22 +208,20 @@ export const ContactInboxView: React.FC<ContactInboxViewProps> = ({
               <button
                 type="button"
                 onClick={() => setInboxFilter('all')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  inboxFilter === 'all'
-                    ? 'bg-slate-800 text-white'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${inboxFilter === 'all'
+                  ? 'bg-slate-800 text-white'
+                  : 'text-slate-400 hover:text-slate-200'
+                  }`}
               >
                 All ({messages.length})
               </button>
               <button
                 type="button"
                 onClick={() => setInboxFilter('unread')}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  inboxFilter === 'unread'
-                    ? 'bg-cyan-500/20 text-cyan-300'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${inboxFilter === 'unread'
+                  ? 'bg-cyan-500/20 text-cyan-300'
+                  : 'text-slate-400 hover:text-slate-200'
+                  }`}
               >
                 Unread ({unreadCount})
               </button>
@@ -284,11 +282,10 @@ export const ContactInboxView: React.FC<ContactInboxViewProps> = ({
               return (
                 <div
                   key={msg.id}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-3 ${
-                    msg.read
-                      ? 'bg-slate-950/50 border-slate-800/80'
-                      : 'bg-cyan-950/15 border-cyan-500/35 shadow-sm shadow-cyan-950/40'
-                  }`}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-3 ${msg.read
+                    ? 'bg-slate-950/50 border-slate-800/80'
+                    : 'bg-cyan-950/15 border-cyan-500/35 shadow-sm shadow-cyan-950/40'
+                    }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="space-y-1 min-w-0">
@@ -304,11 +301,10 @@ export const ContactInboxView: React.FC<ContactInboxViewProps> = ({
                           &lt;{msg.fromEmail}&gt;
                         </a>
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            msg.source === '2d'
-                              ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                              : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
-                          }`}
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${msg.source === '2d'
+                            ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                            : 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
+                            }`}
                         >
                           {msg.source === '2d' ? '2D Classic' : '3D World'}
                         </span>

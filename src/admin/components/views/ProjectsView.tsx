@@ -24,9 +24,10 @@ interface ProjectsViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onToast }) => {
+export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
@@ -61,7 +62,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onTo
   });
 
   // Add Category
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     const trimmed = newCatInput.trim();
     if (!trimmed) {
       onToast('Please enter category name', 'warning');
@@ -72,40 +73,50 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onTo
       return;
     }
 
-    onUpdate((prev) => ({
-      ...prev,
-      project_categories: [...(prev.project_categories || []), trimmed]
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      project_categories: [...(data.project_categories || categories), trimmed]
+    };
     setNewCatInput('');
-    onToast(`Added project category "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category "${trimmed}" added and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Added project category "${trimmed}"`, 'success');
+    }
   };
 
   // Rename Category
-  const handleRenameCategory = (oldName: string) => {
+  const handleRenameCategory = async (oldName: string) => {
     const newName = prompt(`Enter new name for category "${oldName}":`, oldName);
     if (!newName || !newName.trim() || newName.trim() === oldName) return;
     const trimmed = newName.trim();
 
-    onUpdate((prev) => {
-      const updatedCats = (prev.project_categories || []).map((c) =>
-        c === oldName ? trimmed : c
-      );
-      const updatedProjects = (prev.projects || []).map((p) =>
-        p.category === oldName ? { ...p, category: trimmed } : p
-      );
-      return {
-        ...prev,
-        project_categories: updatedCats,
-        projects: updatedProjects
-      };
-    });
+    const updatedCats = (data.project_categories || categories).map((c) =>
+      c === oldName ? trimmed : c
+    );
+    const updatedProjects = (data.projects || []).map((p) =>
+      p.category === oldName ? { ...p, category: trimmed } : p
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      project_categories: updatedCats,
+      projects: updatedProjects
+    };
 
     if (selectedFilter === oldName) setSelectedFilter(trimmed);
-    onToast(`Renamed category to "${trimmed}"`, 'success');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category renamed to "${trimmed}" and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Renamed category to "${trimmed}"`, 'success');
+    }
   };
 
   // Delete Category
-  const handleConfirmDeleteCat = () => {
+  const handleConfirmDeleteCat = async () => {
     if (!deleteCatName) return;
     if (categories.length <= 1) {
       onToast('You must keep at least one category', 'warning');
@@ -114,22 +125,25 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onTo
     }
 
     const fallback = categories.find((c) => c !== deleteCatName) || 'General';
-
-    onUpdate((prev) => {
-      const updatedCats = (prev.project_categories || []).filter((c) => c !== deleteCatName);
-      const updatedProjects = (prev.projects || []).map((p) =>
-        p.category === deleteCatName ? { ...p, category: fallback } : p
-      );
-      return {
-        ...prev,
-        project_categories: updatedCats,
-        projects: updatedProjects
-      };
-    });
+    const updatedCats = (data.project_categories || categories).filter((c) => c !== deleteCatName);
+    const updatedProjects = (data.projects || []).map((p) =>
+      p.category === deleteCatName ? { ...p, category: fallback } : p
+    );
+    const updatedData: PortfolioData = {
+      ...data,
+      project_categories: updatedCats,
+      projects: updatedProjects
+    };
 
     if (selectedFilter === deleteCatName) setSelectedFilter('All');
     setDeleteCatName(null);
-    onToast(`Removed category "${deleteCatName}"`, 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, `Category "${deleteCatName}" removed and synced to database!`);
+    } else {
+      onUpdate(() => updatedData);
+      onToast(`Removed category "${deleteCatName}"`, 'info');
+    }
   };
 
   // Open Editor Modal for New Project
@@ -155,29 +169,41 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onTo
   };
 
   // Save Modal Draft
-  const handleSaveDraft = () => {
+  const handleSaveDraft = async () => {
     if (!editingDraft) return;
     if (!editingDraft.title?.trim()) {
       onToast('Project title is required', 'warning');
       return;
     }
 
-    onUpdate((prev) => {
-      const updated = [...(prev.projects || [])];
-      if (editingIndex === -1) {
-        updated.push(editingDraft);
-      } else if (editingIndex !== null) {
-        updated[editingIndex] = editingDraft;
-      }
-      return { ...prev, projects: updated };
-    });
+    const updatedProjects = [...(data.projects || [])];
+    const isNew = editingIndex === -1;
+    if (isNew) {
+      updatedProjects.push(editingDraft);
+    } else if (editingIndex !== null) {
+      updatedProjects[editingIndex] = editingDraft;
+    }
 
-    onToast(
-      editingIndex === -1 ? 'Project added to showcase' : 'Project updated successfully',
-      'success'
-    );
+    const updatedData: PortfolioData = {
+      ...data,
+      projects: updatedProjects
+    };
+
     setEditingIndex(null);
     setEditingDraft(null);
+
+    if (onSaveDirect) {
+      await onSaveDirect(
+        updatedData,
+        isNew ? 'Project added and synced to database live!' : 'Project updated and synced to database live!'
+      );
+    } else {
+      onUpdate(() => updatedData);
+      onToast(
+        isNew ? 'Project added to showcase' : 'Project updated successfully',
+        'success'
+      );
+    }
   };
 
   // Handle Image Upload inside Modal
@@ -199,14 +225,21 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({ data, onUpdate, onTo
   };
 
   // Confirm Delete Project
-  const handleConfirmDeleteProject = () => {
+  const handleConfirmDeleteProject = async () => {
     if (deleteProjectIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      projects: (prev.projects || []).filter((_, idx) => idx !== deleteProjectIndex)
-    }));
+    const updatedProjects = (data.projects || []).filter((_, idx) => idx !== deleteProjectIndex);
+    const updatedData: PortfolioData = {
+      ...data,
+      projects: updatedProjects
+    };
     setDeleteProjectIndex(null);
-    onToast('Project removed', 'info');
+
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Project removed and synced to database live!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Project removed', 'info');
+    }
   };
 
   return (

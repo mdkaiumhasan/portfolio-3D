@@ -3,6 +3,38 @@ import { useGameStore } from '../../store/gameStore';
 
 export const Classic2DView: React.FC = () => {
   const setMode = useGameStore((s) => s.setMode);
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+
+  // Relay real-time database updates to classic.html iframe
+  useEffect(() => {
+    const notifyIframe = () => {
+      try {
+        iframeRef.current?.contentWindow?.postMessage({ type: 'PORTFOLIO_UPDATED' }, '*');
+      } catch (_) {}
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'portfolio_data_updated_at') {
+        notifyIframe();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
+    let channel: BroadcastChannel | null = null;
+    if ('BroadcastChannel' in window) {
+      try {
+        channel = new BroadcastChannel('portfolio_data_updated');
+        channel.onmessage = () => {
+          notifyIframe();
+        };
+      } catch (_) {}
+    }
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      channel?.close();
+    };
+  }, []);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -31,6 +63,7 @@ export const Classic2DView: React.FC = () => {
   return (
     <div style={{ width: '100vw', height: '100dvh', position: 'relative', overflow: 'hidden', background: '#0b0f17' }}>
       <iframe
+        ref={iframeRef}
         src="/classic.html"
         title="Classic 2D Portfolio - MD. Kaium Hasan"
         style={{

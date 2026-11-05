@@ -176,13 +176,21 @@ export function removeAdminToken(): void {
 }
 
 function broadcastPortfolioSync() {
-  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+  if (typeof window !== 'undefined') {
+    const timestamp = Date.now().toString();
     try {
-      const channel = new BroadcastChannel('portfolio_data_updated');
-      channel.postMessage({ updatedAt: Date.now() });
-      channel.close();
+      localStorage.setItem('portfolio_data_updated_at', timestamp);
     } catch {
-      // Ignore restricted environments
+      // Ignore storage restrictions
+    }
+    if ('BroadcastChannel' in window) {
+      try {
+        const channel = new BroadcastChannel('portfolio_data_updated');
+        channel.postMessage({ updatedAt: timestamp });
+        channel.close();
+      } catch {
+        // Ignore restricted environments
+      }
     }
   }
 }

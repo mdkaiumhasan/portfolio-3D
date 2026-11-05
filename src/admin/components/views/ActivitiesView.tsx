@@ -8,9 +8,10 @@ interface ActivitiesViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const ActivitiesView: React.FC<ActivitiesViewProps> = ({ data, onUpdate, onToast }) => {
+export const ActivitiesView: React.FC<ActivitiesViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -18,17 +19,22 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({ data, onUpdate, 
 
   const activities = data.activities || [];
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newItem: ActivityItem = {
       title: 'New Activity / Achievement',
       description: 'Describe the initiative, robotics exhibition, or competition...',
       imageUrl: 'https://res.cloudinary.com/dgomoujlo/image/upload/v1791035636/portfolio/activities/wh65cwweq8aswishk7cv.webp'
     };
-    onUpdate((prev) => ({
-      ...prev,
-      activities: [...(prev.activities || []), newItem]
-    }));
-    onToast('Added new activity item', 'success');
+    const updatedData: PortfolioData = {
+      ...data,
+      activities: [...(data.activities || []), newItem]
+    };
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Added new activity and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Added new activity item', 'success');
+    }
   };
 
   const handleChange = (index: number, field: keyof ActivityItem, value: string) => {
@@ -63,14 +69,19 @@ export const ActivitiesView: React.FC<ActivitiesViewProps> = ({ data, onUpdate, 
     fileInputRef.current?.click();
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      activities: (prev.activities || []).filter((_, idx) => idx !== deleteIndex)
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      activities: (data.activities || []).filter((_, idx) => idx !== deleteIndex)
+    };
     setDeleteIndex(null);
-    onToast('Activity removed', 'info');
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Activity removed and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Activity removed', 'info');
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, ExternalLink, Github, AlertTriangle } from 'lucide-react';
-import { usePortfolioData, ProjectItem } from '../../hooks/usePortfolioData';
+import { usePortfolioData, fetchPortfolioDataOnce, ProjectItem } from '../../hooks/usePortfolioData';
 import { useGameStore } from '../../store/gameStore';
 import { sound } from '../../systems/audio';
 import { sanitizeHtml, optimizeCloudinaryUrl } from '../../utils/sanitize';
@@ -11,13 +11,23 @@ export const ProjectsModal: React.FC = () => {
   const { data } = usePortfolioData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
+  // Ensure fresh portfolio data from MongoDB whenever modal opens
+  useEffect(() => {
+    fetchPortfolioDataOnce(true).catch(() => {});
+  }, []);
+
+  const projects = data.projects || [];
   const defaultCategories = ['Networking & Security', 'Mobile & Realtime', 'Robotics & Hardware'];
   const configuredCategories = (data.project_categories && data.project_categories.length > 0)
     ? data.project_categories
     : defaultCategories;
-  const categories = ['All', ...configuredCategories];
-
-  const projects = data.projects || [];
+  const dynamicCategories = Array.from(
+    new Set([
+      ...configuredCategories,
+      ...projects.map((p) => p.category?.trim()).filter(Boolean) as string[],
+    ])
+  );
+  const categories = ['All', ...dynamicCategories];
 
   const getProjectCategory = (p: ProjectItem): string => {
     if (p.category && p.category.trim() !== '') return p.category.trim();

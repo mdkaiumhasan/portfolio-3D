@@ -128,6 +128,26 @@ export const AdminApp: React.FC = () => {
     });
   }, []);
 
+  // Direct Save to MongoDB (used by modals and delete actions for instant live sync)
+  const handleSaveDirect = useCallback(async (updatedData: PortfolioData, successMsg?: string) => {
+    setData(updatedData);
+    setIsSaving(true);
+    try {
+      const result = await savePortfolio(updatedData);
+      setOriginalData(updatedData);
+      setHasUnsavedChanges(false);
+      addToast(successMsg || result.message || 'Saved to MongoDB database & updated live across 2D/3D!', 'success');
+    } catch (err: any) {
+      if (err instanceof AuthExpiredError) {
+        handleAuthExpired(err.message);
+      } else {
+        addToast(err.message || 'Failed to save changes to database', 'error');
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  }, [addToast, handleAuthExpired]);
+
   // Save All Changes to MongoDB
   const handleSaveAll = useCallback(async () => {
     if (isSaving) return;
@@ -246,6 +266,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -254,6 +275,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -262,6 +284,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -270,6 +293,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -278,6 +302,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -286,6 +311,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 
@@ -294,6 +320,7 @@ export const AdminApp: React.FC = () => {
               data={data}
               onUpdate={handleDataUpdate}
               onToast={addToast}
+              onSaveDirect={handleSaveDirect}
             />
           )}
 

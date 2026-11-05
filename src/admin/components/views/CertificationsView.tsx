@@ -7,27 +7,34 @@ interface CertificationsViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
 export const CertificationsView: React.FC<CertificationsViewProps> = ({
   data,
   onUpdate,
-  onToast
+  onToast,
+  onSaveDirect
 }) => {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   const stats = data.stats || [];
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const newItem: StatItem = {
       heading: 'NEW CERTIFICATION',
       description: 'CERTIFICATION ISSUING BODY & TITLE'
     };
-    onUpdate((prev) => ({
-      ...prev,
-      stats: [...(prev.stats || []), newItem]
-    }));
-    onToast('Added new certification card', 'success');
+    const updatedData: PortfolioData = {
+      ...data,
+      stats: [...(data.stats || []), newItem]
+    };
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Added new certification card and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Added new certification card', 'success');
+    }
   };
 
   const handleChange = (index: number, field: keyof StatItem, value: string) => {
@@ -38,14 +45,19 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
     });
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteIndex === null) return;
-    onUpdate((prev) => ({
-      ...prev,
-      stats: (prev.stats || []).filter((_, idx) => idx !== deleteIndex)
-    }));
+    const updatedData: PortfolioData = {
+      ...data,
+      stats: (data.stats || []).filter((_, idx) => idx !== deleteIndex)
+    };
     setDeleteIndex(null);
-    onToast('Certification removed', 'info');
+    if (onSaveDirect) {
+      await onSaveDirect(updatedData, 'Certification removed and synced to database!');
+    } else {
+      onUpdate(() => updatedData);
+      onToast('Certification removed', 'info');
+    }
   };
 
   return (

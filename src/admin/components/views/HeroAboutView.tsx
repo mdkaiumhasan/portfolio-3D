@@ -17,9 +17,10 @@ interface HeroAboutViewProps {
   data: PortfolioData;
   onUpdate: (updater: (prev: PortfolioData) => PortfolioData) => void;
   onToast: (msg: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
+  onSaveDirect?: (updatedData: PortfolioData, successMsg?: string) => Promise<void>;
 }
 
-export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, onToast }) => {
+export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, onToast, onSaveDirect }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -75,23 +76,35 @@ export const HeroAboutView: React.FC<HeroAboutViewProps> = ({ data, onUpdate, on
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              onUpdate((prev) => ({
-                ...prev,
-                available_for_work: prev.available_for_work === false
-              }))
-            }
-            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer self-start sm:self-auto ${
-              isAvailable
+          <div className="flex items-center gap-3 self-start sm:self-auto flex-wrap">
+            <button
+              type="button"
+              onClick={() =>
+                onUpdate((prev) => ({
+                  ...prev,
+                  available_for_work: prev.available_for_work === false
+                }))
+              }
+              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${isAvailable
                 ? 'bg-emerald-500/15 border-emerald-500/35 text-emerald-300'
                 : 'bg-rose-500/15 border-rose-500/35 text-rose-300'
-            }`}
-          >
-            {isAvailable ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
-            <span>{isAvailable ? 'Available for Work' : 'Currently Engaged'}</span>
-          </button>
+                }`}
+            >
+              {isAvailable ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+              <span>{isAvailable ? 'Available for Work' : 'Currently Engaged'}</span>
+            </button>
+
+            {onSaveDirect && (
+              <button
+                type="button"
+                onClick={() => onSaveDirect(data, 'Hero & Profile saved to database successfully!')}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Save to Database</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Live Preview Box */}
