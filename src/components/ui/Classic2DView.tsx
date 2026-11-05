@@ -7,15 +7,19 @@ export const Classic2DView: React.FC = () => {
 
   // Relay real-time database updates to classic.html iframe
   useEffect(() => {
-    const notifyIframe = () => {
+    const notifyIframe = (data?: any) => {
       try {
-        iframeRef.current?.contentWindow?.postMessage({ type: 'PORTFOLIO_UPDATED' }, '*');
+        iframeRef.current?.contentWindow?.postMessage({ type: 'PORTFOLIO_UPDATED', data }, '*');
       } catch (_) {}
     };
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'portfolio_data_updated_at') {
-        notifyIframe();
+      if (e.key === 'portfolio_data_updated_at' || e.key === 'portfolio_cached_data') {
+        let payload: any = null;
+        if (e.key === 'portfolio_cached_data' && e.newValue) {
+          try { payload = JSON.parse(e.newValue); } catch (_) {}
+        }
+        notifyIframe(payload);
       }
     };
     window.addEventListener('storage', handleStorage);
@@ -24,8 +28,8 @@ export const Classic2DView: React.FC = () => {
     if ('BroadcastChannel' in window) {
       try {
         channel = new BroadcastChannel('portfolio_data_updated');
-        channel.onmessage = () => {
-          notifyIframe();
+        channel.onmessage = (msg) => {
+          notifyIframe(msg.data?.data);
         };
       } catch (_) {}
     }

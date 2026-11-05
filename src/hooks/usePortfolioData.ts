@@ -400,8 +400,27 @@ router ospf 1
   ]
 };
 
-// In-memory cache + in-flight deduplication + cross-tab BroadcastChannel sync
-let cachedData: PortfolioData | null = null;
+// Persistent localStorage cache key to eliminate 500ms-1100ms flash on reload
+const LOCAL_STORAGE_CACHE_KEY = 'portfolio_cached_data';
+
+function getSavedCache(): PortfolioData | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return mergeWithFallback(parsed);
+      }
+    }
+  } catch {
+    // Ignore JSON parse or storage access exceptions
+  }
+  return null;
+}
+
+// In-memory cache initialized from persistent storage for instant (0ms) render on reload
+let cachedData: PortfolioData | null = getSavedCache();
 let inflightPromise: Promise<PortfolioData> | null = null;
 const subscribers = new Set<(data: PortfolioData) => void>();
 
@@ -432,6 +451,13 @@ function mergeWithFallback(raw: Partial<PortfolioData> | null | undefined): Port
 
 function notifySubscribers(next: PortfolioData) {
   cachedData = next;
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(next));
+    }
+  } catch {
+    // Ignore storage quota or restricted environment errors
+  }
   subscribers.forEach((fn) => fn(next));
 }
 
@@ -473,7 +499,7 @@ export function fetchPortfolioDataOnce(forceRefresh = false): Promise<PortfolioD
       } catch {
         // Ignore static fallback read errors
       }
-      const fallback = cachedData || FALLBACK_DATA;
+      const fallback = cachedData || getSavedCache() || FALLBACK_DATA;
       notifySubscribers(fallback);
       return fallback;
     })
@@ -489,7 +515,10 @@ if (typeof window !== 'undefined') {
   if ('BroadcastChannel' in window) {
     try {
       const channel = new BroadcastChannel('portfolio_data_updated');
-      channel.onmessage = () => {
+      channel.onmessage = (e) => {
+        if (e.data && e.data.data) {
+          notifySubscribers(mergeWithFallback(e.data.data));
+        }
         fetchPortfolioDataOnce(true).catch(() => {});
       };
     } catch {
@@ -499,6 +528,14 @@ if (typeof window !== 'undefined') {
 
   // 2. Storage event (100% reliable across all browser windows, tabs & private tabs)
   window.addEventListener('storage', (e) => {
+    if (e.key === LOCAL_STORAGE_CACHE_KEY && e.newValue) {
+      try {
+        const parsed = JSON.parse(e.newValue);
+        if (parsed && typeof parsed === 'object') {
+          notifySubscribers(mergeWithFallback(parsed));
+        }
+      } catch {}
+    }
     if (e.key === 'portfolio_data_updated_at') {
       fetchPortfolioDataOnce(true).catch(() => {});
     }
@@ -513,11 +550,14 @@ if (typeof window !== 'undefined') {
       fetchPortfolioDataOnce(true).catch(() => {});
     }
   });
+
+  // Eagerly prefetch in background if cache is cold or to validate database freshness
+  fetchPortfolioDataOnce(true).catch(() => {});
 }
 
 export function usePortfolioData() {
-  const [data, setData] = useState<PortfolioData>(cachedData || FALLBACK_DATA);
-  const [loading, setLoading] = useState(!cachedData);
+  const [data, setData] = useState<PortfolioData>(() => cachedData || getSavedCache() || FALLBACK_DATA);
+  const [loading, setLoading] = useState(() => !(cachedData || getSavedCache()));
 
   useEffect(() => {
     let mounted = true;

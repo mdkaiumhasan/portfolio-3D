@@ -175,18 +175,21 @@ export function removeAdminToken(): void {
   localStorage.removeItem(authStorageKey);
 }
 
-function broadcastPortfolioSync() {
+export function broadcastPortfolioSync(data?: PortfolioData) {
   if (typeof window !== 'undefined') {
     const timestamp = Date.now().toString();
     try {
       localStorage.setItem('portfolio_data_updated_at', timestamp);
+      if (data) {
+        localStorage.setItem('portfolio_cached_data', JSON.stringify(data));
+      }
     } catch {
       // Ignore storage restrictions
     }
     if ('BroadcastChannel' in window) {
       try {
         const channel = new BroadcastChannel('portfolio_data_updated');
-        channel.postMessage({ updatedAt: timestamp });
+        channel.postMessage({ updatedAt: timestamp, data });
         channel.close();
       } catch {
         // Ignore restricted environments
@@ -240,7 +243,7 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
     const res = await fetch(`${API_BASE}/portfolio`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
-      return {
+      const merged: PortfolioData = {
         ...fallbackPortfolioData,
         ...data,
         available_for_work: typeof data.available_for_work === 'boolean' ? data.available_for_work : true,
@@ -262,6 +265,10 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
         contactDetails: Array.isArray(data.contactDetails) ? data.contactDetails : fallbackPortfolioData.contactDetails,
         socialLinks: Array.isArray(data.socialLinks) ? data.socialLinks : fallbackPortfolioData.socialLinks
       };
+      try {
+        localStorage.setItem('portfolio_cached_data', JSON.stringify(merged));
+      } catch {}
+      return merged;
     }
   } catch (err) {
     console.warn('API fetch warning, using fallback data:', err);
@@ -284,7 +291,7 @@ export async function savePortfolio(data: PortfolioData): Promise<{ success: boo
   if (!res.ok || !result.success) {
     throw new Error(result.error || 'Failed to save portfolio data');
   }
-  broadcastPortfolioSync();
+  broadcastPortfolioSync(data);
   return { success: true, message: result.message || 'Saved to MongoDB successfully' };
 }
 
