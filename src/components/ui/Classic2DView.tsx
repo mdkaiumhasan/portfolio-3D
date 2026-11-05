@@ -14,11 +14,12 @@ export const Classic2DView: React.FC = () => {
     };
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'portfolio_data_updated_at' || e.key === 'portfolio_cached_data') {
+      if (e.key === 'portfolio_data_updated_at') {
         let payload: any = null;
-        if (e.key === 'portfolio_cached_data' && e.newValue) {
-          try { payload = JSON.parse(e.newValue); } catch (_) {}
-        }
+        try {
+          const cached = localStorage.getItem('portfolio_cached_data');
+          if (cached) payload = JSON.parse(cached);
+        } catch (_) {}
         notifyIframe(payload);
       }
     };

@@ -453,7 +453,11 @@ function notifySubscribers(next: PortfolioData) {
   cachedData = next;
   try {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, JSON.stringify(next));
+      const nextJson = JSON.stringify(next);
+      const currentStored = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
+      if (currentStored !== nextJson) {
+        localStorage.setItem(LOCAL_STORAGE_CACHE_KEY, nextJson);
+      }
     }
   } catch {
     // Ignore storage quota or restricted environment errors
@@ -532,7 +536,8 @@ if (typeof window !== 'undefined') {
       try {
         const parsed = JSON.parse(e.newValue);
         if (parsed && typeof parsed === 'object') {
-          notifySubscribers(mergeWithFallback(parsed));
+          cachedData = mergeWithFallback(parsed);
+          subscribers.forEach((fn) => fn(cachedData!));
         }
       } catch {}
     }
@@ -550,9 +555,6 @@ if (typeof window !== 'undefined') {
       fetchPortfolioDataOnce(true).catch(() => {});
     }
   });
-
-  // Eagerly prefetch in background if cache is cold or to validate database freshness
-  fetchPortfolioDataOnce(true).catch(() => {});
 }
 
 export function usePortfolioData() {
@@ -569,8 +571,8 @@ export function usePortfolioData() {
     };
     subscribers.add(listener);
 
-    // Revalidate in background on mount so opened modal always reflects live database changes
-    fetchPortfolioDataOnce(true).finally(() => {
+    // Revalidate in background if not yet cached; if already cached, do not block or force flicker
+    fetchPortfolioDataOnce(!cachedData).finally(() => {
       if (mounted) setLoading(false);
     });
 

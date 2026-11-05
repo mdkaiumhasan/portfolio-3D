@@ -1846,7 +1846,15 @@ function handleEnter3D() {
             }
         }
 
+        let lastRenderedPortfolioJson = '';
         function updatePortfolioContent(data) {
+            if (!data || typeof data !== 'object') return;
+            const currentJson = JSON.stringify(data);
+            if (currentJson === lastRenderedPortfolioJson) {
+                return; // Content is identical - skip re-render to eliminate all flickering
+            }
+            lastRenderedPortfolioJson = currentJson;
+
             // Helper to safely get data or default
             const get = (key, defaultValue = '') => data?.[key] ?? defaultValue;
             const isAvailable = data?.available_for_work !== false;
@@ -2254,7 +2262,7 @@ function handleEnter3D() {
             portfolioGrid.innerHTML = ''; // Clear previous
             projects.forEach(project => {
                 const projectDiv = document.createElement('div');
-                projectDiv.className = 'portfolio-item';
+                projectDiv.className = 'portfolio-item cursor-pointer';
                 const safeFullDetails = sanitizeHTML(project.fullDetails || '');
                 const category = getProjectCategory(project);
                 const catStyle = getProjectCategoryStyle(category);
@@ -2331,10 +2339,17 @@ function handleEnter3D() {
                 detailsP.textContent = descText;
                 detailsP.title = descText;
 
+                const detailsHtml = safeFullDetails || `<p>${escapeHTML(descText)}</p>`;
+                projectDiv.setAttribute('data-project-image', project.imageUrl || defaultFallback);
+                projectDiv.setAttribute('data-project-title', projectTitle);
+                projectDiv.setAttribute('data-project-details', detailsHtml);
+                projectDiv.setAttribute('data-project-live', liveUrl);
+                projectDiv.setAttribute('data-project-github', githubUrl);
+
                 const button = projectDiv.querySelector('button');
                 button.setAttribute('data-project-image', project.imageUrl || defaultFallback);
                 button.setAttribute('data-project-title', projectTitle);
-                button.setAttribute('data-project-details', safeFullDetails || `<p>${escapeHTML(descText)}</p>`);
+                button.setAttribute('data-project-details', detailsHtml);
                 button.setAttribute('data-project-live', liveUrl);
                 button.setAttribute('data-project-github', githubUrl);
 
@@ -2681,8 +2696,19 @@ function handleEnter3D() {
             // setTimeout(() => errorDiv.remove(), 5000);
         }
 
-        // Dynamic initialization from MongoDB live API with strict cache-busting
+        // Dynamic initialization from MongoDB live API with strict cache-busting & loop prevention
+        let isFetchingPortfolio = false;
+        let initPortfolioDebounce = null;
+        function debouncedInitPortfolio(delay = 500) {
+            if (initPortfolioDebounce) clearTimeout(initPortfolioDebounce);
+            initPortfolioDebounce = setTimeout(() => {
+                initPortfolio();
+            }, delay);
+        }
+
         async function initPortfolio() {
+            if (isFetchingPortfolio) return;
+            isFetchingPortfolio = true;
             try {
                 const cacheBuster = `_t=${Date.now()}`;
                 const res = await fetch(`/api/portfolio?${cacheBuster}`, {
@@ -2695,8 +2721,12 @@ function handleEnter3D() {
                 if (res.ok) {
                     const data = await res.json();
                     if (data && typeof data === 'object') {
+                        const newJson = JSON.stringify(data);
                         try {
-                            localStorage.setItem('portfolio_cached_data', JSON.stringify(data));
+                            const cur = localStorage.getItem('portfolio_cached_data');
+                            if (cur !== newJson) {
+                                localStorage.setItem('portfolio_cached_data', newJson);
+                            }
                         } catch (_) {}
                         updatePortfolioContent(data);
                         if (loadingIndicator) loadingIndicator.classList.add('hidden');
@@ -2707,6 +2737,8 @@ function handleEnter3D() {
                 }
             } catch (err) {
                 console.warn('API fetch failed, trying local fallback:', err);
+            } finally {
+                isFetchingPortfolio = false;
             }
 
             try {
@@ -2740,12 +2772,10 @@ function handleEnter3D() {
                 const syncChannel = new BroadcastChannel('portfolio_data_updated');
                 syncChannel.onmessage = (e) => {
                     if (e.data && e.data.data) {
-                        try {
-                            localStorage.setItem('portfolio_cached_data', JSON.stringify(e.data.data));
-                        } catch (_) {}
                         updatePortfolioContent(e.data.data);
+                    } else {
+                        debouncedInitPortfolio(500);
                     }
-                    initPortfolio();
                 };
             } catch (_) {}
         }
@@ -2759,19 +2789,18 @@ function handleEnter3D() {
                         updatePortfolioContent(data);
                     }
                 } catch (_) {}
-            }
-            if (e.key === 'portfolio_data_updated_at') {
-                initPortfolio();
+            } else if (e.key === 'portfolio_data_updated_at') {
+                debouncedInitPortfolio(500);
             }
         });
 
         // 3. Tab visibility / focus revalidation
         window.addEventListener('focus', () => {
-            initPortfolio();
+            debouncedInitPortfolio(800);
         });
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                initPortfolio();
+                debouncedInitPortfolio(800);
             }
         });
 
@@ -2779,12 +2808,10 @@ function handleEnter3D() {
         window.addEventListener('message', (e) => {
             if (e.data && e.data.type === 'PORTFOLIO_UPDATED') {
                 if (e.data.data) {
-                    try {
-                        localStorage.setItem('portfolio_cached_data', JSON.stringify(e.data.data));
-                    } catch (_) {}
                     updatePortfolioContent(e.data.data);
+                } else {
+                    debouncedInitPortfolio(500);
                 }
-                initPortfolio();
             }
         });
     </script>
@@ -2965,7 +2992,7 @@ function handleEnter3D() {
                  window.scrollTo(0, 0);
              }
 
-            // Project Detail Event Delegation
+            // Project Detail Event Delegation - opens when clicking anywhere on the project card or the button
             const portfolioGridDelegation = document.getElementById('portfolio-grid');
             const projectDetailImage = document.getElementById('project-detail-image');
             const projectDetailTitle = document.getElementById('project-detail-title');
@@ -2973,16 +3000,23 @@ function handleEnter3D() {
             const projectDetailActions = document.getElementById('project-detail-actions');
 
             portfolioGridDelegation?.addEventListener('click', (e) => {
+                // If clicked on an external link (GitHub icon or Live demo icon), let it open naturally
                 if (e.target.closest('a')) return;
-                const button = e.target.closest('.open-project-btn');
-                if (button && projectDetailView && projectDetailImage && projectDetailTitle && projectDetailDetails) {
+                const card = e.target.closest('.portfolio-item');
+                if (!card) return;
+                const button = card.querySelector('.open-project-btn') || card;
+                if (projectDetailView && projectDetailImage && projectDetailTitle && projectDetailDetails) {
                     const populateProject = () => {
-                         projectDetailImage.src = button.getAttribute('data-project-image') || '';
-                         projectDetailTitle.textContent = button.getAttribute('data-project-title') || '';
-                         projectDetailDetails.innerHTML = typeof sanitizeHTML === 'function' ? sanitizeHTML(button.getAttribute('data-project-details') || '') : escapeHTML(button.getAttribute('data-project-details') || '');
+                         const img = button.getAttribute('data-project-image') || card.getAttribute('data-project-image') || '';
+                         const title = button.getAttribute('data-project-title') || card.getAttribute('data-project-title') || '';
+                         const details = button.getAttribute('data-project-details') || card.getAttribute('data-project-details') || '';
+                         const live = button.getAttribute('data-project-live') || card.getAttribute('data-project-live') || '';
+                         const github = button.getAttribute('data-project-github') || card.getAttribute('data-project-github') || '';
+
+                         projectDetailImage.src = img;
+                         projectDetailTitle.textContent = title;
+                         projectDetailDetails.innerHTML = typeof sanitizeHTML === 'function' ? sanitizeHTML(details) : escapeHTML(details);
                          if (projectDetailActions) {
-                             const live = button.getAttribute('data-project-live') || '';
-                             const github = button.getAttribute('data-project-github') || '';
                              let actionsHtml = '';
                              if (live) {
                                  actionsHtml += `<a href="${escapeHTML(live)}" target="_blank" rel="noopener noreferrer" class="btn-custom text-xs"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>`;
